@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "index.js": "^0.0.3",
+    "msnodesqlv8": "^4.1.2",
+    "mssql": "^10.0.2",
+    "mysql": "^2.18.1",
+    "node": "^18.20.0"
+  }
+}
