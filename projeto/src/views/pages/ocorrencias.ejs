@@ -1,0 +1,85 @@
+<%- include ('../layouts/header') %>
+
+    
+
+<div class="container">
+
+    <div class="row">
+        
+        <!-- Minhas Ocorrências -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title"> Minhas Ocorrências</h6>
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Ocorrência</th>
+                            <th scope="col">Responsável</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <% ocorrenciasMinhas.forEach(ocorrencia => { %>
+                            <tr>
+                                <td><%= ocorrencia.deOcorrencia %></td>
+                                <td>Fulano</td>
+                                <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                            </tr>
+                            <% }); %>  
+                        
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+         <!-- Ocorrências Minha Responsabilidade -->
+         <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Ocorrências Atendimento</h6> 
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Ocorrência</th>
+                            <th scope="col">Solicitante</th>
+                            <th scope="col">Situação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>Primeira Ocorrencia</td>
+                            <td>Isabelle</td>
+                            <td>Enviada</td>
+                        </tr>
+                        <tr>
+                            <td>Segunda Ocorrencia</td>
+                            <td>Mateus</td>
+                            <td>Fechada</td>
+                        </tr>
+                        <tr>
+                            <td>Terceira Ocorrencia</td>
+                            <td>Marcio</td>
+                            <td>Recusada</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<%- include ('../layouts/footer') %>

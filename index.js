@@ -1,8 +1,9 @@
 const express = require('express');
 const session = require('express-session');
-const bodyParser = require('body-parser');
 const path = require('path');
+const bodyParser = require('body-parser');
 const usuarioRoute = require('./projeto/src/routes/usuarioRoute');
+const ocorrenciaRoute = require('./projeto/src/routes/ocorrenciaRoute');
 const autenticacaoMiddleware = require('./projeto/src/midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('./projeto/src/configuracoes');
 
@@ -13,14 +14,19 @@ const PORT = 8080;
  * Configura o local onde deve considerar arquivos státicos a serem renderizados nas páginas.
  * Ou seja, imagens, css, javascript, etc
  */
-app.use(express.static(path.join(__dirname, 'projeto', 'src')));
+app.use(express.static(CONFIG_DIRETORIO_SRC));
 
 /**
- * Middleware para analisar corpos de solicitação JSON
+ * Middleware para analisar solicitação JSON
  */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/**
+ * Configurando o EJS como a engine de manipulação e visualização das páginas
+ */
+app.set('view engine', 'ejs');
+app.set('views', path.join(CONFIG_DIRETORIO_SRC, 'views'));
 
 /**
  * Sessão - Configuração do middleware de sessão
@@ -41,13 +47,15 @@ app.use(session({
  */ 
 app.use('/api/usuario', usuarioRoute);
 app.use('/api/usuario', express.static(CONFIG_DIRETORIO_SRC));
+app.use('/api/ocorrencia', ocorrenciaRoute);
+app.use('/api/ocorrencia', express.static(CONFIG_DIRETORIO_SRC));
 
 
 /**
  * Determina que a rota raiz do projeto é a pagina ocorrencias.html
  */
 app.get('/', autenticacaoMiddleware, (req, res) => {
-    res.sendFile('ocorrencias.html', { root: path.join(__dirname, 'projeto', 'src') });
+    res.redirect('/api/ocorrencia/listar');
 });
 
 /**

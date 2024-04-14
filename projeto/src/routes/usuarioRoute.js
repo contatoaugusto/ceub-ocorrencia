@@ -23,16 +23,28 @@ router.post('/login', conectarBanco, async (req, res) => {
     const { nuRA, coSenha } = req.body;
 
     try {
-        const consultaUsuario = await query(`SELECT * FROM OCOTB.Usuario WHERE nuRA = '${nuRA}' AND coSenha = '${coSenha}'`);
-        console.log('Resultado da consulta:', consultaUsuario);
+        let retornoBancoDados = await query(`
+            SELECT 
+                U.coAcesso,
+                U.deAcesso,
+                P.idPessoa
+            FROM 
+                OCOTB.Usuario U
+                INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa 
+            WHERE 
+                coAcesso = '${nuRA}' AND coSenha = '${coSenha}'`);
 
-        if (consultaUsuario.length > 0){
-            const primeiraLinha = consultaUsuario[0];
+        console.log('Resultado da consulta:', retornoBancoDados);
+
+        if (retornoBancoDados.length > 0){
+           
+            const primeiraLinha = retornoBancoDados[0];
+           
             req.session.usuario = {
-                nuRA: primeiraLinha.nuRA,
+                coAcesso: primeiraLinha.coAcesso,
                 deAcesso: primeiraLinha.deAcesso,
-                // Adicione outras informações relevantes do usuário aqui
-            };
+                idPessoa: primeiraLinha.idPessoa
+           };
 
             const urlOriginal = req.session.originalUrl || '/';
         
