@@ -33,7 +33,7 @@ router.get('/listar', autenticacaoMiddleware, async (req, res) => {
         console.log('Resultado da consulta:', retornoBancoDados);
 
 
-        res.render('pages/ocorrencias', { title: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
+        res.render('pages/ocorrencias', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);

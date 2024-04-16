@@ -1,6 +1,13 @@
 const express = require('express');
 
 
+/**
+ * 
+ * @author Antonio Augusto  
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {Function} next
+ */
 function autenticacaoMiddleware(req, res, next) {
     
     if (req.session && req.session.usuario) {
@@ -14,7 +21,7 @@ function autenticacaoMiddleware(req, res, next) {
             req.session.originalUrl = req.originalUrl;
         }
         
-        res.redirect('/api/usuario/loginInit');
+        res.redirect('/api/login/loginInit');
         //res.sendFile('../login.html', { root: path.join(__dirname, 'projeto', 'src') });
     }
 }

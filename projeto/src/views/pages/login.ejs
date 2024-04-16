@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html llang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEUB</title>
-    <link rel="stylesheet" href="css/output.css">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="../../css/output.css">
 </head>
+
 <body class="bg-slate-200">
     
     <main class="w-full min-h-screen flex flex-col md:flex-row items-center justify-center mx-auto shadow-lg">
 
+                
         <section class="w-full flex-1 flex flex-col justify-center items-center p-4">
             <div class="w-full max-w-xl flex justify-center items-center flex-col gap-4">
-                <img src="img/logo-ceub-versao-condensada.webp"
-                 alt="Logo do usuário"
-                 class="w-36 hover:scale-110 scale-150 duration-500 rounded-md">
-                 
+                <img src="../../img/logo-ceub-versao-condensada.webp"
+                alt="Logo do usuário"
+                class="w-36 hover:scale-110 scale-150 duration-500 rounded-md">
+                
                 <h1 class="text-4xl font-bold mb-7">Conecte-se</h1>
 
                 <form id="loginForm" action="login" method="POST">
@@ -46,7 +48,6 @@
             <strong>Este sistema é destinado as ocorrências do CEUB</strong></h1>    
         </section>
 
-    </main>
+    </main>  
 
-</body>
-</html>
+<%- include ('../layouts/footer') %>
