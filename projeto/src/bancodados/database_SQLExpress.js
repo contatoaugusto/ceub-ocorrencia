@@ -10,7 +10,6 @@ const config = {
     
     // Máquina do Augusto
     server: 'DESKTOP-DUAAAQ5\\SQLEXPRESS',
-    //server: 'ANGDSISAD078265\\SQLEXPRESS',
     //server: '172.17.3.116\\SQLEXPRESS',
     
     database: 'OCODB',
@@ -23,6 +22,9 @@ const config = {
 
 let pool = null;
 
+/**
+ * Abre a configuração com o banco de dados
+ */
 async function conectarBancoDeDados() {
     try {
         pool = await sql.connect(config);

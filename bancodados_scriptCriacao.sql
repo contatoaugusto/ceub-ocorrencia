@@ -26,9 +26,9 @@
 	(
 	 [idPessoa] int NOT NULL ,
 	 [nmPessoa] varchar(100) NOT NULL ,
-	 [nuCPF]    char(11) NOT NULL ,
-
-
+	 [nuCPF]    char(11) NOT NULL,
+	 [urlFOto]  varchar(100) NULL,
+	 
 	 CONSTRAINT [PK_Pessoa] PRIMARY KEY CLUSTERED ([idPessoa] ASC),
 	 CONSTRAINT [UK_Pessoa_CPF] UNIQUE NONCLUSTERED ([nuCPF] ASC)
 	);
@@ -292,19 +292,20 @@
 	INSERT INTO  OCOTB.Pessoa (
 		idPessoa,
 		nmPessoa,
-		nuCPF)
+		nuCPF,
+		urlFoto)
 	VALUES
-		(1, 'Isabelle',			'57336998097'),
-		(2, 'Sergio Cozzetti',	'67256131011'),
-		(3, 'Antonio Augusto',	'00235385034'),
-		(4, 'Pessoa Aluno de Teste',	'68917126022'),
-		(5, 'Outra Pessoa Aluno de Teste',	'59482146050'),
-		(6, 'Débora Esther Helena Nunes',	'94180971763'),
-		(7, 'Bryan Anderson Francisco Carvalho', '61469479389'),
-		(8, 'Pessoa Coordenador Análise', '06675655310'),
-		(9, 'Pessoa Coordenador Direito', '06675655311'),
-		(10, 'Pessoa Coordenador Administração', '06675655312'),
-		(11, 'Pessoa Coordenador Medicina', '06675655313')
+		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4'),
+		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti'),
+		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4'),
+		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg')
 	GO
 
 
@@ -350,11 +351,11 @@
 		deAcesso,
 		idPessoa) 
 	values 
-		(1, '20318227', '123', 'usuario 20318227', 1),
-		(2, '123456', '123', 'usuario 123456', 2),
-		(3, 'teste', 'teste', 'usuario teste', 7),
-		(4, '86540', '123', 'Usuario Funcionario Teste', 3),
-		(5, '86541', '123', 'Usuario Coordenador Curso', 3)
+		(1, '22206600', '123', 'usuario Isabelle', 1),
+		(2, '84354', '123', 'usuario Sergio Cozezetti', 2),
+		(3, '123', '123', 'usuario Antonio Augusto', 7),
+		(4, '1234', '123', 'Usuario Funcionario Teste', 3),
+		(5, '20318227', '123', 'Usuario Coordenador Curso', 4)
 	GO
 
 	INSERT INTO OCOTB.Perfil (

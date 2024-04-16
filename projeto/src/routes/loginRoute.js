@@ -28,7 +28,8 @@ router.post('/login', conectarBanco, async (req, res) => {
                 U.coAcesso,
                 U.deAcesso,
                 P.idPessoa,
-                P.nmPessoa
+                P.nmPessoa,
+                P.urlFoto
             FROM 
                 OCOTB.Usuario U
                 INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa 
@@ -45,7 +46,8 @@ router.post('/login', conectarBanco, async (req, res) => {
                 coAcesso: primeiraLinha.coAcesso,
                 deAcesso: primeiraLinha.deAcesso,
                 idPessoa: primeiraLinha.idPessoa,
-                nmPessoa: primeiraLinha.nmPessoa
+                nmPessoa: primeiraLinha.nmPessoa,
+                urlFoto: primeiraLinha.urlFoto
            };
 
             const urlOriginal = req.session.originalUrl || '/';
@@ -65,5 +67,9 @@ router.post('/login', conectarBanco, async (req, res) => {
 });
 
 
+router.get('/logout', conectarBanco, async (req, res) => {
+    delete req.session.usuario;
+    return res.redirect('/api/login/loginInit');
+});
 
 module.exports = router;
