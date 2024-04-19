@@ -1,7 +1,6 @@
 
 <%- include ('../layouts/header') %>
 
-
     <div class="row">
         
         <!-- Minhas Ocorrências -->
@@ -33,6 +32,8 @@
                         </tbody>
                     </table>
 
+                    <button type="button" id="btnOcorrenciaIncluirInit" class="btn btn-primary btn-lg">incluir</button>
+                    
                 </div>
             </div>
         </div>
@@ -77,7 +78,16 @@
             </div>
         </div>
     </div>
-    
+   
+    <script src="../../javascript/ocorrencia.js"></script>
+    <!-- <script>
+        $(document).ready(function() {
+            alert("Merda da porra");
+            $('#btnOcorrenciaIncluirInit').on('click', function() {
+                window.location.href = '/api/ocorrencia/incluirInit';
+            });
+        });
 
+    </script> -->
 
 <%- include ('../layouts/footer') %>

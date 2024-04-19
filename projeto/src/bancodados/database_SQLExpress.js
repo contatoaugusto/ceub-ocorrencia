@@ -6,7 +6,7 @@ const config = {
     password: 'isabelle',
     
     // Máquina da Isabelle
-    //server: 'ISABELLE/SQLEXPRESS',
+    //server: 'ISABELLE\\SQLEXPRESS',
     
     // Máquina do Augusto
     server: 'DESKTOP-DUAAAQ5\\SQLEXPRESS',
