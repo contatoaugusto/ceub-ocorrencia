@@ -29,10 +29,14 @@ router.post('/login', conectarBanco, async (req, res) => {
                 U.deAcesso,
                 P.idPessoa,
                 P.nmPessoa,
-                P.urlFoto
+                P.urlFoto,
+                A.idAluno,
+                A.idCurso,
+                A.nuRA
             FROM 
                 OCOTB.Usuario U
                 INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa 
+                LEFT JOIN OCOTB.Aluno A ON A.idPessoa = P.idPessoa 
             WHERE 
                 coAcesso = '${nuRA}' AND coSenha = '${coSenha}'`);
 
@@ -47,7 +51,10 @@ router.post('/login', conectarBanco, async (req, res) => {
                 deAcesso: primeiraLinha.deAcesso,
                 idPessoa: primeiraLinha.idPessoa,
                 nmPessoa: primeiraLinha.nmPessoa,
-                urlFoto: primeiraLinha.urlFoto
+                urlFoto: primeiraLinha.urlFoto,
+                idAluno: primeiraLinha.idAluno,
+                idCurso: primeiraLinha.idCurso,
+                nuRA: primeiraLinha.nuRA
            };
 
             const urlOriginal = req.session.originalUrl || '/';

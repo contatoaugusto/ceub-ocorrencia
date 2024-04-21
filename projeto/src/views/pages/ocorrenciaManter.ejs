@@ -1,0 +1,92 @@
+<%- include ('../layouts/header') %>
+
+    <div class="row">
+        
+        <input type="hidden" id="hdnidCurso_alunologado" value="<%- session.usuario.idCurso %>"/>
+
+        <!-- Minhas Ocorrências -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title"><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form>
+                        <!-- Curso -->
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="selectCurso" class="form-label">Curso</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select id="selectCurso" class="form-select form-select-lg" aria-label="Curso"></select>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="selectOcorrenciaTipo" class="form-label">Tipo de Ocorrência</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select id="selectOcorrenciaTipo" class="form-select form-select-lg" aria-label="Tipo Ocorrência"></select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="selectOcorrenciaSubTipo" class="form-label">Sub Tipo Ocorrência</label>
+                            </div>
+                            <div class="col-md-10 warning">
+                                <select id="selectOcorrenciaSubTipo" class="form-select form-select-lg" aria-label="Sub Tipo Ocorrência">
+                                    <option value="0">Selecione o Tipo de Ocorrência</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Reponsável -->
+                        <div class="mb-3 row">
+                            <div class="col-md-12">
+                                <!-- <fieldset class="form-group border p-2"> -->
+                                <fieldset>
+                                        <!-- <legend class="col-form-label col-sm-12 pt-0">Responsável(eis) pela Ocorrência</legend> -->
+                                        <legend><h5>Responsável(eis) pela Ocorrência</h5></legend>
+                                        <div class="col-sm-12">
+                                            <ul class="list-group list-group-flush" id="ulResponsavelOcorrencia"><li>
+                                                <i class="fa-solid fa-user-group"></i> Atonio Augusto</li></ul>
+                                        </div>
+                                    
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="selectResponsavel" class="form-label">Responsável</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select id="selectResponsavel" class="form-select form-select-lg" aria-label="Responsável"></select>
+                            </div>
+                        </div>    
+
+                         
+                        <div class="mb-3">
+                          <label for="exampleInputPassword1" class="form-label">Password</label>
+                          <input type="password" class="form-control" id="exampleInputPassword1">
+                        </div>
+                        <div class="mb-3 form-check">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <script src="/javascript/ocorrenciaManter_javaScript.js"></script>
+
+<%- include ('../layouts/footer') %>

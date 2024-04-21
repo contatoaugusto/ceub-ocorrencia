@@ -1,0 +1,61 @@
+
+    /**
+     * Monta dinamicamente os options dos elementos select
+     * @param {*} rotaAPI 
+     * @param {*} idSelectElement 
+     */
+    function selectElementCriarOpionDinamicamente (rotaAPI, idSelectElement, isInserirOpcaoNaoAplica = false, valorElementoSelecionado) {
+        
+        conexaoAjaxFetch (rotaAPI)
+        .then(data => {
+ 
+            // Limpar o elemento
+            let elementoSelect = document.getElementById(idSelectElement);
+            elementoSelect.innerHTML = '';
+            
+            let option = document.createElement('option');
+            option.value = "0";
+            option.textContent = "Selecione";
+            elementoSelect.appendChild(option);
+            
+            if (isInserirOpcaoNaoAplica){
+                let option = document.createElement('option');
+                option.value = "-1";
+                option.textContent = "Não se Aplica";
+                elementoSelect.appendChild(option); 
+            }
+
+            data.forEach(item => {
+                let option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.texto;
+
+                if (valorElementoSelecionado != null && valorElementoSelecionado != undefined && item.id == valorElementoSelecionado || data.length == 1) {
+                    option.selected = true;
+                }
+
+                elementoSelect.appendChild(option);
+            });
+           
+            elementoSelect.parentNode.classList.remove("invisible");
+            
+        }).catch(error => {
+            console.error('Ocorreu um erro em selectElementCriarOpionDinamicamente :', error);
+        });
+    }
+
+    /**
+     * Função que faz todas as conexões ajax
+     * Retorna um objeto promisse contendo o JSON
+     * @param rotaAPI 
+     */
+    async function conexaoAjaxFetch (rotaAPI) {
+        try {
+            const response = await fetch(rotaAPI);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Erro na conexão ajax via fetch:', error);
+            throw error; // Você pode optar por lançar o erro novamente ou retornar null, por exemplo, dependendo do que deseja fazer
+        }
+    }

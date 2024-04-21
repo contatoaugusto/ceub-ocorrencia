@@ -5,68 +5,45 @@ const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLEx
 const { query } = require('../bancodados/database_SQLExpress');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
-const app = express();
 
-
-router.get('/listar', autenticacaoMiddleware, async (req, res) => {
+router.get('/listar/:idOcorrenciaTipo', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.idOcorrenciaTipo;
     
-    let usuarioLogado = req.session.usuario;
-
     try {
-        let retornoBancoDados = await query(`
-            SELECT 
-                 OCO.idOcorrencia
-                ,OCO.deOcorrencia
-                ,OCO.dtOcorrencia
-                ,OCO.idLocal	
-                ,OCO.idPessoa
-                ,OCO.idOcorrenciaSubTipo
-                ,OCO.idCurso
-                ,OS.deOcorrenciaSituacao
-            FROM 
-                OCOTB.Ocorrencia OCO
-                INNER JOIN OCOTB.Pessoa P ON OCO.idPessoa = OCO.idPessoa
-                INNER JOIN OCOTB.OcorrenciaHistoricoSituacao CHS ON CHS.idOcorrencia = OCO.idOcorrencia AND CHS.icAtivo = 1
-                INNER JOIN OCOTB.OcorrenciaSituacao OS ON OS.idOcorrenciaSituacao = CHS.idOcorrenciaSituacao
-            WHERE 
-                P.idPessoa = ${usuarioLogado.idPessoa}`);
-
-        console.log('Resultado da consulta listar:', retornoBancoDados);
-
-
-        res.render('pages/ocorrenciaListar', {session: req.session, tituloCabecalho: 'Ocorrências', subCabecalho: 'Listar',ocorrenciasMinhas: retornoBancoDados});
-
-    } catch (error) {
-        console.error('Erro ao listar ocorrências:', error);
-        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
-    } 
-});
-
-/**
- * Prepara a tela inicial de manter ocorrência
- * Tanto inclusão de uma nova quanto manter uma existente
- */
-router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
-    
-    const ocorrenciaId = req.params.id;
-
-    try {
+        let retornoBancoList 
         
-        console.log('Chamou incluirInit/:id');
+        if (idParameter == 0 ) {
+            retornoBancoList = await query(`
+            SELECT 
+                OST.idOcorrenciaSubTipo AS id,
+                OST.idOcorrenciaTipo,
+                OST.deOcorrenciaSubTipo AS texto
+            FROM 
+                OCOTB.OcorrenciaSubTipo OST`);
+        } else {
+            retornoBancoList = await query(`
+            SELECT 
+                OST.idOcorrenciaSubTipo as id,
+                OST.idOcorrenciaTipo,
+                OST.deOcorrenciaSubTipo AS texto
+            FROM 
+                OCOTB.OcorrenciaSubTipo OST
+            WHERE 
+                OST.idOcorrenciaTipo = ${idParameter}`)
+        }
 
-        res.render(
-            'pages/ocorrenciaManter', 
-            { 
-                session: req.session, 
-                tituloCabecalho: 'Manter Ocorrência', 
-                subCabecalho: 'Incluir'
-            });
+        console.log('Resultado da consulta listar:', retornoBancoList);
+
+
+        res.json(retornoBancoList);
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);
         res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
     } 
 });
+
 
 
 /**

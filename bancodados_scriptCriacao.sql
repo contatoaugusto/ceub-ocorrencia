@@ -127,9 +127,9 @@
 	-- ************************************** [OCOTB].[TipoOcorrencia]
 	CREATE TABLE [OCOTB].[OcorrenciaTipo]
 	(
-	 [idOcorrenciaTipo] tinyint IDENTITY (1, 1) NOT NULL ,
-	 [deOcorrenciaTipo] varchar(50) NOT NULL ,
-
+	 [idOcorrenciaTipo]					tinyint IDENTITY (1, 1) NOT NULL ,
+	 [deOcorrenciaTipo]					varchar(50) NOT NULL ,
+	 [icResponsavelCoordenadorCurso]	bit		NOT NULL DEFAULT (0),	-- Incorma que nesse caso o responsável dessa ocrrência é o coordenador do curso. ENtão é obrigatório informar o idCurso na ocorrência
 
 	 CONSTRAINT [PK_OcorrenciaTipo] PRIMARY KEY CLUSTERED ([idOcorrenciaTipo] ASC)
 	);
@@ -163,8 +163,7 @@
 		[idOcorrenciaTipo]				tinyint NOT NULL ,
 		[idPessoa]						int		NULL ,
 		[idPerfil]						int		NULL ,  -- Nesse caso deve integrar com o SGI e ler a tabela SISTB.PerfilUsuario para descobrir todos os usuários que tem acesso a esse perfil,
-		[icEnviaCoordenadorCurso]		bit		NULL,	-- Incorma que nesse caso o responsável dessa
-
+		
 		 CONSTRAINT [PK_OcorrenciaTipoResponsavel] PRIMARY KEY CLUSTERED ([idOcorrenciaTipoResponsavel] ASC),
 		 CONSTRAINT [UK_OcorrenciaTipoResponsavel_Pessoa_OcorrenciaTipo] UNIQUE NONCLUSTERED ([idPessoa] ASC, [idOcorrenciaTipo] ASC),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES [OCOTB].[Pessoa]([idPessoa]),
@@ -305,7 +304,8 @@
 		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
 		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
 		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg')
+		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
+		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg')
 	GO
 
 
@@ -328,10 +328,10 @@
 		idCurso)
 	VALUES
 		(1, '123456789', 1, 1),
-		(2, '20318227', 3, 4),
+		(2, '20318227', 4, 1),
 		(3, '22222222', 3, 2)
 	GO
-
+select * from OCOTB.Aluno
 
 	INSERT INTO OCOTB.Funcionario(
 		idFuncionario,
@@ -367,7 +367,8 @@
 		(2, 'Ocorrência Desenvolvimento', 'Responsável por sistemas e melhorias'),
 		(3, 'Ocorrência Suporte de TI', 'Suporte em geral'),
 		(4, 'Ocorrência Engenharia', 'Resolve problemas de manutenção de espaços físicos'),
-		(5, 'Ocorrência Cordenador', 'Grupo de cordenadores')
+		(5, 'Ocorrência Cordenador', 'Grupo de cordenadores'),
+		(6, 'Perfil Cuida Praça Alimentação', 'Grupo Alimentação')
 
 	INSERT INTO OCOTB.PerfilUsuario (
 		idPerfilUsuario,
@@ -381,13 +382,13 @@
 	
 
 	INSERT INTO [OCOTB].[OcorrenciaTipo]
-		([deOcorrenciaTipo])
+		([deOcorrenciaTipo], icResponsavelCoordenadorCurso)
 	VALUES
-		 ('Professor')
-		,('Sala de Aula')
-		,('Recursos Informática')
-		,('Campus')
-		,('Praça de Alimentação')
+		 ('Professor', 1)
+		,('Sala de Aula', 0)
+		,('Recursos Informática', 0)
+		,('Campus', 0)
+		,('Praça de Alimentação', 0)
 	GO
 
 	
@@ -403,7 +404,15 @@
 		,(2, 'Infra estrutura da Sala')
 	GO
 
-	
+	INSERT INTO OCOTB.OcorrenciaTipoResponsavel
+		(idOcorrenciaTipo,
+		 idPessoa,
+		 idPerfil)
+	VALUES
+		 (2, null, 4)
+		,(2, 12, null)
+		,(5, null, 6)
+
 	INSERT INTO OCOTB.OcorrenciaSituacao (deOcorrenciaSituacao)
 	VALUES
 		('Criada'),
@@ -440,3 +449,13 @@
 	where registry_key like '%IPALL'
 	and value_name like 'TCP%PORT%'
 	and nullif(value_data, '') is not null
+
+--	select * from  [OCOTB].[OcorrenciaTipo]
+--	select * from  OCOTB.OcorrenciaSubTipo
+-- select * from OCOTB.Ocorrencia
+
+
+			SELECT
+                *
+            FROM
+                OCOTB.Curso
