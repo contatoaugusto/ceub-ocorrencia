@@ -120,8 +120,6 @@ select * from  OCOTB.Ocorrencia
 			SET @_nuPosicao  = CHARINDEX(@_SEPARADOR_RESPONSAVEIS, @idPessoaResponsavelArray)  
 			SET @_idPessoaResponsavel = SUBSTRING(@idPessoaResponsavelArray, 1, @_nuPosicao -1)
 
-select @_nuPosicao as _nuPosicao, @_idPessoaResponsavel as _idPessoaResponsavel, @idPessoaResponsavelArray as idOcorrenciaTipoResponsavelArray
-
 			IF (ISNULL(@_idPessoaResponsavel, 0) > 0)
 			BEGIN
 				INSERT INTO OCOTB.OcorrenciaHistoricoResponsavel (

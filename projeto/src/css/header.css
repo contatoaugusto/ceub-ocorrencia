@@ -6,7 +6,7 @@ body {
 #sidebar {
     width: 250px;
     padding: 10px;
-    background-color: #ab1c80;
+    background-color: #43054e;
 }
 #sidebar a {
     color: white;
@@ -51,4 +51,34 @@ legend {
 
 .campo-invalido {
     border-color: red;
+}
+
+.card-ocorrencia{
+    border-color: #ab1c80 !important;
+}
+.card-header-ocorrencia{
+    color:white;
+    background-color: #ab1c80 !important;
+}
+
+.text-color-estilo{
+    color:white !important
+}
+
+.bg-fuchsia-700 {
+    --tw-bg-opacity: 1;
+    background-color: #43054e;
+}
+
+.bg-fuchsia-600 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(192 38 211 / var(--tw-bg-opacity));
+}
+.hover\:bg-fuchsia-600:hover  {
+    --tw-bg-opacity: 1;
+    background-color: rgb(192 38 211 / var(--tw-bg-opacity));
+}
+.hover\:bg-fuchsia-700:hover {
+    --tw-bg-opacity: 1;
+    background-color: #43054e;
 }

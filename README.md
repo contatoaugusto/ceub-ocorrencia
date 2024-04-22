@@ -1,37 +1,29 @@
 Projeto de registro de ocorrência
 
-Por ser tratar de um projeto node, o arquivo de entrada, o main, é o aquivo index.js que está na raiz do projeto.
+Por ser tratar de um projeto node, o arquivo de entrada, o main/server, é o aquivo index.js que está na raiz do projeto.
 
 Quase todas as configurações iniciais e que de fato ira caracterizar o servidor web é feito ai
 
-Lembrando que usado o EJS como engine de manipulação de scriplets a serem embutidos nas páginas html e assim trasfegar dados do cliente pro servior e vice-versa.
+Lembrando que é utilizado o EJS () como engine de manipulação de scriplets a serem embutidos nas páginas html e assim trafegar dados do cliente pro servior e de volta do cliente para o servidor.
 
-Quanto ao banco de dados é preciso configurar a string de conexão no arquivo
+Quanto ao banco de dados é preciso configurar a string de conexão no configuracoes.js
 
-projeto/src/bancodados/database_SQLExpress.js
+<b>projeto/src/configuracoes.js</b>
 
-No trecho:
+Mais precisamente no trecho:
 
-const config = {
-    user: 'isabelle',
-    password: 'isabelle',
-    
-    // Máquina da Isabelle
-    //server: 'ISABELLE\\SQLEXPRESS',
-    
-    // Máquina do Augusto
-    server: 'DESKTOP-DUAAAQ5\\SQLEXPRESS',
-    
-    // Maquina trabalho
-    //server: '172.17.3.116\\SQLEXPRESS',
-    
-    database: 'OCODB',
-    options: {
-        encrypt: false,
-        enableArithAbort: true,
-        trustedConnection: true
-    }
-};
+<code>
+// Máquina da Isabelle
+//const config_banco_servidor = 'ISABELLE\\SQLEXPRESS'
+// Máquina do Augusto
+// const config_banco_servidor = 'DESKTOP-DUAAAQ5\\SQLEXPRESS'
+// Maquina trabalho
+const config_banco_servidor = '172.17.3.116\\SQLEXPRESS';
+
+const config_banco_usuario = 'isabelle';
+const config_banco_senha = 'isabelle';
+const config_banco_nomebanco = 'OCODB';
+</code>
 
 Feito isso, execute os script contidos nos arquivos 
 

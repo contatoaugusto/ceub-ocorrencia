@@ -657,7 +657,7 @@ video {
 
 .bg-fuchsia-700 {
   --tw-bg-opacity: 1;
-  background-color: rgb(162 28 175 / var(--tw-bg-opacity));
+  background-color: #43054e;
 }
 
 .bg-fuchsia-600 {
@@ -677,7 +677,7 @@ video {
 
 .bg-fuchsia-900 {
   --tw-bg-opacity: 1;
-  background-color: rgb(112 26 117 / var(--tw-bg-opacity));
+  background-color: #43054e;
 }
 
 .p-2 {

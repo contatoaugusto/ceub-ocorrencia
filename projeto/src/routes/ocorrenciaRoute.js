@@ -16,7 +16,7 @@ router.get('/listar', autenticacaoMiddleware, async (req, res) => {
  
         console.log('Resultado da consulta listar:', retornoBancoDados);
 
-        res.render('pages/ocorrenciaListar', {session: req.session, tituloCabecalho: 'Ocorrências', subCabecalho: 'Listar',ocorrenciasMinhas: retornoBancoDados});
+        res.render('pages/ocorrenciaListar', {session: req.session, tituloCabecalho: 'Lista Ocorrências', subCabecalho: 'Listar',ocorrenciasMinhas: retornoBancoDados});
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);

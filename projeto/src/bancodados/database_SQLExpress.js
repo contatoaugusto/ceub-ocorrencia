@@ -1,18 +1,13 @@
 
 const sql = require('mssql');
+const { config_banco_servidor, config_banco_usuario, config_banco_senha, config_banco_nomebanco } = require('../configuracoes');
 
 const config = {
-    user: 'isabelle',
-    password: 'isabelle',
-    
-    // Máquina da Isabelle
-    //server: 'ISABELLE\\SQLEXPRESS',
-    
-    // Máquina do Augusto
-    server: 'DESKTOP-DUAAAQ5\\SQLEXPRESS',
-    //server: '172.17.3.116\\SQLEXPRESS',
-    
-    database: 'OCODB',
+
+    server: config_banco_servidor,
+    user: config_banco_usuario,
+    password: config_banco_senha,
+    database: config_banco_nomebanco,
     options: {
         encrypt: false,
         enableArithAbort: true,
