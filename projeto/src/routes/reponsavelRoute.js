@@ -72,32 +72,47 @@ router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);
-        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        res.status(500).json({ message: 'Erro interno do servidor (responsavelRoute)' });
     } 
 });
 
-router.get('/listarCoordenadoByCurso/:id', autenticacaoMiddleware, async (req, res) => {
+router.get('/listarByOcorrenciaTipo/:idOcorrenciaTipo', autenticacaoMiddleware, async (req, res) => {
    
-    const idParameter = req.params.id;
+    const idParameter = req.params.idOcorrenciaTipo;
     
     try {
         let retornoBancoList 
         
         if (idParameter > 0 ) {
             retornoBancoList = await query(`
-            SELECT 
-                P.idPessoa AS id,
-                P.nmPessoa AS texto,
-                P.nuCPF,
-                P.urlFOto
-            FROM 
-                 OCOTB.Pessoa P
-                 INNER JOIN OCOTB.Curso C ON C.idCoordenador = P.idPessoa
-            WHERE 
-                C.idCurso = ${idParameter}`)
+            SELECT
+                    OTR.idOcorrenciaTipoResponsavel,
+                    OTR.idOcorrenciaTipo,
+                    OTR.idPessoa	AS id,
+                    P.nmPessoa		AS texto,
+                    'pessoa'		AS entidade
+                FROM 
+                    OCOTB.OcorrenciaTipoResponsavel OTR
+                    INNER JOIN OCOTB.Pessoa P ON P.idPessoa = OTR.idPessoa
+                WHERE 
+                    OTR.idOcorrenciaTipo = ${idParameter}
+                
+                UNION ALL
+                
+                SELECT
+                    OTR.idOcorrenciaTipoResponsavel,
+                    OTR.idOcorrenciaTipo,
+                    OTR.idPerfil	AS id,
+                    PE.nmPerfil		AS texto,
+                    'perfil'		AS entidade
+                FROM 
+                    OCOTB.OcorrenciaTipoResponsavel OTR
+                    INNER JOIN OCOTB.Perfil PE ON PE.idPerfil = OTR.idPerfil
+                WHERE 
+                    OTR.idOcorrenciaTipo = ${idParameter}`)
         }
 
-        console.log('Resultado da consulta listar:', retornoBancoList);
+        console.log('Resultado da consulta listarByOcorrenciaTipo:', retornoBancoList);
 
 
         res.json(retornoBancoList);

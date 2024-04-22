@@ -1,7 +1,18 @@
 
+            <% 
+                var mensagem = ''; 
+                var cssClass = '';
 
-            <div class="alert alert-warning" role="alert" id="mensagemAlert" style="display: block;"></div>
-
+                if ( typeof session !== 'undefined' && session.mensagemErro != null && typeof session.mensagemErro.mensagem !== 'undefined') { 
+                    mensagem = session.mensagemErro.mensagem;   
+                    cssClass = session.mensagemErro.cssClass;   
+                    delete session.mensagemErro;
+                } 
+            %> 
+            <div class="d-flex alert col-md-12 <%- cssClass %>" id="mensagemAlert" style="display: none !important;" role="alert">
+                <%= mensagem %>
+            </div>
+            
             <footer class="bg-light p-3 mt-4 text-center">
                 <p>&copy; CEUB - Sistema de Gerenciamento de Ocorrências</p>
             </footer>

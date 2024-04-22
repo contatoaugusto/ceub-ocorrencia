@@ -51,19 +51,12 @@ app.use(session({
  * Muito importante que a cada definição de rota, seja configurado também o diretório de arquivos státicos pra ela. Isso para que carrege css, imagens, etc
  */ 
 app.use('/api/login', loginRoute);
-app.use('/api/login', express.static(CONFIG_DIRETORIO_SRC));
 app.use('/api/ocorrencia', ocorrenciaRoute);
-app.use('/api/ocorrencia', express.static(CONFIG_DIRETORIO_SRC));
-app.use('/api/ocorrenciaTipoRoute', ocorrenciaTipoRoute);
-app.use('/api/ocorrenciaTipoRoute', express.static(CONFIG_DIRETORIO_SRC));
-app.use('/api/ocorrenciaSubTipoRoute', ocorrenciaSubTipoRoute);
-app.use('/api/ocorrenciaSubTipoRoute', express.static(CONFIG_DIRETORIO_SRC));
-app.use('/api/cursoRoute', cursoRoute);
-app.use('/api/cursoRoute', express.static(CONFIG_DIRETORIO_SRC));
-app.use('/api/pessoaRoute', pessoaRoute);
-app.use('/api/pessoaRoute', express.static(CONFIG_DIRETORIO_SRC));
-app.use('/api/responsavelRoute', reponsavelRoute);
-app.use('/api/responsavelRoute', express.static(CONFIG_DIRETORIO_SRC));
+app.use('/api/ocorrenciaTipo', ocorrenciaTipoRoute);
+app.use('/api/ocorrenciaSubTipo', ocorrenciaSubTipoRoute);
+app.use('/api/curso', cursoRoute);
+app.use('/api/pessoa', pessoaRoute);
+app.use('/api/responsavel', reponsavelRoute);
 
 /**
  * Determina que a rota raiz do projeto é a pagina ocorrencias.html

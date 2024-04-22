@@ -102,7 +102,7 @@
 
 	CREATE TABLE [OCOTB].[Perfil](
 		[idPerfil] int NOT NULL,
-		[nmPerfil] VARCHAR (30)  NOT NULL,
+		[nmPerfil] VARCHAR (100)  NOT NULL,
 		[dePerfil] VARCHAR (300) NULL,
 
 		CONSTRAINT [PK_Perfil] PRIMARY KEY CLUSTERED ([idPerfil] ASC),
@@ -209,7 +209,7 @@
 	 [idOcorrencia]			int IDENTITY (1, 1) NOT NULL ,
 	 [deOcorrencia]			text NOT NULL ,
 	 [dtOcorrencia]			datetime NOT NULL DEFAULT (GETDATE()),
-	 [idLocal]				int NOT NULL ,
+	 [idLocal]				int NULL ,
 	 [idPessoa]				int NOT NULL ,
 	 [idOcorrenciaSubTipo]	int NOT NULL ,
 	 [idCurso]				int NULL,		-- Obrigatório preencher quando for uma Ocorrenciasubtipo cuja OcorrenciaTipoResponsavel tiver o icEnviaCoordenadorCurso = 1. Pois indica que é pra enviar para o coordenador desse curso
@@ -219,12 +219,6 @@
 	 CONSTRAINT [FK_Ocorrencia_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES [OCOTB].[Pessoa]([idPessoa]),
 	 CONSTRAINT [FK_Ocorrencia_OcorrenciaSubTipo] FOREIGN KEY ([idOcorrenciaSubTipo])  REFERENCES [OCOTB].[OcorrenciaSubTipo]([idOcorrenciaSubTipo])
 	);
-	GO
-
-	CREATE NONCLUSTERED INDEX [IX_Ocorrencia_Local] ON [OCOTB].[Ocorrencia] ([idLocal] ASC)
-	GO
-
-	CREATE NONCLUSTERED INDEX [IX_Ocorrencia_Pessoa] ON [OCOTB].[Ocorrencia]([idPessoa] ASC)
 	GO
 
 	CREATE NONCLUSTERED INDEX [IX_Ocorrencia_OcorrenciaSubTipo] ON [OCOTB].[Ocorrencia]([idOcorrenciaSubTipo] ASC)
@@ -283,6 +277,20 @@
 	END
 	GO
 
+
+	-- ************************************** [OCOTB].[OcorrenciaHistoricoResponsavel]
+	-- Para armezenar os responsáveis por essa ocorrencias e não perder a rastreabilidade de quem foi que aprovou ou atendeu dterminada ocorrência
+	CREATE TABLE OCOTB.OcorrenciaHistoricoResponsavel
+	(
+	 [idOcorrenciaHistoricoResponsavel]	int IDENTITY (1, 1) NOT NULL ,
+	 [idOcorrenciaHistoricoSituacao]	int NOT NULL ,
+	 [idPessoa]		int NOT NULL, -- Esse é o presponsável por essa demanda, por essa ocorrências
+
+	 CONSTRAINT [PK_OcorrenciaHistoricoResponsavel] PRIMARY KEY CLUSTERED (idOcorrenciaHistoricoResponsavel ASC),
+	 CONSTRAINT [FK_OcorrenciaHistoricoResponsavel_OcorrenciaHistoricoSituacao] FOREIGN KEY ([idOcorrenciaHistoricoSituacao])  REFERENCES OCOTB.OcorrenciaHistoricoSituacao(idOcorrenciaHistoricoSituacao),
+	 CONSTRAINT [FK_OcorrenciaHistoricoResponsavel_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES OCOTB.Pessoa(idPessoa)
+	);
+	GO
 
 
 	/*********************************** Cargas table SGI ***********************************/
@@ -363,11 +371,11 @@ select * from OCOTB.Aluno
 		nmPerfil,
 		dePerfil)
 	VALUES 
-		(1, 'Ocorrência Administrador', 'Acesso a tudo'),
-		(2, 'Ocorrência Desenvolvimento', 'Responsável por sistemas e melhorias'),
-		(3, 'Ocorrência Suporte de TI', 'Suporte em geral'),
-		(4, 'Ocorrência Engenharia', 'Resolve problemas de manutenção de espaços físicos'),
-		(5, 'Ocorrência Cordenador', 'Grupo de cordenadores'),
+		(1, 'Perfil Ocorrência Administrador', 'Acesso a tudo'),
+		(2, 'Perfil Ocorrência Desenvolvimento', 'Responsável por sistemas e melhorias'),
+		(3, 'Perfil Ocorrência Suporte de TI', 'Suporte em geral'),
+		(4, 'Perfil Ocorrência Engenharia', 'Resolve problemas de manutenção de espaços físicos'),
+		(5, 'Perfil Ocorrência Cordenador', 'Grupo de cordenadores'),
 		(6, 'Perfil Cuida Praça Alimentação', 'Grupo Alimentação')
 
 	INSERT INTO OCOTB.PerfilUsuario (
@@ -450,12 +458,10 @@ select * from OCOTB.Aluno
 	and value_name like 'TCP%PORT%'
 	and nullif(value_data, '') is not null
 
---	select * from  [OCOTB].[OcorrenciaTipo]
---	select * from  OCOTB.OcorrenciaSubTipo
--- select * from OCOTB.Ocorrencia
-
-
-			SELECT
-                *
-            FROM
-                OCOTB.Curso
+/*
+	select * from  [OCOTB].[OcorrenciaTipo]
+	select * from  OCOTB.OcorrenciaSubTipo
+	select * from OCOTB.Ocorrencia
+	select * from OCOTB.OcorrenciaHistoricoSituacao
+	select * from OCOTB.OcorrenciaHistoricoResponsavel
+*/

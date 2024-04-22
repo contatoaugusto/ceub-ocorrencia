@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
+//const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
 const { query } = require('../bancodados/database_SQLExpress');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');

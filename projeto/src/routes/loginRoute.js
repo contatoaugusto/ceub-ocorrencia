@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
-const { query } = require('../bancodados/database_SQLExpress');
+const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 
 /** 
@@ -20,26 +20,12 @@ router.get('/loginInit', async (req, res) => {
  * Conecta no banco ou api que permite verificar o usuario e senha para continuar a navegação
  */
 router.post('/login', conectarBanco, async (req, res) => {
-    const { nuRA, coSenha } = req.body;
+    const { coAcesso, coSenha } = req.body;
 
     try {
-        let retornoBancoDados = await query(`
-            SELECT 
-                U.coAcesso,
-                U.deAcesso,
-                P.idPessoa,
-                P.nmPessoa,
-                P.urlFoto,
-                A.idAluno,
-                A.idCurso,
-                A.nuRA
-            FROM 
-                OCOTB.Usuario U
-                INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa 
-                LEFT JOIN OCOTB.Aluno A ON A.idPessoa = P.idPessoa 
-            WHERE 
-                coAcesso = '${nuRA}' AND coSenha = '${coSenha}'`);
 
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getLoginAcessoSenha", {coAcesso: coAcesso, coSenha: coSenha});
+       
         console.log('Resultado da consulta:', retornoBancoDados);
 
         if (retornoBancoDados.length > 0){

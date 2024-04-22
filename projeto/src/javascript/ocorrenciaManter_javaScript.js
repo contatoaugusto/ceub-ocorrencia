@@ -1,104 +1,159 @@
+let dblOcorrenciaTipo = $('#ddlOcorrenciaTipo');
+let ddlCurso = $('#ddlCurso');
+let hdnidCurso_AlunoLogado = $('#hdnidCurso_alunologado');
+let ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');    
+let hdnResponsavelFinanceiroList = $('#hdnResponsavelFinanceiroList');
+let formOcorrenciaManter = $('#formOcorrenciaManter');
+
+/**
+ *  Funcção principal que roda quando todo o documento DOM é carregado
+ */
 $(document).ready(function() {
     
-    // Tipo de Ocorrências
-    let dblOcorrenciaTipo = $('#selectOcorrenciaTipo');
-    selectElementCriarOpionDinamicamente (`/api/ocorrenciaTipoRoute/listar/0`, dblOcorrenciaTipo.attr('id'));
+    $('#btnOcorrenciaCancelar').on('click', function() {
+        window.location.href = '/api/ocorrencia/listar';
+    });
+
+     // Monta dinamicamente Curso
+     selectElementCriarOpionDinamicamente (
+        '/api/curso/listar/0', 
+        ddlCurso.attr('id'), 
+        true, 
+        hdnidCurso_AlunoLogado.val());
     
+    ddlCurso.on('change', function() {
+        if (this.value > 0)
+            montaElementoReponsavelOcorrencia(this.value);
+        else{
+            dblOcorrenciaTipo.val(0);
+            ulResponsavelOcorrencia.empty();
+        }
+    });
+
+    // Monta dinamicamente Tipo de Ocorrências
+    selectElementCriarOpionDinamicamente (`/api/ocorrenciaTipo/listar/0`, dblOcorrenciaTipo.attr('id'));
     dblOcorrenciaTipo.on('change', function() {
 
-        validacoes ('/api/ocorrenciaTipoRoute/listar/'+ this.value);
+        validacoes ('/api/ocorrenciaTipo/listar/'+ this.value);
 
-        selectElementCriarOpionDinamicamente ('/api/ocorrenciaSubTipoRoute/listar/'+ this.value, 'selectOcorrenciaSubTipo');
+        // Monta dinamicamente o dropdownlist de Subtipo Ocorrências
+        selectElementCriarOpionDinamicamente ('/api/ocorrenciaSubTipo/listar/'+ this.value, 'ddlOcorrenciaSubTipo');
+
+        montaElementoReponsavelOcorrencia(ddlCurso.val());
     });
 
-    // Curso
-    let selectCurso = $('#selectCurso');
-    let hdnidCursoalunologado = $('#hdnidCurso_alunologado');
-    
-    selectElementCriarOpionDinamicamente (
-        '/api/cursoRoute/listar/0', 
-        selectCurso.attr('id'), 
-        true, 
-        hdnidCursoalunologado.val());
-    
-    selectCurso.on('change', function() {
-        montaElementoReponsavelOcorrencia(this.value);
+
+    /**
+     * Validações do formulario antes do submit
+     */
+    formOcorrenciaManter.on('submit', function(event) {
+        
+        event.preventDefault();
+        
+        if (validacoes())
+            this.submit();
     });
 
-     // Responsavel
-     selectElementCriarOpionDinamicamente ('/api/pessoaRoute/listar/0', 'selectResponsavel');
 });
 
 
 /**
- * Monta o elemento html para mostrar os responsáveis financeiros do tipo de ocorrências selecinada
+ * Responsável pela Ocorrencia
+ * Monta o elemento html que mostra os responsáveis financeiros para esse tipo ocorrência selecinada ou o coordenador do curso selecionado
  * @param {*} idCurso 
  */
 async function montaElementoReponsavelOcorrencia (idCurso){
     
-    //let retornoAjax = null;
-    let dblOcorrenciaTipo = $('#selectOcorrenciaTipo');
-    let ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');
-
     ulResponsavelOcorrencia.empty();
+    hdnResponsavelFinanceiroList.val('');
 
-    if (idCurso != null && idCurso != undefined){
-        //const retornoAjax = await conexaoAjaxFetch ('/api/pessoaRoute/listarCoordenadoByCurso/'+ idCurso);
-        conexaoAjaxFetch ('/api/pessoaRoute/listarCoordenadoByCurso/'+ idCurso)
+    if (idCurso != null && idCurso != undefined && idCurso > 0){
+       
+        conexaoAjaxFetch ('/api/pessoa/listarCoordenadoByCurso/'+ idCurso)
         .then(data => {
             data.forEach(item => {
                 let li = $('<li>');
                 li.addClass('list-group-item');
-                li.append('<i class="fa-solid fa-people-group fa-lg"></i>  ');
+                li.append('<i class="fa-solid fa-user fa-lg"></i>   ');
                 li.append(item.texto);
                 ulResponsavelOcorrencia.append(li);
+
+                //hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + '#' + item.id + '#');
+                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + item.id);
             });    
+
+            hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + (hdnResponsavelFinanceiroList.val().slice(-1) == '#' ? '' : '#'));
         });
     }
 
-    //if (dblOcorrenciaTipo.length > 0) 
-   // const    retornoAjax = await conexaoAjaxFetch ('/api/responsavelRoute/listar/'+ dblOcorrenciaTipo.val());
+    if (dblOcorrenciaTipo.length > 0 && dblOcorrenciaTipo.val() != null && dblOcorrenciaTipo.val() > 0) {
 
+        conexaoAjaxFetch ('/api/responsavel/listarByOcorrenciaTipo/'+ dblOcorrenciaTipo.val())
+        .then(data => {
+         
+            data.forEach(item => {
+                let li = $('<li>');
+                li.addClass('list-group-item');
+                if (item.entidade != null && item.entidade != undefined && item.entidade === 'pessoa')
+                    li.append('<i class="fa-solid fa-user fa-lg"></i>   ');
+                else if (item.entidade != null && item.entidade != undefined && item.entidade === 'perfil')
+                    li.append('<i class="fa-solid fa-people-group fa-lg"></i>  ');
 
-    //    console.log(retornoAjax);
+                li.append(item.texto);
+                ulResponsavelOcorrencia.append(li);
 
-    //     ulResponsavelOcorrencia.empty();
-
-    //     retornoAjax.then(data => {
+                //hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + '#' + item.id);
+                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + item.id);
+            });  
             
-    //         data.forEach(item => {
-    //             let li = document.createElement('li');
-    //             li.textContent = item.texto;
-    //             ulResponsavelOcorrencia.appendChild(li);
-    //         });
-    //     }).catch(error => {
-    //         console.error('Ocorreu um erro em montaElementoReponsavelOcorrencia :', error);
-    //     });
-    // selectElementCriarOpionDinamicamente (
-    //     '/api/pessoaRoute/listarCoordenadoByCurso/'+ idCurso, 
-    //     'selectResponsavel', 
-    //     false, 
-    //     $(this).val()
+            hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + (hdnResponsavelFinanceiroList.val().slice(-1) == '#' ? '' : '#'));
+        });
+    }
+    
+    // Se não tiver nenhum responsável financeiro cadastrado, não pode prosseguir
+    //if (ulResponsavelOcorrencia.children('li').length === 0) {
+
 }
 
 function validacoes (rotaAPIValidar) {
 
-    fetch(rotaAPIValidar)
-    .then(response => response.json())
-    .then(data => {
-        
-        // Nesse caso exige que um curso seja selecionado
-        if (data[0].icResponsavelCoordenadorCurso){
+    
+    if (rotaAPIValidar != null && rotaAPIValidar != undefined){
+        fetch(rotaAPIValidar)
+        .then(response => response.json())
+        .then(data => {
             
-            if ($('#selectCurso').val() <= 0){
-                
-                var mensagemAlert = $('#mensagemAlert');
-                mensagemAlert.html('É preciso informar o curso quando seleciona o tipo de ocorrência ' +  data[0].texto);
-                mensagemAlert.show();
-                setTimeout(function() { mensagemAlert.fadeOut(); }, 10000);
-                
+            // Nesse caso exige que um curso seja selecionado
+            if (data[0].icResponsavelCoordenadorCurso){
+                if (parseInt($('#ddlCurso').val()) <= 0)
+                    mostraMensagemErroAlertaNotificacao('É preciso informar o curso quando seleciona o tipo de ocorrência ' +  data[0].texto, 'alert-warning');
             }
-        }
-    })
-    .catch(error => console.error('Erro:', error));
+        })
+        .catch(error => console.error('Erro:', error));
+    } else {
+
+        var camposValidos = true;
+        
+        formOcorrenciaManter.find('[required]').each(function() {
+            
+            // Verifica se o campo está vazio
+            if ($(this).val() === '' || $(this).val() == '0') {
+                
+                $(this).addClass('campo-invalido');
+                $(this).siblings('.errorMensageAlert').text('Este campo é obrigatório');
+                
+                $('#'+ $(this).attr('id') + '_alert').show(); 
+
+                camposValidos = false;
+            } else {
+                $(this).removeClass('campo-invalido');
+                $(this).siblings('.errorMensageAlert').text('');
+                $('#'+ $(this).attr('id') + '_alert').hide();
+            }
+        });
+
+        return camposValidos;
+    }
+
 }
+

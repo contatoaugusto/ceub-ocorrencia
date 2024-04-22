@@ -10,34 +10,36 @@
         .then(data => {
  
             // Limpar o elemento
-            let elementoSelect = document.getElementById(idSelectElement);
-            elementoSelect.innerHTML = '';
+            let elementoSelect = $('#'+ idSelectElement);
+            elementoSelect.html('');
             
-            let option = document.createElement('option');
-            option.value = "0";
-            option.textContent = "Selecione";
-            elementoSelect.appendChild(option);
+            let option = $('<option>');
+            option.val('0');
+            option.text('Selecione');
+            elementoSelect.append(option);
             
             if (isInserirOpcaoNaoAplica){
-                let option = document.createElement('option');
-                option.value = "-1";
-                option.textContent = "Não se Aplica";
-                elementoSelect.appendChild(option); 
+                let option = $('<option>');
+                option.val('-1');
+                option.text('Não se Aplica');
+                elementoSelect.append(option); 
             }
 
             data.forEach(item => {
-                let option = document.createElement('option');
-                option.value = item.id;
-                option.textContent = item.texto;
+                let option = $('<option>');
+                option.val(item.id);
+                option.text(item.texto);
 
                 if (valorElementoSelecionado != null && valorElementoSelecionado != undefined && item.id == valorElementoSelecionado || data.length == 1) {
-                    option.selected = true;
+                    option.prop('selected', true);
                 }
 
-                elementoSelect.appendChild(option);
+                elementoSelect.append(option);
             });
            
-            elementoSelect.parentNode.classList.remove("invisible");
+
+             if (elementoSelect.val() > 0)
+                elementoSelect.trigger('change');
             
         }).catch(error => {
             console.error('Ocorreu um erro em selectElementCriarOpionDinamicamente :', error);
@@ -50,12 +52,28 @@
      * @param rotaAPI 
      */
     async function conexaoAjaxFetch (rotaAPI) {
+        let response;
         try {
-            const response = await fetch(rotaAPI);
+            response = await fetch(rotaAPI);
+ 
+            if (response == null || !response.ok || response.status === 204)
+                return JSON.stringify({});
+
             const data = await response.json();
             return data;
         } catch (error) {
             console.error('Erro na conexão ajax via fetch:', error);
+            console.log(error);
+            console.log(response);
             throw error; // Você pode optar por lançar o erro novamente ou retornar null, por exemplo, dependendo do que deseja fazer
         }
+    }
+
+    function mostraMensagemErroAlertaNotificacao (mensagem, classTipoMensagem = 'alert-warning'){
+        
+        var mensagemElement = $('#mensagemAlert');
+        mensagemElement.html('<div class="col-md-1"><i class="fa-solid fa-comments fa-2x"></i></div><div class="col-md-11"><h5>' + mensagem + '</h5></div>');
+        mensagemElement.addClass(classTipoMensagem);
+        mensagemElement.show();
+        setTimeout(function() { mensagemElement.fadeOut(); }, 10000);
     }

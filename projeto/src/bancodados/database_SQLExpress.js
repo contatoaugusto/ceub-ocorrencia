@@ -44,6 +44,11 @@ async function desconectarBancoDeDados() {
 }
 
 
+/**
+ * Executa consultas no banco de dado passadas da manera antiga, ou seja, informando a query
+ * @param {*} sqlQuery 
+ * @returns 
+ */
 async function query(sqlQuery) {
     try {
         const resultado = await pool.query(sqlQuery);
@@ -54,8 +59,40 @@ async function query(sqlQuery) {
     }
 }
 
+/**
+ * Executa stored procedures no banco de dados
+ * @param {*} nomeStoredProcedure 
+ * @param {*} parametros 
+ */
+async function querySoredProcedure(nomeStoredProcedure, parametros) {
+
+    try {
+
+        const request = pool.request();
+
+        for (const nomeParametro in parametros) {
+            if (Object.hasOwnProperty.call(parametros, nomeParametro)) {
+                const valorParametro = parametros[nomeParametro];
+                request.input(nomeParametro, valorParametro);
+            }
+        }
+
+        const resultado = await request.execute(nomeStoredProcedure);
+        return resultado.recordset;
+
+    } catch (error) {
+        console.error('Erro ao executar consulta em querySoredProcedure:', error);
+        throw error.originalError.errors[0].message;
+    }
+    //  finally {
+    //     sql.close();
+    // }
+}
+
+
 module.exports = {
     conectarBancoDeDados,
     desconectarBancoDeDados,
-    query
+    query,
+    querySoredProcedure
 };
