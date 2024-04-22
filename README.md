@@ -38,3 +38,4 @@ Feito isso, execute os script contidos nos arquivos
  - bancodados_scriptCriacao.sql
  - bancodados_scriptCriacao Prucedures e Funcoes.sql
 
+image.png
