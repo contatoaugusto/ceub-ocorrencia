@@ -6,9 +6,13 @@ Quase todas as configurações iniciais e que de fato ira caracterizar o servido
 
 Lembrando que é utilizado o EJS (https://ejs.co) como engine de manipulação de scriplets a serem embutidos nas páginas html e assim trafegar dados do servidor para cliente e de volta do cliente para o servidor.
 
-Quanto ao banco de dados é preciso configurar a string de conexão no configuracoes.js
 
-<b>projeto/src/configuracoes.js</b>
+<h4>Banco de Dados</h4>
+
+<p>Quanto ao banco de dados é utilizado o SQL Expres ou SQL Server.</p>
+<p>preciso configurar a string de conexão no arquivo <b>configuracoes.js</b></p>
+
+<b>- projeto/src/configuracoes.js</b>
 
 Mais precisamente no trecho:
 
@@ -25,9 +29,9 @@ const config_banco_senha = 'isabelle';
 const config_banco_nomebanco = 'OCODB';
 </code>
 
-Feito isso, execute os script contidos nos arquivos 
+Feito isso, execute os script contidos nos arquivos:
 
  - bancodados_scriptCriacao.sql
  - bancodados_scriptCriacao Prucedures e Funcoes.sql
 
-image.png
+Feito isso o banco tá pronto para uso
