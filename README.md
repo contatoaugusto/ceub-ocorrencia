@@ -4,7 +4,7 @@ Por ser tratar de um projeto node, o arquivo de entrada, o main/server, é o aqu
 
 Quase todas as configurações iniciais e que de fato ira caracterizar o servidor web é feito ai
 
-Lembrando que é utilizado o EJS (https://ejs.co) como engine de manipulação de scriplets a serem embutidos nas páginas html e assim trafegar dados do cliente pro servior e de volta do cliente para o servidor.
+Lembrando que é utilizado o EJS (https://ejs.co) como engine de manipulação de scriplets a serem embutidos nas páginas html e assim trafegar dados do servidor para cliente e de volta do cliente para o servidor.
 
 Quanto ao banco de dados é preciso configurar a string de conexão no configuracoes.js
 
