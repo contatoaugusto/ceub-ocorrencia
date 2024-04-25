@@ -23,13 +23,43 @@
                             </thead>
                             <tbody>
 
-                                <% ocorrenciasMinhas.forEach(ocorrencia => { %>
-                                <tr>
-                                    <td><%= ocorrencia.deOcorrencia %></td>
-                                    <td>Fulano</td>
-                                    <td><%= ocorrencia.deOcorrenciaSituacao %></td>
-                                </tr>
-                                <% }); %>  
+                                <% 
+                                    let idOcorrencia;
+                                    ocorrenciasMinhas.forEach(ocorrencia => { 
+
+                                        if (idOcorrencia != ocorrencia.idOcorrencia) {
+                                            
+                                            const ocorrenciasResponsavelList_Filtrado = ocorrenciasMinhas.filter(ocorrenciaFilter => ocorrenciaFilter.idOcorrencia === ocorrencia.idOcorrencia);
+                                            let blocoHtmlResponsavel = "";
+                                            
+                                            ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
+                                                
+                                                if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
+                                                    blocoHtmlResponsavel += '<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                
+                                                if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
+                                                    blocoHtmlResponsavel += '<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador   + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                
+                                                    if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
+                                                    blocoHtmlResponsavel += '<i class=\"fa-solid fa-people-group fa-lg\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                            });
+                                %>
+                                            <tr>
+                                                <td><%= ocorrencia.deOcorrencia %></td>
+                                                
+                                                <td>
+                                                    <%- blocoHtmlResponsavel %>
+                                                </td>
+
+                                                <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                            </tr>
+                                <%
+                                         }
+                                         
+                                         idOcorrencia = ocorrencia.idOcorrencia;
+                                    });
+
+                                %>  
                             
                             </tbody>
                         </table>

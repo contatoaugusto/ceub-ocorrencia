@@ -278,17 +278,20 @@
 	GO
 
 
-	-- ************************************** [OCOTB].[OcorrenciaHistoricoResponsavel]
+	-- ************************************** [OCOTB].[OcorrenciaResponsavel]
 	-- Para armezenar os responsáveis por essa ocorrencias e não perder a rastreabilidade de quem foi que aprovou ou atendeu dterminada ocorrência
-	CREATE TABLE OCOTB.OcorrenciaHistoricoResponsavel
+	CREATE TABLE OCOTB.OcorrenciaResponsavel
 	(
-	 [idOcorrenciaHistoricoResponsavel]	int IDENTITY (1, 1) NOT NULL ,
-	 [idOcorrenciaHistoricoSituacao]	int NOT NULL ,
-	 [idPessoa]		int NOT NULL, -- Esse é o presponsável por essa demanda, por essa ocorrências
+		idOcorrenciaResponsavel	int IDENTITY (1, 1) NOT NULL ,
+		idOcorrencia	int NOT NULL ,
+		idPessoa		int NULL, -- Esse é o presponsável por essa demanda, por essa ocorrências
+		idPerfil		int NULL, -- Esse é o presponsável por essa demanda, por essa ocorrências
 
-	 CONSTRAINT [PK_OcorrenciaHistoricoResponsavel] PRIMARY KEY CLUSTERED (idOcorrenciaHistoricoResponsavel ASC),
-	 CONSTRAINT [FK_OcorrenciaHistoricoResponsavel_OcorrenciaHistoricoSituacao] FOREIGN KEY ([idOcorrenciaHistoricoSituacao])  REFERENCES OCOTB.OcorrenciaHistoricoSituacao(idOcorrenciaHistoricoSituacao),
-	 CONSTRAINT [FK_OcorrenciaHistoricoResponsavel_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES OCOTB.Pessoa(idPessoa)
+		CONSTRAINT PK_OcorrenciaResponsavel PRIMARY KEY CLUSTERED (idOcorrenciaResponsavel ASC),
+		CONSTRAINT FK_OcorrenciaResponsavel_Ocorrencia FOREIGN KEY ([idOcorrencia])  REFERENCES OCOTB.Ocorrencia(idOcorrencia),
+		CONSTRAINT FK_OcorrenciaResponsavel_Pessoa FOREIGN KEY ([idPessoa])  REFERENCES OCOTB.Pessoa(idPessoa),
+		CONSTRAINT FK_OcorrenciaResponsavel_Perfil FOREIGN KEY ([idPerfil])  REFERENCES OCOTB.Perfil(idPerfil),
+		CONSTRAINT CK_OcorrenciaResponsave_Pessoa_Perfil CHECK (idPessoa IS NOT NULL OR idPerfil IS NOT NULL)
 	);
 	GO
 
@@ -463,5 +466,5 @@ select * from OCOTB.Aluno
 	select * from  OCOTB.OcorrenciaSubTipo
 	select * from OCOTB.Ocorrencia
 	select * from OCOTB.OcorrenciaHistoricoSituacao
-	select * from OCOTB.OcorrenciaHistoricoResponsavel
+	select * from OCOTB.OcorrenciaResponsavel
 */

@@ -79,7 +79,7 @@ async function montaElementoReponsavelOcorrencia (idCurso){
                 ulResponsavelOcorrencia.append(li);
 
                 //hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + '#' + item.id + '#');
-                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + item.id);
+                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + 'pessoa' + item.id);
             });    
 
             hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + (hdnResponsavelFinanceiroList.val().slice(-1) == '#' ? '' : '#'));
@@ -103,7 +103,7 @@ async function montaElementoReponsavelOcorrencia (idCurso){
                 ulResponsavelOcorrencia.append(li);
 
                 //hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + '#' + item.id);
-                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + item.id);
+                hdnResponsavelFinanceiroList.val((hdnResponsavelFinanceiroList.val().length > 0 ? hdnResponsavelFinanceiroList.val() + '#': '') + item.nmEntidade + item.id);
             });  
             
             hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + (hdnResponsavelFinanceiroList.val().slice(-1) == '#' ? '' : '#'));

@@ -90,7 +90,7 @@ router.get('/listarByOcorrenciaTipo/:idOcorrenciaTipo', autenticacaoMiddleware, 
                     OTR.idOcorrenciaTipo,
                     OTR.idPessoa	AS id,
                     P.nmPessoa		AS texto,
-                    'pessoa'		AS entidade
+                    'pessoa'		AS nmEntidade
                 FROM 
                     OCOTB.OcorrenciaTipoResponsavel OTR
                     INNER JOIN OCOTB.Pessoa P ON P.idPessoa = OTR.idPessoa
@@ -104,7 +104,7 @@ router.get('/listarByOcorrenciaTipo/:idOcorrenciaTipo', autenticacaoMiddleware, 
                     OTR.idOcorrenciaTipo,
                     OTR.idPerfil	AS id,
                     PE.nmPerfil		AS texto,
-                    'perfil'		AS entidade
+                    'perfil'		AS nmEntidade
                 FROM 
                     OCOTB.OcorrenciaTipoResponsavel OTR
                     INNER JOIN OCOTB.Perfil PE ON PE.idPerfil = OTR.idPerfil
