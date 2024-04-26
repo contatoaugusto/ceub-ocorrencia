@@ -4,6 +4,7 @@ const path = require('path');
 const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
+const { formataData } = require('../util/library');
 const app = express();
 
 
@@ -13,10 +14,18 @@ router.get('/listar', autenticacaoMiddleware, async (req, res) => {
 
     try {
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaByPessoa", {idPessoa: usuarioLogado.idPessoa});
+        let retornoBancoDadosOcorrenciaMinhaResponsabilidade = await querySoredProcedure("OCOTB.SP_getOcorrenciaByPessoaResponsavel", {idPessoa: usuarioLogado.idPessoa});
  
         console.log('Resultado da consulta listar:', retornoBancoDados);
 
-        res.render('pages/ocorrenciaListar', {session: req.session, tituloCabecalho: 'Lista Ocorrências', subCabecalho: 'Listar',ocorrenciasMinhas: retornoBancoDados});
+        res.render('pages/ocorrenciaListar', {
+            session: req.session, 
+            tituloCabecalho: 'Lista Ocorrências', 
+            subCabecalho: 'Listar',
+            ocorrenciasMinhas: retornoBancoDados,
+            ocorrenciasMinhaResponsabilidade: retornoBancoDadosOcorrenciaMinhaResponsabilidade,
+            formataData
+        });
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);

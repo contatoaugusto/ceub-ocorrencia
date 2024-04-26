@@ -18,7 +18,9 @@
                             <tr>
                                 <th scope="col">Ocorrência</th>
                                 <th scope="col">Responsável</th>
+                                <th scope="col">Data</th>
                                 <th scope="col">Situação</th>
+                                <th scope="col">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -38,7 +40,7 @@
                                                     blocoHtmlResponsavel += '<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
                                                 
                                                 if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
-                                                    blocoHtmlResponsavel += '<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador   + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                    blocoHtmlResponsavel += '<i class=\"fa-solid fa-chalkboard-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador   + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
                                                 
                                                     if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
                                                     blocoHtmlResponsavel += '<i class=\"fa-solid fa-people-group fa-lg\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
@@ -50,8 +52,12 @@
                                                 <td>
                                                     <%- blocoHtmlResponsavel %>
                                                 </td>
+                                                <td>
+                                                    <%= formataData(ocorrencia.dtOcorrencia) %>
+                                                </td>
 
                                                 <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                                <td><i class="fa-solid fa-pen-to-square fa-lg"></i> &nbsp;&nbsp; <i class="fa-solid fa-trash fa-lg"></i></i></td>
                                             </tr>
                                 <%
                                          }
@@ -65,7 +71,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <button type="button" id="btnOcorrenciaIncluirInit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">incluir</button>
+                        <button type="button" id="btnOcorrenciaIncluirInit" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
                     </div>
                 </div>
             </div>
@@ -86,26 +92,39 @@
                             <tr>
                                 <th scope="col">Ocorrência</th>
                                 <th scope="col">Solicitante</th>
+                                <th scope="col">Data</th>
                                 <th scope="col">Situação</th>
+                                <th scope="col">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
 
-                            <tr>
-                                <td>Primeira Ocorrencia</td>
-                                <td>Isabelle</td>
-                                <td>Enviada</td>
-                            </tr>
-                            <tr>
-                                <td>Segunda Ocorrencia</td>
-                                <td>Mateus</td>
-                                <td>Fechada</td>
-                            </tr>
-                            <tr>
-                                <td>Terceira Ocorrencia</td>
-                                <td>Marcio</td>
-                                <td>Recusada</td>
-                            </tr>
+                                <% 
+                                idOcorrencia = 0;
+                                ocorrenciasMinhaResponsabilidade.forEach(ocorrencia => { 
+
+                                    if (idOcorrencia != ocorrencia.idOcorrencia) {
+                                %>
+                                        <tr>
+                                            <td><%= ocorrencia.deOcorrencia %></td>
+                                            
+                                            <td>
+                                                <%= ocorrencia.nmPessoa %>
+                                            </td>
+                                            <td>
+                                                <%= formataData(ocorrencia.dtOcorrencia) %>
+                                            </td>
+
+                                            <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                            <td> <i class="fa-solid fa-pen-to-square fa-lg"></i> &nbsp;&nbsp; <i class="fa-solid fa-trash fa-lg"></i></i></td>
+                                        </tr>
+                            <%
+                                     }
+                                     
+                                     idOcorrencia = ocorrencia.idOcorrencia;
+                                });
+
+                            %>  
                             </tbody>
                         </table>
 

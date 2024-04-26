@@ -74,7 +74,7 @@ async function montaElementoReponsavelOcorrencia (idCurso){
             data.forEach(item => {
                 let li = $('<li>');
                 li.addClass('list-group-item');
-                li.append('<i class="fa-solid fa-user fa-lg"></i>   ');
+                li.append('<i class="fa-solid fa-chalkboard-user fa-lg"></i>   ');
                 li.append(item.texto);
                 ulResponsavelOcorrencia.append(li);
 
@@ -94,9 +94,10 @@ async function montaElementoReponsavelOcorrencia (idCurso){
             data.forEach(item => {
                 let li = $('<li>');
                 li.addClass('list-group-item');
-                if (item.entidade != null && item.entidade != undefined && item.entidade === 'pessoa')
+
+                if (item.nmEntidade != null && item.nmEntidade != undefined && item.nmEntidade === 'pessoa')
                     li.append('<i class="fa-solid fa-user fa-lg"></i>   ');
-                else if (item.entidade != null && item.entidade != undefined && item.entidade === 'perfil')
+                else if (item.nmEntidade != null && item.nmEntidade != undefined && item.nmEntidade === 'perfil')
                     li.append('<i class="fa-solid fa-people-group fa-lg"></i>  ');
 
                 li.append(item.texto);
