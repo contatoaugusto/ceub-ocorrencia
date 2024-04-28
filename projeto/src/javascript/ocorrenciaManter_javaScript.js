@@ -1,19 +1,15 @@
-let dblOcorrenciaTipo = $('#ddlOcorrenciaTipo');
-let ddlCurso = $('#ddlCurso');
-let hdnidCurso_AlunoLogado = $('#hdnidCurso_alunologado');
-let ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');    
-let hdnResponsavelFinanceiroList = $('#hdnResponsavelFinanceiroList');
-let formOcorrenciaManter = $('#formOcorrenciaManter');
+var dblOcorrenciaTipo = $('#ddlOcorrenciaTipo');
+var ddlCurso = $('#ddlCurso');
+var hdnidCurso_AlunoLogado = $('#hdnidCurso_alunologado');
+var ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');    
+var hdnResponsavelFinanceiroList = $('#hdnResponsavelFinanceiroList');
+var formOcorrenciaManter = $('#formOcorrenciaManter');
 
 /**
  *  Funcção principal que roda quando todo o documento DOM é carregado
  */
 $(document).ready(function() {
     
-    $('#btnOcorrenciaCancelar').on('click', function() {
-        window.location.href = '/api/ocorrencia/listar';
-    });
-
      // Monta dinamicamente Curso
      selectElementCriarOpionDinamicamente (
         '/api/curso/listar/0', 

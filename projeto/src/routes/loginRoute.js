@@ -49,6 +49,12 @@ router.post('/login', conectarBanco, async (req, res) => {
             delete req.session.originalUrl;
 
             return res.redirect(urlOriginal);
+        }else {
+             // Limpe a URL original da sessão
+             delete req.session.originalUrl;
+             
+            console.log('Erro ao listar usuários:');
+            res.render('pages/login', { title: 'Login', mensagem: 'Usuário ou senha incorretos'});
         }
     } catch (error) {
         console.error('Erro ao listar usuários:', error);

@@ -59,10 +59,10 @@ app.use('/api/pessoa', pessoaRoute);
 app.use('/api/responsavel', reponsavelRoute);
 
 /**
- * Determina que a rota raiz do projeto é a pagina ocorrencias.html
+ * Determina que a rota raiz do projeto é a pagina de ocorrencias
  */
 app.get('/', autenticacaoMiddleware, (req, res) => {
-    res.redirect('/api/ocorrencia/listar');
+    res.redirect('/api/ocorrencia/init');
 });
 
 /**

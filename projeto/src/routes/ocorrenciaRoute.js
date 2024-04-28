@@ -6,12 +6,27 @@ const autenticacaoMiddleware = require('../midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 const { formataData } = require('../util/library');
 const app = express();
+//const fs = require('fs');
 
+
+/**
+ * Carrega a página main.ejs, a qual pe na verdade um conjunto de layouts.
+ * Quando a pagina estiver pronta será chamado a função carregarConteudoMain
+ * carregarConteudoMain será SEMPRE chamada para carregar TODAS as páginas do sistema
+ */
+router.get('/init', autenticacaoMiddleware, async (req, res) => {
+    
+    res.render('layouts/main.ejs', {
+        session: req.session, 
+        tituloCabecalho: 'Lista Ocorrências', 
+        subCabecalho: 'Listar',
+    });
+});
 
 router.get('/listar', autenticacaoMiddleware, async (req, res) => {
     
     let usuarioLogado = req.session.usuario;
-
+    
     try {
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaByPessoa", {idPessoa: usuarioLogado.idPessoa});
         let retornoBancoDadosOcorrenciaMinhaResponsabilidade = await querySoredProcedure("OCOTB.SP_getOcorrenciaByPessoaResponsavel", {idPessoa: usuarioLogado.idPessoa});
@@ -24,8 +39,8 @@ router.get('/listar', autenticacaoMiddleware, async (req, res) => {
             subCabecalho: 'Listar',
             ocorrenciasMinhas: retornoBancoDados,
             ocorrenciasMinhaResponsabilidade: retornoBancoDadosOcorrenciaMinhaResponsabilidade,
-            formataData
-        });
+            formataData}
+        );
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);
@@ -97,7 +112,7 @@ router.post('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
         console.log('Resultado da consulta:', retornoBancoDados);
 
         //res.render('pages/ocorrenciaManter', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
-        return res.redirect('/api/ocorrencia/listar');
+        return res.redirect('/api/ocorrencia/init');
 
     } catch (error) {
         console.log(error);
@@ -109,7 +124,7 @@ router.post('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
             mensagem: error
        };
 
-        return res.redirect('/api/ocorrencia/listar');
+        return res.redirect('/api/ocorrencia/init');
     } 
 });
 

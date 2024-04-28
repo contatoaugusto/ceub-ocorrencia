@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
-const { query } = require('../bancodados/database_SQLExpress');
+const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 
@@ -11,38 +10,19 @@ router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
     const idParameter = req.params.id;
     
     try {
-        let retornoBancoList 
         
-        if (idParameter == 0 ) {
-            retornoBancoList = await query(`
-            SELECT 
-                P.idPessoa AS id,
-                P.nmPessoa AS texto,
-                P.nuCPF,
-                P.urlFOto
-            FROM 
-                 OCOTB.Pessoa P`);
-        } else {
-            retornoBancoList = await query(`
-            SELECT 
-                P.idPessoa AS id,
-                P.nmPessoa AS texto,
-                P.nuCPF,
-                P.urlFOto
-            FROM 
-                 OCOTB.Pessoa P
-            WHERE 
-                P.idPessoa = ${idParameter}`)
-        }
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: idParameter});
+       
+        res.render('pages/pessoaListar', {
+            tituloCabecalho: 'Lista Pessoas', 
+            subCabecalho: 'Listar',
+            pessoasList: retornoBancoDados}
+        );
 
-        console.log('Resultado da consulta listar:', retornoBancoList);
-
-
-        res.json(retornoBancoList);
 
     } catch (error) {
-        console.error('Erro ao listar ocorrências:', error);
-        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        console.error('Erro ao listar pessoas:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (pessoaRoute)' });
     } 
 });
 

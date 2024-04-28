@@ -1,6 +1,9 @@
 
 $(document).ready(function() {
     
+    // Carrega sempre a listagem de ocorrências como sendo a página inicial
+    carregarConteudoMain("/api/ocorrencia/listar");
+   
     let mensagemAlert = $('#mensagemAlert');
 
     mensagemAlert.on('click', function() {
@@ -10,18 +13,48 @@ $(document).ready(function() {
     if (mensagemAlert.html().trim().length > 0 )
         mensagemAlert.show();
 
+    // $('.nav-link').click(function(e) {
+    //     e.preventDefault();
+    //     var elementosIrmaos = $(this).parent().siblings('li').not($(this));;
+    //     elementosIrmaos.removeClass('activeOcorrencia');
+    // });
 
     // Script para controlar a exibição dos submenus
-    $('.submenu-toggle').click(function(e) {
+    $('.nav-link').click(function(e) {
         e.preventDefault();
-        var submenu = $(this).attr('href');
-        $(submenu).toggleClass('show');
         
-        var submenuCadastro = $("#iSetaAlternada");
+        $(this).addClass('activeOcorrencia');
+ 
+        var submenu_Destino_ID = $(this).attr('href');
+        if (submenu_Destino_ID !== '#')
+            $(submenu_Destino_ID).toggleClass('show');
 
-        if (submenuCadastro.hasClass('fa-chevron-down'))
-            submenuCadastro.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        var submenu_SetaAbreFecha = $(this).find('i').first();
+        
+        if (submenu_SetaAbreFecha.hasClass('fa-plus'))
+            submenu_SetaAbreFecha.removeClass('fa-plus').addClass('fa-minus');
         else
-            submenuCadastro.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            submenu_SetaAbreFecha.removeClass('fa-minus').addClass('fa-plus');
+
+        // Remover os ative links dos outros elementos que não o clicado
+        // Procura todos os elementos <li> irmão do elmento <li> pai deste elemento aqui clicado <a> ($(this)) 
+        var liElementsIrmaos = $(this).parent().siblings('li').not($(this));
+        // Procura todos os elementos <a> contido dentro dos elementos <li> irmãos
+        liElementsIrmaos.find('a').removeClass('activeOcorrencia');
+       
+       // $(this).nextAll().find('.nav-link').removeClass('activeOcorrencia');
+
     });
 });
+
+function carregarConteudoMain (rotaPagina){
+    
+    fetch(rotaPagina)
+    .then(response => response.text())
+    .then(data => {
+        $('#divMainConteudo').empty();
+        $('#divMainConteudo').html(data);
+    }).catch(error => {
+        console.error('Ocorreu um erro ao carregar a página: ' + rotaPagina, error);
+    });
+}

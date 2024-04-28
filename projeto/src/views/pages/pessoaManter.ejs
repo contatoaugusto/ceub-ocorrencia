@@ -1,5 +1,6 @@
+<%- include ('../layouts/header') %>
 
-
+    <div class="row">
         
         <!-- Minhas Ocorrências -->
         <div class="col-md-12 mb-4">
@@ -10,22 +11,19 @@
                 <div class="card-body">
 
                    
-                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formOcorrenciaManter" novalidate>
-                        <input type="hidden" id="hdnidCurso_alunologado" value="<%- session.usuario.idCurso %>"/>
-                        <input type="hidden" id="hdnResponsavelFinanceiroList" name="hdnResponsavelFinanceiroList"/>
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formPessoaManter" novalidate>
                         
-                        <!-- Curso -->
                         <div class="mb-3 row">
                             <div class="col-md-2">
-                                <label for="ddlCurso" class="form-label">Curso</label>
+                                <label for="txtnmPessoa" class="form-label">Curso</label>
                             </div>
                             <div class="col-md-10">
-                                <select id="ddlCurso" name="ddlCurso" class="form-select form-select-lg" aria-label="Curso"></select>
+                                <input type="text" id="txtnmPessoa" name="txtnmPessoa" class="form-text" aria-label="Nome"></select>
                             </div>
                         </div>
 
 
-                        <div class="mb-3 row">
+                        <!-- <div class="mb-3 row">
                             <div class="col-md-2">
                                 <label for="ddlOcorrenciaTipo" class="form-label">Tipo de Ocorrência</label>
                             </div>
@@ -45,33 +43,17 @@
                                 </select>
                                 <div id="ddlOcorrenciaSubTipo_alert" class="errorMensageAlert text-danger"></div>
                             </div>
-                        </div>
+                        </div> -->
                         
-                        <!-- Reponsável -->
-                        <div class="mb-3 row">
-                            <div class="col-md-12">
-                                <fieldset>
-                                    <legend><h5>Responsável(eis) pela Ocorrência</h5></legend>
-                                    <div class="col-sm-12">
-                                        <ul class="list-group list-group-flush" id="ulResponsavelOcorrencia"></ul>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="deOcorrencia" class="form-label">Detalhamento</label>
-                            <textarea class="form-control" id="deOcorrencia" name="deOcorrencia" rows="3" required><%= deOcorrencia %></textarea>
-                            <div id="deOcorrencia_alert" class="errorMensageAlert text-danger"></div>
-                          </div>
-
                         <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
-                        <button type="button" id="btnOcorrenciaCancelar" onclick="carregarConteudoMain('/api/ocorrencia/listar')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                        <button type="button" id="btnPessoaCancelar" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
                     </form>
                     
                 </div>
             </div>
         </div>
-    
+    </div>
    
     <script src="/javascript/ocorrenciaManter_javaScript.js"></script>
+
+<%- include ('../layouts/footer') %>

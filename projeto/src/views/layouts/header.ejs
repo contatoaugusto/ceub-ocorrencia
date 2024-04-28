@@ -34,16 +34,28 @@
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="/api/ocorrencia/listar" class="nav-link " aria-current="page">Ocorrências</a>
+                        <a href="#" onclick="carregarConteudoMain('/api/ocorrencia/listar')" class="nav-link " aria-current="page">Ocorrências</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ">
                         <!-- <a href="#" class="nav-link text-white">Cadastros</a> -->
                         
-                        <a class="nav-link text-white submenu-toggle" href="#submenuCadastro">Cadastros <i id="iSetaAlternada" class="fa-solid fa-chevron-down fa-xs"></i></a>
+                        <a class="nav-link text-white submenu-toggle d-flex justify-content-between align-items-center" href="#submenuCadastro">
+                            Cadastros <i id="iSetaAlternada1" class="fa-solid fa-plus fa-xs"></i>
+                        </a>
                         
                         <ul class="flex-column collapse list-unstyled" id="submenuCadastro">
                             <li class="nav-item pl-4">
-                                <a class="nav-link" href="#">Pessoa</a>
+                                
+                                <a class="nav-link text-white submenu-toggle d-flex justify-content-between align-items-center" href="#submenuPessoa">Pessoa <i id="iSetaAlternada2" class="fa-solid fa-plus fa-xs"></i></a>
+                                <ul class="flex-column collapse list-unstyled" id="submenuPessoa">
+                                    <li class="nav-item pl-4">
+                                        <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/pessoa/listar/0')" >Listar</a>
+                                    </li>
+                                    <li class="nav-item pl-4">
+                                        <a class="nav-link" href="#">Incluir</a>
+                                    </li>
+                                </ul>
+
                             </li>
                             <li class="nav-item pl-4">
                                 <a class="nav-link" href="#">Usuário</a>
@@ -67,7 +79,7 @@
 
                     </li>
                     <li>
-                        <a href="/api/login/logout" class="nav-link text-white">Sair</a>
+                        <a href="/api/login/logout" class="nav-link text-white"><i class="fas fa-sign-out-alt"></i> Sair</a>
                     </li>
                 </ul>
             <hr>

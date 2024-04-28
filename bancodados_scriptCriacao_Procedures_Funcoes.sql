@@ -86,7 +86,7 @@ GO
 GO
 
 
-/****************************** Stores Procedures  *****************************/
+/************************************************************ Stores Procedures  ***********************************************************/
 
 	drop procedure if exists OCOTB.SP_getLoginAcessoSenha
 GO 
@@ -116,7 +116,25 @@ GO
 	END
 GO
 
-
+-->>>>>>> Pessoa
+	drop procedure if exists OCOTB.SP_getPessoa
+GO
+	CREATE PROCEDURE OCOTB.SP_getPessoa (
+		@idPessoa	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            P.idPessoa,
+            P.nmPessoa,
+            P.nuCPF,
+            P.urlFoto
+        FROM 
+                OCOTB.Pessoa P
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idPessoa, 0) = 0  OR P.idPessoa = @idPessoa THEN 1 ELSE 0 END)
+	END
+GO
 
 	drop procedure if exists OCOTB.SP_getOcorrenciaByPessoa
 GO 

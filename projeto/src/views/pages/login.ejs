@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel="stylesheet" href="../../css/output.css">
+   
+       
 </head>
 
 <body class="bg-slate-200">
@@ -21,24 +23,28 @@
                 <h1 class="text-4xl font-bold mb-7">Conecte-se</h1>
 
                 <form id="loginForm" action="login" method="POST">
-                    <input type="text" name="coAcesso"
-                    placeholder="Insira seu código de acesso"
-                    class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"
-                    />
+                    
+                    <input type="text" name="coAcesso" placeholder="Insira seu código de acesso" class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"/>
                     <br><br>
-                    <input type="password" name="coSenha"
-                    placeholder="************"
-                    class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"
-                    />
-                        <div class="w-full flex items-center justify-between">
-                            <div class="flex items-center gap-2"></div>
-                            <br><br>
-                            <a href="#" class="text-sky-600 hover:text-sky-400 duration-500">Esqueceu a senha?</a>
+                    <input type="password" name="coSenha" placeholder="************" class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"/>
+                    
+                    <div class="w-full flex items-center justify-between">
+                        <div class="flex items-center gap-2"></div>
+                        <br><br>
+                        <a href="#" class="text-sky-600 hover:text-sky-400 duration-500">Esqueceu a senha?</a>
+                    </div>
+
+                    <%  ('Porra'); if (typeof mensagem !== 'undefined') { %>
+                        <div class="p-2 flex items-center" style="color: red;">
+                            
+                            <%= mensagem %>
                         </div>
-                        <div>
-                            <button type="submit" style="color:white !important" class="bg-fuchsia-700 hover:bg-fuchsia-600 hover:text-white px-40 p-2 rounded-lg text-lg font-medium duration-300 items-center justify-center shadow-md">
-                                Acessar
-                            </button>
+                    <% } %>
+                    <div>
+                        <button type="submit" style="color:white !important" class="bg-fuchsia-700 hover:bg-fuchsia-600 hover:text-white px-40 p-2 rounded-lg text-lg font-medium duration-300 items-center justify-center shadow-md">
+                            Acessar
+                        </button>
+                    </div>    
                 </form>    
 
             </div>  
