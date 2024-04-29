@@ -3,9 +3,9 @@ const CONFIG_DIRETORIO_SRC = __dirname;
 // Máquina da Isabelle
 //const config_banco_servidor = 'ISABELLE\\SQLEXPRESS'
 // Máquina do Augusto
-const config_banco_servidor = 'DESKTOP-DUAAAQ5\\SQLEXPRESS'
+//const config_banco_servidor = 'DESKTOP-DUAAAQ5\\SQLEXPRESS'
 // Maquina trabalho
-//const config_banco_servidor = '172.17.3.116\\SQLEXPRESS';
+const config_banco_servidor = '172.17.3.116\\SQLEXPRESS';
 
 const config_banco_usuario = 'isabelle';
 const config_banco_senha = 'isabelle';
