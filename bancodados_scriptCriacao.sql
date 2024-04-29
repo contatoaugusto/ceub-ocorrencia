@@ -461,6 +461,43 @@ select * from OCOTB.Aluno
 	and value_name like 'TCP%PORT%'
 	and nullif(value_data, '') is not null
 
+
+	/*** Cria usuario do banco ***/
+
+	-- Excluir o usuário do banco de dados
+USE SeuBancoDeDados;
+GO
+DROP USER isabelle;
+GO
+
+-- Excluir o login do servidor
+USE master;
+GO
+DROP LOGIN isabelle;
+GO
+
+	IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'isabelle')
+		DROP USER isabelle
+	ELSE
+		CREATE LOGIN isabelle WITH PASSWORD = 'isabelle';
+	BEGIN
+		PRINT 'O usuário isabelle já existe.';
+	END
+	GO
+
+	USE SeuBancoDeDados;
+	GO
+
+	IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'isabelle')
+	BEGIN
+		CREATE USER isabelle FOR LOGIN isabelle;
+		ALTER ROLE db_owner ADD MEMBER isabelle;
+	END
+	ELSE
+	BEGIN
+		PRINT 'O usuário isabelle já existe no banco de dados.';
+	END
+
 /*
 	select * from  [OCOTB].[OcorrenciaTipo]
 	select * from  OCOTB.OcorrenciaSubTipo

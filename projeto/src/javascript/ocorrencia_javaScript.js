@@ -3,7 +3,7 @@ var ddlCurso = $('#ddlCurso');
 var hdnidCurso_AlunoLogado = $('#hdnidCurso_alunologado');
 var ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');    
 var hdnResponsavelFinanceiroList = $('#hdnResponsavelFinanceiroList');
-var formOcorrenciaManter = $('#formOcorrenciaManter');
+var formManter = $('#formManterOcorrencia');
 
 /**
  *  Funcção principal que roda quando todo o documento DOM é carregado
@@ -42,7 +42,7 @@ $(document).ready(function() {
     /**
      * Validações do formulario antes do submit
      */
-    formOcorrenciaManter.on('submit', function(event) {
+    formManter.on('submit', function(event) {
         
         event.preventDefault();
         
@@ -129,27 +129,7 @@ function validacoes (rotaAPIValidar) {
         .catch(error => console.error('Erro:', error));
     } else {
 
-        var camposValidos = true;
-        
-        formOcorrenciaManter.find('[required]').each(function() {
-            
-            // Verifica se o campo está vazio
-            if ($(this).val() === '' || $(this).val() == '0') {
-                
-                $(this).addClass('campo-invalido');
-                $(this).siblings('.errorMensageAlert').text('Este campo é obrigatório');
-                
-                $('#'+ $(this).attr('id') + '_alert').show(); 
-
-                camposValidos = false;
-            } else {
-                $(this).removeClass('campo-invalido');
-                $(this).siblings('.errorMensageAlert').text('');
-                $('#'+ $(this).attr('id') + '_alert').hide();
-            }
-        });
-
-        return camposValidos;
+        return validarCamposObrigatoriosForm(formManter);
     }
 
 }

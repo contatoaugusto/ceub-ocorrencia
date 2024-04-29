@@ -1,5 +1,7 @@
 
-
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
         
         <!-- Minhas Ocorrências -->
         <div class="col-md-12 mb-4">
@@ -10,7 +12,7 @@
                 <div class="card-body">
 
                    
-                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formOcorrenciaManter" novalidate>
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterOcorrencia" novalidate>
                         <input type="hidden" id="hdnidCurso_alunologado" value="<%- session.usuario.idCurso %>"/>
                         <input type="hidden" id="hdnResponsavelFinanceiroList" name="hdnResponsavelFinanceiroList"/>
                         
@@ -74,4 +76,4 @@
         </div>
     
    
-    <script src="/javascript/ocorrenciaManter_javaScript.js"></script>
+    <script src="/javascript/ocorrencia_javaScript.js"></script>

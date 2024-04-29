@@ -50,11 +50,12 @@
      * Função que faz todas as conexões ajax
      * Retorna um objeto promisse contendo o JSON
      * @param rotaAPI 
+     * @param metodo (GET, POST, UPDATE, etc) 
      */
-    async function conexaoAjaxFetch (rotaAPI) {
+    async function conexaoAjaxFetch (rotaAPI, metodo = 'GET') {
         let response;
         try {
-            response = await fetch(rotaAPI);
+            response = await fetch(rotaAPI, {method: metodo});
  
             if (response == null || !response.ok || response.status === 204)
                 return JSON.stringify({});
@@ -76,4 +77,35 @@
         mensagemElement.addClass(classTipoMensagem);
         mensagemElement.show();
         setTimeout(function() { mensagemElement.fadeOut(); }, 10000);
+    }
+
+
+    /**
+     * Dado um formulário valida os campos obrigatórios
+     * @param form 
+     * @returns bool
+     */
+    function validarCamposObrigatoriosForm(form) {
+
+        var camposValidos = true;
+        
+        form.find('[required]').each(function() {
+            
+            // Verifica se o campo está vazio
+            if ($(this).val() === '' || $(this).val() == '0') {
+                
+                $(this).addClass('campo-invalido');
+                $(this).siblings('.errorMensageAlert').text('Este campo é obrigatório');
+                
+                $('#'+ $(this).attr('id') + '_alert').show(); 
+
+                camposValidos = false;
+            } else {
+                $(this).removeClass('campo-invalido');
+                $(this).siblings('.errorMensageAlert').text('');
+                $('#'+ $(this).attr('id') + '_alert').hide();
+            }
+        });
+
+        return camposValidos;
     }

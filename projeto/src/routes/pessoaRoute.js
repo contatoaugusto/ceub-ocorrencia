@@ -59,41 +59,90 @@ router.get('/listarCoordenadoByCurso/:id', autenticacaoMiddleware, async (req, r
 });
 
 /**
- * Rota para pesquisar uma ocorrência
+ * Prepara a tela inicial de manter
+ * Tanto inclusão de uma nova quanto manter uma existente
  */
-router.get('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
-    const ocorrenciaId = req.params.id;
-
-    let usuarioLogado = req.session.usuario;
+router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
+    
+    const idParameter = req.params.id;
 
     try {
-        let retornoBancoDados = await query(`
-            SELECT 
-                 OCO.idOcorrencia
-                ,OCO.deOcorrencia
-                ,OCO.dtOcorrencia
-                ,OCO.idLocal	
-                ,OCO.idPessoa
-                ,OCO.idOcorrenciaSubTipo
-                ,OCO.idCurso
-                ,OS.deOcorrenciaSituacao
-            FROM 
-                OCOTB.Ocorrencia OCO
-                INNER JOIN OCOTB.Pessoa P ON OCO.idPessoa = OCO.idPessoa
-                INNER JOIN OCOTB.OcorrenciaHistoricoSituacao CHS ON CHS.idOcorrencia = OCO.idOcorrencia AND CHS.icAtivo = 1
-                INNER JOIN OCOTB.OcorrenciaSituacao OS ON OS.idOcorrenciaSituacao = CHS.idOcorrenciaSituacao
-            WHERE 
-                P.idPessoa = ${usuarioLogado.idPessoa}`);
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: idParameter});
+        
+        if (idParameter > 0 && retornoBancoDados.length > 0){
+            const primeiraLinha = retornoBancoDados[0];
 
-        console.log('Resultado da consulta:', retornoBancoDados);
+            res.render(
+                'pages/pessoaManter', 
+                { 
+                    rota: '/api/pessoa/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Pessoa', 
+                    subCabecalho: 'Incluir',
+                    idPessoa: primeiraLinha.idPessoa,
+                    nmPessoa: primeiraLinha.nmPessoa,
+                    nuCPF: primeiraLinha.nuCPF,
+                    urlFoto: primeiraLinha.urlFoto
+                });
+        }else {
 
-
-        res.render('pages/ocorrenciaManter', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
+            res.render(
+                'pages/pessoaManter', 
+                { 
+                    rota: '/api/pessoa/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Pessoa', 
+                    subCabecalho: 'Incluir',
+                    idPessoa: 0,
+                    nmPessoa: '',
+                    nuCPF: '',
+                    urlFoto: ''
+                });
+        }
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);
         res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
     } 
 });
+
+/**
+ * Para salvar um novo registro ou atualizar um existente
+ */
+router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
+    
+    const { id, nmPessoa, nuCPF, urlFoto } = req.body;
+
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_setPessoa", 
+            {
+                idPessoa: id,
+                nmPessoa: nmPessoa,
+                nuCPF: nuCPF,
+                urlFoto: urlFoto 
+            });
+        
+       
+        console.log('Resultado da consulta:', retornoBancoDados);
+
+        //res.render('pages/ocorrenciaManter', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
+        return res.redirect('/api/pessoa/listar/0');
+
+    } catch (error) {
+        console.log(error);
+        console.error('Erro ao salva ocorrência:', error);
+        //res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        req.session.mensagemErro = {
+            id: 0,
+            cssClass: [' alert-danger '],
+            mensagem: error
+       };
+
+        return res.redirect('/api/pessoa/listar/0');
+    } 
+});
+
 
 module.exports = router;

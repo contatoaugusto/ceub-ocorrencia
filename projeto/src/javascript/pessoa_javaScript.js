@@ -1,7 +1,24 @@
+var formManter = $('#formManterPessoa');
+
+/**
+ *  Função principal que roda quando todo o documento DOM é carregado
+ */
 $(document).ready(function() {
     
-    // $('#btnOcorrenciaIncluirInit').on('click', function() {
-    //     window.location.href = '/api/ocorrencia/incluirInit/0';
-    // });
     
+    /**
+     * Validações do formulario antes do submit
+     */
+    formManter.on('submit', function(event) {
+        
+        event.preventDefault();
+
+        if (validarCamposObrigatoriosForm(formManter)) {
+            carregarConteudoMain('/api/pessoa/salvar', 'POST', formManter.attr('id'));    
+            //this.submit();
+        }
+    });
+
 });
+
+

@@ -47,9 +47,27 @@ $(document).ready(function() {
     });
 });
 
-function carregarConteudoMain (rotaPagina){
-    
-    fetch(rotaPagina)
+function carregarConteudoMain (rotaPagina, metodo = 'GET', formularioId = {}){
+
+    let opcoesFetch = {
+        method: metodo,
+    };
+
+    if (metodo === 'POST' && formularioId.length) {
+
+            var formObject = {};
+            $('form[id="' + formularioId + '"] :input').each(function() {
+                formObject[$(this).attr('id')] = $(this).val();
+            });
+
+            const requestBody = new URLSearchParams(formObject).toString();
+            alert ('Teste');
+            // Converte os dados do formulário em formato URL-encoded
+            opcoesFetch.body = requestBody; 
+            console.log(opcoesFetch);
+    }
+ 
+    fetch(rotaPagina, opcoesFetch)
     .then(response => response.text())
     .then(data => {
         $('#divMainConteudo').empty();
