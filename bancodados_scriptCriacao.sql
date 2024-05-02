@@ -28,6 +28,7 @@
 	 [nmPessoa] varchar(100) NOT NULL ,
 	 [nuCPF]    char(11) NOT NULL,
 	 [urlFOto]  varchar(100) NULL,
+	 [nuTelefone]  int NULL,
 	 
 	 CONSTRAINT [PK_Pessoa] PRIMARY KEY CLUSTERED ([idPessoa] ASC),
 	 CONSTRAINT [UK_Pessoa_CPF] UNIQUE NONCLUSTERED ([nuCPF] ASC)

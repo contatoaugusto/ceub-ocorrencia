@@ -48,7 +48,6 @@ app.use(session({
 
 /** 
  * Regitrar aqui todos os arquivos e suas rotas disponíveis para que fique disponível para o resto do projeto todo
- * Muito importante que a cada definição de rota, seja configurado também o diretório de arquivos státicos pra ela. Isso para que carrege css, imagens, etc
  */ 
 app.use('/api/login', loginRoute);
 app.use('/api/ocorrencia', ocorrenciaRoute);

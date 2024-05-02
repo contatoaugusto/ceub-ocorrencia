@@ -92,8 +92,9 @@ GO
 GO 
 
 	CREATE PROCEDURE OCOTB.SP_getLoginAcessoSenha (
-		@coAcesso	varchar(10),
-		@coSenha	varchar(50)
+		@coAcesso	varchar(10) = null,
+		@coSenha	varchar(50) = null,
+		@nuCPF    	char(11)	= null
 	)
 	AS
 	BEGIN
@@ -103,6 +104,7 @@ GO
 			P.idPessoa,
 			P.nmPessoa,
 			P.urlFoto,
+			P.nuTelefone,
 			A.idAluno,
 			A.idCurso,
 			A.nuRA
@@ -111,8 +113,9 @@ GO
 			INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa 
 			LEFT JOIN OCOTB.Aluno A ON A.idPessoa = P.idPessoa 
 		WHERE 
-				coAcesso	= @coAcesso 
-			AND coSenha		= @coSenha
+				1 = (CASE WHEN @coAcesso IS NULL OR coAcesso	= @coAcesso THEN 1 ELSE 0 END)
+			AND 1 = (CASE WHEN @coSenha IS NULL OR coSenha	= @coSenha THEN 1 ELSE 0 END)
+			AND 1 = (CASE WHEN @nuCPF IS NULL OR nuCPF	= @nuCPF THEN 1 ELSE 0 END)
 	END
 GO
 
@@ -128,9 +131,10 @@ GO
             P.idPessoa,
             P.nmPessoa,
             P.nuCPF,
-            P.urlFoto
+            P.urlFoto,
+			P.nuTelefone
         FROM 
-                OCOTB.Pessoa P
+			OCOTB.Pessoa P
         WHERE 
             1 = (CASE WHEN ISNULL(@idPessoa, 0) = 0  OR P.idPessoa = @idPessoa THEN 1 ELSE 0 END)
 	END

@@ -1,59 +1,57 @@
 <!DOCTYPE html>
-<html llang="pt-br">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link rel="stylesheet" href="../../css/output.css">
-   
-       
+    <title>Login</title>
+  
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/header.css">
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 </head>
 
-<body class="bg-slate-200">
+<body>
     
-    <main class="w-full min-h-screen flex flex-col md:flex-row items-center justify-center mx-auto shadow-lg">
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 bg-light p-5  d-flex justify-content-center align-items-center " style="height: 100vh">
                 
-        <section class="w-full flex-1 flex flex-col justify-center items-center p-4">
-            <div class="w-full max-w-xl flex justify-center items-center flex-col gap-4">
-                <img src="../../img/logo-ceub-versao-condensada.webp"
-                alt="Logo do usuário"
-                class="w-36 hover:scale-110 scale-150 duration-500 rounded-md">
-                
-                <h1 class="text-4xl font-bold mb-7">Conecte-se</h1>
-
                 <form id="loginForm" action="login" method="POST">
-                    
-                    <input type="text" name="coAcesso" placeholder="Insira seu código de acesso" class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"/>
-                    <br><br>
-                    <input type="password" name="coSenha" placeholder="************" class="w-full p-2 rounded-lg outline-none bg-gray-50 focus:bg-white"/>
-                    
-                    <div class="w-full flex items-center justify-between">
-                        <div class="flex items-center gap-2"></div>
-                        <br><br>
-                        <a href="#" class="text-sky-600 hover:text-sky-400 duration-500">Esqueceu a senha?</a>
+                    <img src="../../img/logo-ceub-versao-condensada.webp">
+                    <h1>Conecte-se</h1>
+                
+                    <div class="form-group">
+                        <label for="usuario">Usuário:</label>
+                        <input type="text" name="coAcesso" id="coAcesso" class="form-control 80px" placeholder="Insira seu código de acesso">
+                    </div>
+                    <div class="form-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" name="coSenha" id="coSenha" class="form-control" placeholder="Digite sua senha">
                     </div>
 
-                    <%  ('Porra'); if (typeof mensagem !== 'undefined') { %>
-                        <div class="p-2 flex items-center" style="color: red;">
-                            
-                            <%= mensagem %>
-                        </div>
+                    <div class="text-right">
+                        <a href="#" data-toggle="modal" data-target="#minhaModal">Esqueceu a senha?</a>
+                    </div>
+                    
+                    <% if (typeof mensagem !== 'undefined') { %>
+                        <div class="p-2 flex items-center" style="color: red;"> <%= mensagem %> </div>
                     <% } %>
-                    <div>
-                        <button type="submit" style="color:white !important" class="bg-fuchsia-700 hover:bg-fuchsia-600 hover:text-white px-40 p-2 rounded-lg text-lg font-medium duration-300 items-center justify-center shadow-md">
-                            Acessar
-                        </button>
-                    </div>    
-                </form>    
 
-            </div>  
-        </section>
-        <section class="hidden md:flex gap-9 w-full flex-1 bg-fuchsia-900 h-screen items-center justify-center flex-col p-4">
-            <h1 class="text-white text-2xl text-center max-w-lg lg:text-4xl">
-            <strong>Sistema destinado as ocorrências do CEUB</strong></h1>    
-        </section>
+                    <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Entrar</button>
+            
+                </form>
+            
+            </div>
+            <div class=" col-md-6 p-5 d-flex text-center text-white justify-content-center align-items-center bg-fuchsia-700" style="height: 100vh; width: 100vw;">
+                <h1><strong>Sistema destinado as ocorrências do CEUB</strong></h1>    
+            </div>
 
-    </main>  
+            
+        </div>
+    </div>
 
-<%- include ('../layouts/footer') %>
+   
+</body>
+</html>
