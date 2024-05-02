@@ -47,6 +47,12 @@ $(document).ready(function() {
     });
 });
 
+/**
+ *  Monta o conteúdo principal da tela sempre via fetch. Tanto GET quanto POST
+ * @param {*} rotaPagina 
+ * @param {*} metodo 
+ * @param {*} formularioId 
+ */
 function carregarConteudoMain (rotaPagina, metodo = 'GET', formularioId = {}){
 
     let opcoesFetch = {
@@ -55,16 +61,16 @@ function carregarConteudoMain (rotaPagina, metodo = 'GET', formularioId = {}){
 
     if (metodo === 'POST' && formularioId.length) {
 
-            var formObject = {};
-            $('form[id="' + formularioId + '"] :input').each(function() {
-                formObject[$(this).attr('id')] = $(this).val();
-            });
+        var formObject = {};
+        $('form[id="' + formularioId + '"] :input').each(function() {
+            formObject[$(this).attr('id')] = $(this).val();
+        });
 
-            const requestBody = new URLSearchParams(formObject).toString();
-            alert ('Teste');
-            // Converte os dados do formulário em formato URL-encoded
-            opcoesFetch.body = requestBody; 
-            console.log(opcoesFetch);
+        var headers = {};
+        headers['Content-Type'] = 'application/json'
+        opcoesFetch.headers =headers
+
+        opcoesFetch.body = JSON.stringify(formObject); 
     }
  
     fetch(rotaPagina, opcoesFetch)
