@@ -28,7 +28,7 @@
 	 [nmPessoa] varchar(100) NOT NULL ,
 	 [nuCPF]    char(11) NOT NULL,
 	 [urlFOto]  varchar(100) NULL,
-	 [nuTelefone]  int NULL,
+	 [nuTelefone]  varchar(12) NULL,
 	 
 	 CONSTRAINT [PK_Pessoa] PRIMARY KEY CLUSTERED ([idPessoa] ASC),
 	 CONSTRAINT [UK_Pessoa_CPF] UNIQUE NONCLUSTERED ([nuCPF] ASC)
@@ -304,20 +304,21 @@
 		idPessoa,
 		nmPessoa,
 		nuCPF,
-		urlFoto)
+		urlFoto,
+		nuTelefone)
 	VALUES
-		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4'),
-		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti'),
-		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4'),
-		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg'),
-		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg')
+		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4', '6199999999'),
+		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti', '6199999999'),
+		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4', '61992737257'),
+		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
+		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999')
 	GO
 
 
@@ -343,7 +344,7 @@
 		(2, '20318227', 4, 1),
 		(3, '22222222', 3, 2)
 	GO
-select * from OCOTB.Aluno
+
 
 	INSERT INTO OCOTB.Funcionario(
 		idFuncionario,
@@ -365,8 +366,8 @@ select * from OCOTB.Aluno
 	values 
 		(1, '22206600', '123', 'usuario Isabelle', 1),
 		(2, '84354', '123', 'usuario Sergio Cozezetti', 2),
-		(3, '123', '123', 'usuario Antonio Augusto', 7),
-		(4, '1234', '123', 'Usuario Funcionario Teste', 3),
+		(3, '123', '123', 'usuario Antonio Augusto', 3),
+		(4, '1234', '123', 'Usuario Funcionario Teste', 7),
 		(5, '20318227', '123', 'Usuario Coordenador Curso', 4)
 	GO
 
@@ -457,52 +458,12 @@ select * from OCOTB.Aluno
 		(1, 1, 1)
 
 
+	USE OCODB;
+	GO
+	ALTER AUTHORIZATION ON DATABASE::OCODB TO isabelle;
+	GO
+
 	select * from sys.dm_server_registry
 	where registry_key like '%IPALL'
 	and value_name like 'TCP%PORT%'
 	and nullif(value_data, '') is not null
-
-
-	/*** Cria usuario do banco ***/
-
-	-- Excluir o usuário do banco de dados
-USE SeuBancoDeDados;
-GO
-DROP USER isabelle;
-GO
-
--- Excluir o login do servidor
-USE master;
-GO
-DROP LOGIN isabelle;
-GO
-
-	IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'isabelle')
-		DROP USER isabelle
-	ELSE
-		CREATE LOGIN isabelle WITH PASSWORD = 'isabelle';
-	BEGIN
-		PRINT 'O usuário isabelle já existe.';
-	END
-	GO
-
-	USE SeuBancoDeDados;
-	GO
-
-	IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'isabelle')
-	BEGIN
-		CREATE USER isabelle FOR LOGIN isabelle;
-		ALTER ROLE db_owner ADD MEMBER isabelle;
-	END
-	ELSE
-	BEGIN
-		PRINT 'O usuário isabelle já existe no banco de dados.';
-	END
-
-/*
-	select * from  [OCOTB].[OcorrenciaTipo]
-	select * from  OCOTB.OcorrenciaSubTipo
-	select * from OCOTB.Ocorrencia
-	select * from OCOTB.OcorrenciaHistoricoSituacao
-	select * from OCOTB.OcorrenciaResponsavel
-*/

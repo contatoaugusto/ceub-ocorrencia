@@ -18,23 +18,24 @@
         <div class="row">
             <div class="col-md-6 bg-light p-5  d-flex justify-content-center align-items-center " style="height: 100vh">
                 
-                <form id="loginForm" action="login" method="POST">
+                <form id="loginForm" action="loginRecuperaSenha" method="POST" class="m-5">
                     <img src="../../img/logo-ceub-versao-condensada.webp">
-                    <h1>Conecte-se</h1>
-                
+                    <h1>Reperar Senha</h1>
+                    <br>
+                    <strong>
+                        <p>Informe seu usuario ou CPF</p>
+                        <p>Será enviado uma mensagem com a nova senha</p>
+                        <p>via Telegram no número celular cadastrado</p>
+                    </strong>
                     <div class="form-group">
                         <label for="coAcesso">Usuário:</label>
                         <input type="text" name="coAcesso" id="coAcesso" class="form-control 80px" placeholder="Insira seu código de acesso">
                     </div>
                     <div class="form-group">
-                        <label for="coSenha">Senha:</label>
-                        <input type="password" name="coSenha" id="coSenha" class="form-control" placeholder="Digite sua senha">
+                        <label for="nuCPF">CPF:</label>
+                        <input type="text" name="nuCPF" id="nuCPF" class="form-control" placeholder="Digite seu CPF">
                     </div>
 
-                    <div class="text-right">
-                        <a href="#"  onclick="window.location.href='/api/login/loginInitRecuperaSenha'"  data-toggle="modal" data-target="#minhaModal">Esqueceu a senha?</a>
-                    </div>
-                    
                     <% if (typeof mensagem !== 'undefined') { %>
                         <div class="p-2 flex items-center" style="color: red;"> <%= mensagem %> </div>
                     <% } %>
