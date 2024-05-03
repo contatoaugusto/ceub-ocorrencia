@@ -44,7 +44,7 @@ async function desconectarBancoDeDados() {
  * @param {*} sqlQuery 
  * @returns 
  */
-async function query(sqlQuery) {
+async function query_BancoDeDados(sqlQuery) {
     try {
         const resultado = await pool.query(sqlQuery);
         return resultado.recordset;
@@ -59,7 +59,7 @@ async function query(sqlQuery) {
  * @param {*} nomeStoredProcedure 
  * @param {*} parametros 
  */
-async function querySoredProcedure(nomeStoredProcedure, parametros) {
+async function querySoredProcedure_BancoDeDados(nomeStoredProcedure, parametros) {
 
     try {
 
@@ -79,15 +79,12 @@ async function querySoredProcedure(nomeStoredProcedure, parametros) {
         console.error('Erro ao executar consulta em querySoredProcedure:', error);
         throw error.originalError.errors[0].message;
     }
-    //  finally {
-    //     sql.close();
-    // }
 }
 
 
 module.exports = {
     conectarBancoDeDados,
     desconectarBancoDeDados,
-    query,
-    querySoredProcedure
+    query_BancoDeDados,
+    querySoredProcedure_BancoDeDados
 };

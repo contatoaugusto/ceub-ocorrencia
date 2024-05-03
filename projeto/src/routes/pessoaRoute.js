@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
-const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
+const { query, querySoredProcedure } = require('../midleware/database_middleware');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
-const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 
 router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
    

@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
+const { querySoredProcedure } = require('../midleware/database_middleware');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
-const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 const { formataData } = require('../util/library');
 const app = express();
 //const fs = require('fs');

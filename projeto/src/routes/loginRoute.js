@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const telegram = require('../util/telegram');
-const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
-const { query, querySoredProcedure } = require('../bancodados/database_SQLExpress');
-const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
+const { conectarBanco, querySoredProcedure } = require('../midleware/database_middleware');
+
 
 /** 
  * Endpoint para lidar com o login

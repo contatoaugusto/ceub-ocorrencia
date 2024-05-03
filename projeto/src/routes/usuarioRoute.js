@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { conectarBanco, desconectarBanco } = require('../midleware/database_SQLExpress_middleware');
-const { query } = require('../bancodados/database_SQLExpress');
+const { conectarBanco, desconectarBanco } = require('../midleware/database_middleware');
+const { query } = require('../midleware/database_middleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 
 /** 
@@ -57,9 +57,6 @@ router.post('/login', conectarBanco, async (req, res) => {
         console.error('Erro ao listar usuários:', error);
         res.status(500).json({ message: 'Erro interno do servidor (usuarioRoute)' });
     } 
-    // finally {
-    //     desconectarBanco();
-    // }
 });
 
 
