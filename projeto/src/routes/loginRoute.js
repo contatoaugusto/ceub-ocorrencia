@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const telegram = require('../util/telegram');
+//const whatsapp = require('../util/whatsapp');
+const WhatsAppSender = require('../util/whatsappClass');
 const { conectarBanco, querySoredProcedure } = require('../midleware/database_middleware');
 
 
@@ -99,7 +101,10 @@ router.post('/loginRecuperaSenha', conectarBanco, async (req, res) => {
            
             const primeiraLinha = retornoBancoDados[0];
             
-            telegram.enviaMensagem(primeiraLinha.nuTelefone, 'Seu usuário e senha são ' + primeiraLinha.coAcesso + ' e ' + primeiraLinha.coSenha)    
+            //whatsapp.qrCodeLogin();    
+            const whatsappSender = new WhatsAppSender();
+
+            //telegram.enviaMensagem(primeiraLinha.nuTelefone, 'Seu usuário e senha são ' + primeiraLinha.coAcesso + ' e ' + primeiraLinha.coSenha)    
 
             mensagemRetorno = 'Dandos de login enviado para o telegran ' + primeiraLinha.nuTelefone;
 
