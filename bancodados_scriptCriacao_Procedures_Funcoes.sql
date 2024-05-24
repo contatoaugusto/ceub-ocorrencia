@@ -146,7 +146,51 @@ GO
 			AND 1 = (CASE WHEN @nuCPF = '' OR @nuCPF IS NULL OR nuCPF	= @nuCPF THEN 1 ELSE 0 END)
 	END
 GO
+
 -->>>>>>> Pessoa
+	drop procedure if exists OCOTB.SP_setPessoa
+GO
+	CREATE PROCEDURE OCOTB.SP_setPessoa (
+		@idPessoa	INT = NULL,
+		@nmPessoa	VARCHAR(100),
+        @nuCPF		CHAR(11),
+        @urlFoto	VARCHAR(100),
+		@nuTelefone VARCHAR(12)
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idPessoa, 0) = 0
+		BEGIN
+			INSERT INTO OCOTB.Pessoa (
+				idPessoa,
+				nmPessoa,
+				nuCPF,
+				urlFoto,
+				nuTelefone
+			)
+			SELECT 
+				(select max(idPessoa) + 1 from OCOTB.Pessoa),
+				@nmPessoa,
+				@nuCPF,
+				@urlFoto,
+				@nuTelefone
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Pessoa SET
+				nmPessoa	= @nmPessoa,
+				nuCPF		= @nuCPF,
+				urlFoto		= @urlFoto,
+				nuTelefone  = @nuTelefone
+			WHERE 
+				idPEssoa = @idPessoa
+		END
+
+	END
+GO
+
+
 	drop procedure if exists OCOTB.SP_getPessoa
 GO
 	CREATE PROCEDURE OCOTB.SP_getPessoa (
@@ -166,6 +210,75 @@ GO
             1 = (CASE WHEN ISNULL(@idPessoa, 0) = 0  OR P.idPessoa = @idPessoa THEN 1 ELSE 0 END)
 	END
 GO
+
+
+-->>>>>>> Usuario
+
+	drop procedure if exists OCOTB.SP_setUsuario
+GO
+	CREATE PROCEDURE OCOTB.SP_setUsuario (
+		@idUsuario	INT = NULL,
+		@coAcesso	VARCHAR(10),
+        @coSenha	VARCHAR(50),
+        @deAcesso	VARCHAR(100),
+		@idPessoa	INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idUsuario, 0) = 0
+		BEGIN
+			INSERT INTO OCOTB.Usuario (
+				idUsuario,
+				coAcesso,
+				coSenha,
+				deAcesso,
+				idPessoa
+			)
+			SELECT 
+				(select max(idUsuario) + 1 from OCOTB.Usuario),
+				@coAcesso,
+				@coSenha,
+				@deAcesso,
+				@idPessoa
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Usuario SET
+				coAcesso	= @coAcesso,
+				coSenha		= @coSenha,
+				deAcesso	= @deAcesso,
+				idPessoa	= @idPessoa
+			WHERE 
+				idUsuario = @idUsuario
+		END
+
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getUsuario
+GO
+	CREATE PROCEDURE OCOTB.SP_getUsuario (
+		@idUsuario	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            U.idUsuario,
+			U.coAcesso,
+			U.coSenha,
+			U.deAcesso,
+			U.idPessoa
+        FROM 
+			OCOTB.Usuario U
+			INNER JOIN OCOTB.Pessoa P ON P.idPessoa = U.idPessoa
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idUsuario, 0) = 0  OR U.idUsuario = @idUsuario THEN 1 ELSE 0 END)
+	END
+GO
+
+-->>>>>>>>>>>>>> Ocorrencias
 
 	drop procedure if exists OCOTB.SP_getOcorrenciaByPessoa
 GO 

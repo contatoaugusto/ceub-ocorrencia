@@ -81,7 +81,8 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     idPessoa: primeiraLinha.idPessoa,
                     nmPessoa: primeiraLinha.nmPessoa,
                     nuCPF: primeiraLinha.nuCPF,
-                    urlFoto: primeiraLinha.urlFoto
+                    urlFoto: primeiraLinha.urlFoto,
+                    nuTelefone: primeiraLinha.nuTelefone
                 });
         }else {
 
@@ -95,7 +96,8 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     idPessoa: 0,
                     nmPessoa: '',
                     nuCPF: '',
-                    urlFoto: ''
+                    urlFoto: '',
+                    nuTelefone: ''
                 });
         }
 
@@ -110,7 +112,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  */
 router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
     
-    const { id, nmPessoa, nuCPF, urlFoto } = req.body;
+    const { id, nmPessoa, nuCPF, urlFoto, nuTelefone } = req.body;
 
     try {
         
@@ -119,7 +121,8 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
                 idPessoa: id,
                 nmPessoa: nmPessoa,
                 nuCPF: nuCPF,
-                urlFoto: urlFoto 
+                urlFoto: urlFoto,
+                nuTelefone: nuTelefone
             });
         
        

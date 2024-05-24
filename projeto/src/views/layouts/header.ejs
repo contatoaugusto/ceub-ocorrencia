@@ -46,7 +46,9 @@
                         <ul class="flex-column collapse list-unstyled" id="submenuCadastro">
                             <li class="nav-item pl-4">
                                 
-                                <a class="nav-link text-white submenu-toggle d-flex justify-content-between align-items-center" href="#submenuPessoa">Pessoa <i id="iSetaAlternada2" class="fa-solid fa-plus fa-xs"></i></a>
+                                <a class="nav-link text-white submenu-toggle d-flex justify-content-between align-items-center" href="#submenuPessoa">
+                                    Pessoa <i id="iSetaAlternada2" class="fa-solid fa-plus fa-xs"></i>
+                                </a>
                                 <ul class="flex-column collapse list-unstyled" id="submenuPessoa">
                                     <li class="nav-item pl-4">
                                         <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/pessoa/listar/0')" >Listar</a>
@@ -55,11 +57,23 @@
                                         <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/pessoa/incluirInit/0');">Incluir</a>
                                     </li>
                                 </ul>
+                            </li>
 
-                            </li>
                             <li class="nav-item pl-4">
-                                <a class="nav-link" href="#">Usuário</a>
+                                
+                                <a class="nav-link text-white submenu-toggle d-flex justify-content-between align-items-center" href="#submenuUsuario">
+                                    Usuário <i id="iSetaAlternada3" class="fa-solid fa-plus fa-xs"></i>
+                                </a>
+                                <ul class="flex-column collapse list-unstyled" id="submenuUsuario">
+                                    <li class="nav-item pl-4">
+                                        <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/usuario/listar/0')" >Listar</a>
+                                    </li>
+                                    <li class="nav-item pl-4">
+                                        <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/usuario/incluirInit/0');">Incluir</a>
+                                    </li>
+                                </ul>
                             </li>
+
                             <li class="nav-item pl-4">
                                 <a class="nav-link" href="#">Perfil</a>
                             </li>
@@ -74,6 +88,9 @@
                             </li>
                             <li class="nav-item pl-4">
                                 <a class="nav-link" href="#">Responsãvel Tipo Ocorrência</a>
+                            </li>
+                            <li class="nav-item pl-4">
+                                <a class="nav-link" href="#">Curso</a>
                             </li>
                         </ul>
 

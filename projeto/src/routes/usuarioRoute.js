@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const { conectarBanco, desconectarBanco } = require('../midleware/database_middleware');
-const { query } = require('../midleware/database_middleware');
+const autenticacaoMiddleware = require('../midleware/authMiddleware');
+const { query, querySoredProcedure } = require('../midleware/database_middleware');
 const { CONFIG_DIRETORIO_SRC } = require('../configuracoes');
 
 /** 
@@ -59,6 +60,77 @@ router.post('/login', conectarBanco, async (req, res) => {
     } 
 });
 
+router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.id;
+    
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getUsuario", {idPessoa: idParameter});
+       
+        res.render('pages/pessoaListar', {
+            tituloCabecalho: 'Lista Usuario', 
+            subCabecalho: 'Listar',
+            pessoasList: retornoBancoDados}
+        );
 
+
+    } catch (error) {
+        console.error('Erro ao listar pessoas:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (pessoaRoute)' });
+    } 
+});
+
+
+/**
+ * Prepara a tela inicial de manter
+ * Tanto inclusão de uma nova quanto a manter uma existente
+ */
+router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
+    
+    const idParameter = req.params.id;
+
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getUsuario", {idUsuario: idParameter});
+        
+        if (idParameter > 0 && retornoBancoDados.length > 0){
+            const primeiraLinha = retornoBancoDados[0];
+
+            res.render(
+                'pages/pessoaManter', 
+                { 
+                    rota: '/api/usuario/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Usuário', 
+                    subCabecalho: 'Incluir',
+                    idUsuario: primeiraLinha.idUsuario,
+                    coAcesso: primeiraLinha.coAcesso,
+                    coSenha: primeiraLinha.coSenha,
+                    deAcesso: primeiraLinha.deAcesso,
+                    idPessoa: primeiraLinha.idPessoa
+                });
+        }else {
+
+            res.render(
+                'pages/usuarioManter', 
+                { 
+                    rota: '/api/usuario/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Usuário', 
+                    subCabecalho: 'Incluir',
+                    idUsuario: 0,
+                    coAcesso: '',
+                    coSenha: '',
+                    deAcesso: '',
+                    idPessoa: 0
+                });
+        }
+
+    } catch (error) {
+        console.error('Erro ao listar usuario:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (usuarioRoute)' });
+    } 
+});
 
 module.exports = router;

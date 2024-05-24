@@ -9,6 +9,7 @@ const ocorrenciaSubTipoRoute = require('./projeto/src/routes/ocorrenciaSubTipoRo
 const cursoRoute = require('./projeto/src/routes/cursoRoute');
 const pessoaRoute = require('./projeto/src/routes/pessoaRoute');
 const reponsavelRoute = require('./projeto/src/routes/reponsavelRoute');
+const usuarioRoute = require('./projeto/src/routes/usuarioRoute');
 const autenticacaoMiddleware = require('./projeto/src/midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('./projeto/src/configuracoes');
 
@@ -56,6 +57,7 @@ app.use('/api/ocorrenciaSubTipo', ocorrenciaSubTipoRoute);
 app.use('/api/curso', cursoRoute);
 app.use('/api/pessoa', pessoaRoute);
 app.use('/api/responsavel', reponsavelRoute);
+app.use('/api/usuario', usuarioRoute);
 
 /**
  * Determina que a rota raiz do projeto é a pagina de ocorrencias

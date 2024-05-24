@@ -43,6 +43,7 @@
             
         }).catch(error => {
             console.error('Ocorreu um erro em selectElementCriarOpionDinamicamente :', error);
+            console.log(error);
         });
     }
 
