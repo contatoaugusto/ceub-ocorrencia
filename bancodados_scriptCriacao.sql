@@ -129,14 +129,14 @@
 	CREATE TABLE [OCOTB].[OcorrenciaTipo]
 	(
 	 [idOcorrenciaTipo]					tinyint IDENTITY (1, 1) NOT NULL ,
-	 [deOcorrenciaTipo]					varchar(50) NOT NULL ,
+	 [nmOcorrenciaTipo]					varchar(50) NOT NULL ,
 	 [icResponsavelCoordenadorCurso]	bit		NOT NULL DEFAULT (0),	-- Incorma que nesse caso o responsável dessa ocrrência é o coordenador do curso. ENtão é obrigatório informar o idCurso na ocorrência
 
 	 CONSTRAINT [PK_OcorrenciaTipo] PRIMARY KEY CLUSTERED ([idOcorrenciaTipo] ASC)
 	);
 	GO
 
-	CREATE NONCLUSTERED INDEX UK_OcorrenciaTipo ON OCOTB.OcorrenciaTipo (deOcorrenciaTipo ASC)
+	CREATE NONCLUSTERED INDEX UK_OcorrenciaTipo ON OCOTB.OcorrenciaTipo (nmOcorrenciaTipo ASC)
 	GO
 
 
@@ -145,7 +145,7 @@
 	(
 	 [idOcorrenciaSubTipo] int IDENTITY (1, 1) NOT NULL ,
 	 [idOcorrenciaTipo]    tinyint NOT NULL ,
-	 [deOcorrenciaSubTipo] varchar(50) NOT NULL ,
+	 [nmOcorrenciaSubTipo] varchar(50) NOT NULL ,
  
 	 CONSTRAINT [PK_OcorrenciaSubTipo] PRIMARY KEY CLUSTERED ([idOcorrenciaSubTipo] ASC),
 	 CONSTRAINT [FK_OcorrenciaSubTipo_OcorrenciaTipo] FOREIGN KEY ([idOcorrenciaTipo])  REFERENCES [OCOTB].[OcorrenciaTipo]([idOcorrenciaTipo])
@@ -166,7 +166,7 @@
 		[idPerfil]						int		NULL ,  -- Nesse caso deve integrar com o SGI e ler a tabela SISTB.PerfilUsuario para descobrir todos os usuários que tem acesso a esse perfil,
 		
 		 CONSTRAINT [PK_OcorrenciaTipoResponsavel] PRIMARY KEY CLUSTERED ([idOcorrenciaTipoResponsavel] ASC),
-		 CONSTRAINT [UK_OcorrenciaTipoResponsavel_Pessoa_OcorrenciaTipo] UNIQUE NONCLUSTERED ([idPessoa] ASC, [idOcorrenciaTipo] ASC),
+		 CONSTRAINT [UK_OcorrenciaTipoResponsavel_Pessoa_Perfil_OcorrenciaTipo] UNIQUE NONCLUSTERED ([idPessoa] ASC, [idPerfil] ASC, [idOcorrenciaTipo] ASC),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES [OCOTB].[Pessoa]([idPessoa]),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_Perfil] FOREIGN KEY ([idPerfil])  REFERENCES [OCOTB].[Perfil]([idPerfil]),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_OcorrenciaTipo] FOREIGN KEY ([idOcorrenciaTipo])  REFERENCES [OCOTB].[OcorrenciaTipo]([idOcorrenciaTipo])
@@ -395,7 +395,7 @@
 	
 
 	INSERT INTO [OCOTB].[OcorrenciaTipo]
-		([deOcorrenciaTipo], icResponsavelCoordenadorCurso)
+		([nmOcorrenciaTipo], icResponsavelCoordenadorCurso)
 	VALUES
 		 ('Professor', 1)
 		,('Sala de Aula', 0)
@@ -407,7 +407,7 @@
 	
 	INSERT INTO [OCOTB].[OcorrenciaSubTipo]
 		([idOcorrenciaTipo]
-		,[deOcorrenciaSubTipo])
+		,[nmOcorrenciaSubTipo])
 	VALUES
 		(1,'Atraso')
 		,(1,'Saída antecipada')

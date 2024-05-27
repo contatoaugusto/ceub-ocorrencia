@@ -14,28 +14,25 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">CPF</th>
-                                <th scope="col">Foto</th>
+                                <th scope="col">Sub Tipo Ocorrência</th>
+                                <th scope="col">Tipo Ocorrência</th>
                                 <th scope="col">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
 
                                 <% 
-                                    pessoasList.forEach(pessoa => { 
+                                ocorrenciaSubTipoList.forEach(item => { 
                                 %>
                                         <tr>
-                                            <td><%= pessoa.nmPessoa %></td>
+                                            <td><%= item.nmOcorrenciaSubTipo %></td>
                                             
                                             <td>
-                                                <%= pessoa.nuCPF %>
+                                                <%= item.nmOcorrenciaTipo %>
                                             </td>
+                                            
                                             <td>
-                                                <img src="<%- pessoa.urlFoto %>" alt="" width="35" height="35" class="rounded-circle  d-none d-md-block">
-                                            </td>
-                                            <td>
-                                                <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/pessoa/incluirInit/<%= pessoa.idPessoa %>');">
+                                                <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/ocorrenciaSubTipo/incluirInit/<%= item.idOcorrenciaSubTipo %>');">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </a>
                                             </td>
@@ -57,7 +54,7 @@
 
         <div class="col-md-12 mb-4 p-2 flex" style="padding-left: 480px; padding-right: 80px; ">
             <nav class="navbar bg-light" >
-                <button type="button" id="btnPessoaIncluirInit" onclick="carregarConteudoMain('/api/pessoa/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
+                <button type="button" id="btnocorrenciaSubTipoIncluirInit" onclick="carregarConteudoMain('/api/ocorrenciaSubTipo/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
             </nav>
         </div>
         

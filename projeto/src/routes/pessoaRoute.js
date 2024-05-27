@@ -24,6 +24,25 @@ router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
     } 
 });
 
+/**
+ * Mesmo que o método acima, no entanto retornando formato json e preparado para preencher elemento option/dropdown list e outros elementos
+ */
+router.get('/listarJson/:id', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.id;
+    
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: idParameter});
+       
+        res.json(retornoBancoDados);
+
+    } catch (error) {
+        console.error('Erro ao listar pessoas:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (pessoaRoute)' });
+    } 
+});
+
 router.get('/listarCoordenadoByCurso/:id', autenticacaoMiddleware, async (req, res) => {
    
     const idParameter = req.params.id;
@@ -69,6 +88,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: idParameter});
         
         if (idParameter > 0 && retornoBancoDados.length > 0){
+            
             const primeiraLinha = retornoBancoDados[0];
 
             res.render(
@@ -82,7 +102,13 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     nmPessoa: primeiraLinha.nmPessoa,
                     nuCPF: primeiraLinha.nuCPF,
                     urlFoto: primeiraLinha.urlFoto,
-                    nuTelefone: primeiraLinha.nuTelefone
+                    nuTelefone: primeiraLinha.nuTelefone,
+
+                    // Usuario
+                    idUsuario: primeiraLinha.idUsuario,
+                    coAcesso: primeiraLinha.coAcesso,
+                    coSenha: primeiraLinha.coSenha,
+                    deAcesso: primeiraLinha.deAcesso
                 });
         }else {
 
@@ -97,7 +123,13 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     nmPessoa: '',
                     nuCPF: '',
                     urlFoto: '',
-                    nuTelefone: ''
+                    nuTelefone: '',
+
+                    // Usuario
+                    idUsuario: 0,
+                    coAcesso: '',
+                    coSenha: '',
+                    deAcesso: ''
                 });
         }
 
@@ -112,19 +144,29 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  */
 router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
     
-    const { id, nmPessoa, nuCPF, urlFoto, nuTelefone } = req.body;
+    const { idPessoa, nmPessoa, nuCPF, urlFoto, nuTelefone, idUsuario, coAcesso, coSenha, deAcesso } = req.body;
 
     try {
         
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_setPessoa", 
             {
-                idPessoa: id,
+                idPessoa: idPessoa,
                 nmPessoa: nmPessoa,
                 nuCPF: nuCPF,
                 urlFoto: urlFoto,
                 nuTelefone: nuTelefone
             });
         
+        const primeiraLinha = retornoBancoDados[0];
+        // Usuário
+        let retornoBancoDadosUsuario = await querySoredProcedure("OCOTB.SP_setUsuario", 
+            {
+                idUsuario: idUsuario,
+                coAcesso: coAcesso,
+                coSenha: coSenha,
+                deAcesso: deAcesso,
+                idPessoa: primeiraLinha.idPessoa
+            });    
        
         console.log('Resultado da consulta:', retornoBancoDados);
 

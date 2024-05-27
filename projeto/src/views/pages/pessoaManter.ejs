@@ -13,13 +13,14 @@
 
                    
                     <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterPessoa" novalidate>
-                        <input type="hidden" id="id" name="id" value="<%- idPessoa %>">
+                        <input type="hidden" id="idPessoa" name="idPessoa" value="<%- idPessoa %>">
                         <div class="mb-3 row">
                             <div class="col-md-2">
                                 <label for="nmPessoa" class="form-label">Nome</label>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" id="nmPessoa" name="nmPessoa" class="form-text" aria-label="Nome" value="<%- nmPessoa %>">
+                            <div class="col-md-6">
+                                <input type="text" id="nmPessoa" name="nmPessoa" class="form-control" aria-label="Nome" value="<%- nmPessoa %>" required>
+                                <div id="nmPessoa" class="errorMensageAlert text-danger"></div>
                             </div>
                         </div>
                         
@@ -27,8 +28,9 @@
                             <div class="col-md-2">
                                 <label for="nuCPF" class="form-label">CPF</label>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" id="nuCPF" name="nuCPF" class="form-text" aria-label="CPF" value="<%- nuCPF %>">
+                            <div class="col-md-6">
+                                <input type="text" id="nuCPF" name="nuCPF" class="form-control" aria-label="CPF" value="<%- nuCPF %>" required>
+                                <div id="nuCPF" class="errorMensageAlert text-danger"></div>
                             </div>
                         </div>
 
@@ -36,8 +38,8 @@
                             <div class="col-md-2">
                                 <label for="urlFoto" class="form-label">URL Foto</label>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" id="urlFoto" name="urlFoto" class="form-text" aria-label="Foto" value="<%- urlFoto %>">
+                            <div class="col-md-6">
+                                <input type="text" id="urlFoto" name="urlFoto" class="form-control" aria-label="Foto" value="<%- urlFoto %>">
                             </div>
                         </div>
 
@@ -45,10 +47,56 @@
                             <div class="col-md-2">
                                 <label for="nuTelefone" class="form-label">Telefone</label>
                             </div>
-                            <div class="col-md-10">
-                                <input type="text" id="nuTelefone" name="nuTelefone" class="form-text" aria-label="Telefone" value="<%- nuTelefone %>">
+                            <div class="col-md-6">
+                                <input type="text" id="nuTelefone" name="nuTelefone" class="form-control" aria-label="Telefone" value="<%- nuTelefone %>">
                             </div>
                         </div>
+
+                        <!-- Usuário -->
+                        <div class="mb-3 row">
+                            <div class="col-md-12">
+                                <fieldset>
+                                    <legend><h5>Usuário</h5></legend>
+                                    <div class="col-sm-12">
+                                        
+                                        <input type="hidden" id="idUsuario" name="idUsuario" value="<%- idUsuario %>">
+                        
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">
+                                                <label for="coAcesso" class="form-label">Código Acesso</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="coAcesso" name="coAcesso" class="form-control" aria-label="Código Acesso" value="<%- coAcesso %>" required>
+                                                <div id="coAcesso" class="errorMensageAlert text-danger"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">
+                                                <label for="coSenha" class="form-label">Senha</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="coSenha" name="coSenha" class="form-control" aria-label="Senha" value="<%- coSenha %>" required>
+                                                <div id="coSenha" class="errorMensageAlert text-danger"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">
+                                                <label for="deAcesso" class="form-label">Descrição</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="deAcesso" name="deAcesso" class="form-control" aria-label="Descrição" value="<%- deAcesso %>">
+                                            </div>
+                                        </div>    
+
+
+
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>    
+
 
                         <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
                         <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/pessoa/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>

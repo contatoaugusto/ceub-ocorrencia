@@ -57,11 +57,12 @@
         let response;
         try {
             response = await fetch(rotaAPI, {method: metodo});
- 
+            
             if (response == null || !response.ok || response.status === 204)
                 return JSON.stringify({});
 
             const data = await response.json();
+
             return data;
         } catch (error) {
             console.error('Erro na conexão ajax via fetch:', error);

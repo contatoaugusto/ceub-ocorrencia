@@ -1,0 +1,44 @@
+       
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+       <!-- Pessoa -->
+        <div class="col-md-12 mb-4">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia">
+                    <h5 class="card-title "><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterPerfil" novalidate>
+                        <input type="hidden" id="idPerfil" name="idPerfil" value="<%- idPerfil %>">
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="nmPerfil" class="form-label">Nome do Perfil</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="nmPerfil" name="nmPerfil" class="form-control" aria-label="Código Acesso" value="<%- nmPerfil %>" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="dePerfil" class="form-label">Descrição</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="dePerfil" name="dePerfil" class="form-control" aria-label="Descricao" value="<%- dePerfil %>" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
+                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/perfil/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+   
+    <script src="/javascript/perfil_javascript.js"></script>

@@ -147,8 +147,9 @@ GO
 	END
 GO
 
--->>>>>>> Pessoa
-	drop procedure if exists OCOTB.SP_setPessoa
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Pessoa <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  
+drop procedure if exists OCOTB.SP_setPessoa
 GO
 	CREATE PROCEDURE OCOTB.SP_setPessoa (
 		@idPessoa	INT = NULL,
@@ -160,7 +161,7 @@ GO
 	AS
 	BEGIN
 
-		IF ISNULL(@idPessoa, 0) = 0
+		IF ISNULL(@idPessoa, 0) = 0 OR @idPessoa = '0' OR @idPessoa = ''
 		BEGIN
 			INSERT INTO OCOTB.Pessoa (
 				idPessoa,
@@ -175,6 +176,8 @@ GO
 				@nuCPF,
 				@urlFoto,
 				@nuTelefone
+			
+			SET @idPessoa = (select max(idPessoa) from OCOTB.Pessoa)
 		END
 		ELSE
 		BEGIN
@@ -187,6 +190,7 @@ GO
 				idPEssoa = @idPessoa
 		END
 
+		SELECT @idPessoa AS idPessoa
 	END
 GO
 
@@ -201,18 +205,27 @@ GO
 		SELECT 
             P.idPessoa,
             P.nmPessoa,
+			P.idPessoa AS id,  	-- Para adequar a construção de elemntos na tela dinamicamente
+            P.nmPessoa AS texto,-- Para adequar a construção de elemntos na tela dinamicamente 
             P.nuCPF,
             P.urlFoto,
-			P.nuTelefone
+			P.nuTelefone,
+
+			-- Usuario
+			U.idUsuario,
+			U.coAcesso,
+			U.coSenha,
+			U.deAcesso
         FROM 
-			OCOTB.Pessoa P
+			OCOTB.Pessoa 			P
+			LEFT JOIN OCOTB.Usuario U ON U.idPessoa = P.idPessoa
         WHERE 
             1 = (CASE WHEN ISNULL(@idPessoa, 0) = 0  OR P.idPessoa = @idPessoa THEN 1 ELSE 0 END)
 	END
 GO
 
 
--->>>>>>> Usuario
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Usuário <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	drop procedure if exists OCOTB.SP_setUsuario
 GO
@@ -278,7 +291,314 @@ GO
 	END
 GO
 
--->>>>>>>>>>>>>> Ocorrencias
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Perfil <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_setPerfil (
+		@idPerfil	INT = NULL,
+        @nmPerfil	VARCHAR(100),
+		@dePerfil	VARCHAR(300)
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idPerfil, 0) = 0 OR @idPerfil = '0' OR @idPerfil = ''
+		BEGIN
+			INSERT INTO OCOTB.Perfil (
+				idPerfil,
+				nmPerfil,
+				dePerfil
+			)
+			SELECT 
+				(select max(idPerfil) + 1 from OCOTB.Perfil),
+				@nmPerfil,
+				@dePerfil
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Perfil SET
+				nmPerfil	= @nmPerfil,
+				dePerfil	= @dePerfil
+			WHERE 
+				idPerfil = @idPerfil
+		END
+
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_getPerfil (
+		@idPerfil	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            idPerfil,
+			nmPerfil,
+			dePerfil
+        FROM 
+			OCOTB.Perfil
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idPerfil, 0) = 0  OR idPerfil = @idPerfil THEN 1 ELSE 0 END)
+	END
+GO
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Curso <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setCurso
+GO
+	CREATE PROCEDURE OCOTB.SP_setCurso (
+		@idCurso	INT = NULL,
+        @nmCurso	VARCHAR(100),
+		@idCoordenador	INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idCurso, 0) = 0 OR @idCurso = '0' OR @idCurso = ''
+		BEGIN
+			INSERT INTO OCOTB.Curso (
+				idCurso,
+				nmCurso,
+				idCoordenador
+			)
+			SELECT 
+				(select max(idCurso) + 1 from OCOTB.Curso),
+				@nmCurso,
+				@idCoordenador
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Curso SET
+				nmCurso	= @nmCurso,
+				idCoordenador	= @idCoordenador
+			WHERE 
+				idCurso = @idCurso
+		END
+
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getCurso
+GO
+	CREATE PROCEDURE OCOTB.SP_getCurso (
+		@idCurso	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+			C.idCurso,
+			C.nmCurso,
+			C.idCurso AS id,
+			C.nmCurso AS texto,
+			C.idCoordenador,
+			P.nmPessoa,
+			P.urlFOto
+		FROM 
+			OCOTB.Curso C
+			INNER JOIN OCOTB.Pessoa P ON P.idPessoa = C.idCoordenador
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idCurso, 0) = 0  OR idCurso = @idCurso THEN 1 ELSE 0 END)
+	END
+GO
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Tipo Ocorrencia <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setOcorrenciaTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaTipo (
+		@idOcorrenciaTipo	INT = NULL,
+        @nmOcorrenciaTipo	VARCHAR(50),
+		@icResponsavelCoordenadorCurso	BIT -- Indica que o responsável por esse tipo de ocorrência e o coordenador do curso
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idOcorrenciaTipo, 0) = 0 OR @idOcorrenciaTipo = '0' OR @idOcorrenciaTipo = ''
+		BEGIN
+			INSERT INTO OCOTB.OcorrenciaTipo (
+				nmOcorrenciaTipo,
+				icResponsavelCoordenadorCurso
+			)
+			SELECT 
+				@nmOcorrenciaTipo,
+				@icResponsavelCoordenadorCurso
+			
+			SET @idOcorrenciaTipo = SCOPE_IDENTITY()
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.OcorrenciaTipo SET
+				nmOcorrenciaTipo	= @nmOcorrenciaTipo,
+				icResponsavelCoordenadorCurso	= @icResponsavelCoordenadorCurso
+			WHERE 
+				idOcorrenciaTipo = @idOcorrenciaTipo
+		END
+
+		SELECT @idOcorrenciaTipo AS idOcorrenciaTipo
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaTipo (
+		@idOcorrenciaTipo	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            idOcorrenciaTipo,
+			nmOcorrenciaTipo,
+			idOcorrenciaTipo AS id,		-- Para adequar a construção de elemntos na tela dinamicamente
+			nmOcorrenciaTipo AS texto,  -- Para adequar a construção de elemntos na tela dinamicamente 
+			icResponsavelCoordenadorCurso
+        FROM 
+			OCOTB.OcorrenciaTipo
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idOcorrenciaTipo, 0) = 0  OR idOcorrenciaTipo = @idOcorrenciaTipo THEN 1 ELSE 0 END)
+		ORDER BY nmOcorrenciaTipo
+	END
+GO
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Ocorrência Tipo Responsavel <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setOcorrenciaTipoResponsavel
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaTipoResponsavel (
+		@idOcorrenciaTipoResponsavel	INT = NULL,
+        @idOcorrenciaTipo	INT,
+		@idPessoa			INT,
+		@idPerfil			INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idOcorrenciaTipoResponsavel, 0) = 0 OR @idOcorrenciaTipoResponsavel = '0' OR @idOcorrenciaTipoResponsavel = ''
+		BEGIN
+			IF ISNULL(@idPessoa, 0) = 0 OR @idPessoa = '0' OR @idPessoa = ''
+				SET @idPessoa = NULL
+			IF ISNULL(@idPerfil, 0) = 0 OR @idPerfil = '0' OR @idPerfil = ''
+				SET @idPerfil = NULL
+
+			INSERT INTO OCOTB.OcorrenciaTipoResponsavel (
+				idOcorrenciaTipo,
+				idPessoa,
+				idPerfil
+			)
+			SELECT 
+				@idOcorrenciaTipo,
+				@idPessoa,
+				@idPerfil
+			
+			SET @idOcorrenciaTipoResponsavel = SCOPE_IDENTITY()
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.OcorrenciaTipoResponsavel SET
+				idOcorrenciaTipo	= @idOcorrenciaTipo,
+				idPessoa	= @idPessoa,
+				idPerfil	= @idPerfil
+			WHERE 
+				idOcorrenciaTipoResponsavel = @idOcorrenciaTipoResponsavel
+		END
+
+		SELECT @idOcorrenciaTipoResponsavel AS idOcorrenciaTipoResponsavel
+	END
+GO
+
+
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Sub Tipo Ocorrencia <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setOcorrenciaSubTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaSubTipo (
+		@idOcorrenciaSubTipo	INT = NULL,
+        @idOcorrenciaTipo		INT,
+		@nmOcorrenciaSubTipo	VARCHAR(50)
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idOcorrenciaSubTipo, 0) = 0 OR @idOcorrenciaSubTipo = '0' OR @idOcorrenciaSubTipo = ''
+		BEGIN
+			INSERT INTO OCOTB.OcorrenciaSubTipo (
+				idOcorrenciaTipo,
+				nmOcorrenciaSubTipo
+			)
+			SELECT 
+				@idOcorrenciaTipo,
+				@nmOcorrenciaSubTipo
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.OcorrenciaSubTipo SET
+				idOcorrenciaTipo	= @idOcorrenciaTipo,
+				nmOcorrenciaSubTipo	= @nmOcorrenciaSubTipo
+			WHERE 
+				idOcorrenciaSubTipo = @idOcorrenciaSubTipo
+		END
+
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaSubTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaSubTipo (
+		@idOcorrenciaSubTipo	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            OST.idOcorrenciaSubTipo,
+			OST.nmOcorrenciaSubTipo,
+			OST.idOcorrenciaSubTipo AS id,		-- Para adequar a construção de elemntos na tela dinamicamente
+			OST.nmOcorrenciaSubTipo AS texto,  -- Para adequar a construção de elemntos na tela dinamicamente 
+			OST.idOcorrenciaTipo,
+			OT.nmOcorrenciaTipo
+        FROM 
+			OCOTB.OcorrenciaSubTipo OST
+			LEFT JOIN OCOTB.OcorrenciaTipo OT ON OT.idOcorrenciaTipo = OST.idOcorrenciaTipo
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idOcorrenciaSubTipo, 0) = 0  OR idOcorrenciaSubTipo = @idOcorrenciaSubTipo THEN 1 ELSE 0 END)
+		ORDER BY nmOcorrenciaSubTipo
+	END
+GO
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaSubTipoByTipoOcorrencia
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaSubTipoByTipoOcorrencia (
+		@idOcorrenciaTipo	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            OST.idOcorrenciaSubTipo,
+			OST.nmOcorrenciaSubTipo,
+			OST.idOcorrenciaSubTipo AS id,		-- Para adequar a construção de elemntos na tela dinamicamente
+			OST.nmOcorrenciaSubTipo AS texto,  -- Para adequar a construção de elemntos na tela dinamicamente 
+			OST.idOcorrenciaTipo,
+			OT.nmOcorrenciaTipo
+        FROM 
+			OCOTB.OcorrenciaSubTipo OST
+			LEFT JOIN OCOTB.OcorrenciaTipo OT ON OT.idOcorrenciaTipo = OST.idOcorrenciaTipo
+        WHERE 
+            OST.idOcorrenciaTipo = @idOcorrenciaTipo
+		ORDER BY nmOcorrenciaSubTipo
+	END
+GO
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Ocorrências <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	drop procedure if exists OCOTB.SP_getOcorrenciaByPessoa
 GO 

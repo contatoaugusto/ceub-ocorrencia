@@ -12,7 +12,7 @@ $(document).ready(function() {
     
      // Monta dinamicamente Curso
      selectElementCriarOpionDinamicamente (
-        '/api/curso/listar/0', 
+        '/api/curso/listarJson/0', 
         ddlCurso.attr('id'), 
         true, 
         hdnidCurso_AlunoLogado.val());
@@ -27,13 +27,13 @@ $(document).ready(function() {
     });
 
     // Monta dinamicamente Tipo de Ocorrências
-    selectElementCriarOpionDinamicamente (`/api/ocorrenciaTipo/listar/0`, dblOcorrenciaTipo.attr('id'));
+    selectElementCriarOpionDinamicamente (`/api/ocorrenciaTipo/listarJson/0`, dblOcorrenciaTipo.attr('id'));
     dblOcorrenciaTipo.on('change', function() {
 
-        validacoes ('/api/ocorrenciaTipo/listar/'+ this.value);
+        validacoes ('/api/ocorrenciaTipo/listarJson/'+ this.value);
 
         // Monta dinamicamente o dropdownlist de Subtipo Ocorrências
-        selectElementCriarOpionDinamicamente ('/api/ocorrenciaSubTipo/listar/'+ this.value, 'ddlOcorrenciaSubTipo');
+        selectElementCriarOpionDinamicamente ('/api/ocorrenciaSubTipo/listarJsonByTipoOcorrencia/'+ this.value, 'ddlOcorrenciaSubTipo');
 
         montaElementoReponsavelOcorrencia(ddlCurso.val());
     });

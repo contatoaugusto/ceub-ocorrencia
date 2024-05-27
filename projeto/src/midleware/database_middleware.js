@@ -46,7 +46,8 @@ async function querySoredProcedure(nomeStoredProcedure, parametros) {
         return await querySoredProcedure_BancoDeDados(nomeStoredProcedure, parametros);
     } catch (error) {
         console.error('Erro ao executar a stored procedure (databaseMidleWare): ' + nomeStoredProcedure, error);
-        res.status(500).json({ message: 'Erro interno do servidor (databaseMidleWare)' });
+        //res.status(500).json({ message: 'Erro interno do servidor (databaseMidleWare)' });
+        throw error;
     }
 }
 

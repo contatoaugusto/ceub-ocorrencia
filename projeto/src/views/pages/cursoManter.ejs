@@ -1,0 +1,46 @@
+       
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+       <!-- Pessoa -->
+        <div class="col-md-12 mb-4">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia">
+                    <h5 class="card-title "><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterCurso" novalidate>
+                        <input type="hidden" id="idCurso" name="idCurso" value="<%- idCurso %>">
+                        <input type="hidden" id="idCoordenador" name="idCoordenador" value="<%- idCoordenador %>">
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="nmCurso" class="form-label">Nome</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="nmCurso" name="nmCurso" class="form-control" aria-label="Nome" value="<%- nmCurso %>" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Coordenador -->
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="ddlCoordenador" class="form-label">Coordenador</label>
+                            </div>
+                            <div class="col-md-10">
+                                <select id="ddlCoordenador" name="ddlCoordenador" class="form-select form-select-lg" aria-label="Coordenador"></select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
+                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/perfil/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+   
+    <script src="/javascript/curso_javascript.js"></script>

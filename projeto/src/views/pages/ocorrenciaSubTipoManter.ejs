@@ -1,0 +1,60 @@
+       
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+       <!-- Pessoa -->
+        <div class="col-md-12 mb-4">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia">
+                    <h5 class="card-title "><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterOcorrenciaSubtipo" novalidate>
+                        <input type="hidden" id="idOcorrenciaSubTipo" name="idOcorrenciaSubTipo" value="<%- idOcorrenciaSubTipo %>">
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="nmPessoa" class="form-label">Nome Subtipo Ocorrência</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="nmOcorrenciaSubTipo" name="nmOcorrenciaSubTipo" class="form-control" aria-label="Nome" value="<%- nmOcorrenciaSubTipo %>" required>
+                                <div id="nmOcorrenciaSubTipo" class="errorMensageAlert text-danger"></div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!-- Tipo de Ocorrência -->
+                        <div class="mb-3 row">
+                            <div class="col-md-12">
+                                <fieldset>
+                                    <legend><h5>Tipo Ocorrência</h5></legend>
+                                    <div class="col-sm-12">
+                                        
+                                        <input type="hidden" id="idOcorrenciaTipo" name="idOcorrenciaTipo" value="<%- idOcorrenciaTipo %>">
+                        
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">
+                                                <label for="ddlOcorrenciaTipo" class="form-label">Tipo de Ocorrência</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select id="ddlOcorrenciaTipo" stype="border-color: red;" name="ddlOcorrenciaTipo" class="form-select form-select-lg form-control" aria-label="Tipo Ocorrência" required></select>
+                                                <div id="ddlOcorrenciaTipo_alert" class="errorMensageAlert text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>    
+
+
+                        <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
+                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/ocorrenciaSubTipo/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+   
+    <script src="/javascript/ocorrenciasubtipo_javascript.js"></script>

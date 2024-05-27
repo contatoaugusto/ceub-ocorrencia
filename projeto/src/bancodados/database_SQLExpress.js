@@ -77,7 +77,7 @@ async function querySoredProcedure_BancoDeDados(nomeStoredProcedure, parametros)
 
     } catch (error) {
         console.error('Erro ao executar consulta em querySoredProcedure:', error);
-        throw error.originalError.errors[0].message;
+        throw error.message;
     }
 }
 

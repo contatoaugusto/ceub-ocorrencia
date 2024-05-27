@@ -1,85 +1,155 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { query } = require('../midleware/database_middleware');
+const { query, querySoredProcedure } = require('../midleware/database_middleware');
 const autenticacaoMiddleware = require('../midleware/authMiddleware');
 
-router.get('/listar/:idOcorrenciaTipo', autenticacaoMiddleware, async (req, res) => {
+router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.id;
+    
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaSubTipo", {idOcorrenciaSubTipo: idParameter});
+       
+        res.render('pages/ocorrenciaSubTipoListar', {
+            tituloCabecalho: 'Lista Sub Tipo Ocorrência', 
+            subCabecalho: 'Listar',
+            ocorrenciaSubTipoList: retornoBancoDados}
+        );
+
+
+    } catch (error) {
+        console.error('Erro ao listar Sub Tipo Ocorrência:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaSubTipoRoute)' });
+    } 
+});
+
+
+router.get('/listarJson/:idOcorrenciaSubTipo', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.idOcorrenciaSubTipo;
+    
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaSubTipo", {idOcorrenciaSubTipo: idParameter});
+       
+        res.json(retornoBancoDados);
+
+    } catch (error) {
+        console.error('Erro ao listar Sub Tipo Ocorrência:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaSubTipoRoute)' });
+    } 
+});
+
+/**
+ * Seleciona o Subtipo Ocorrencia dependendo do parámetro idOcorrenciaTipo
+ */
+router.get('/listarJsonByTipoOcorrencia/:idOcorrenciaTipo', autenticacaoMiddleware, async (req, res) => {
    
     const idParameter = req.params.idOcorrenciaTipo;
     
     try {
-        let retornoBancoList 
         
-        if (idParameter == 0 ) {
-            retornoBancoList = await query(`
-            SELECT 
-                OST.idOcorrenciaSubTipo AS id,
-                OST.idOcorrenciaTipo,
-                OST.deOcorrenciaSubTipo AS texto
-            FROM 
-                OCOTB.OcorrenciaSubTipo OST`);
-        } else {
-            retornoBancoList = await query(`
-            SELECT 
-                OST.idOcorrenciaSubTipo as id,
-                OST.idOcorrenciaTipo,
-                OST.deOcorrenciaSubTipo AS texto
-            FROM 
-                OCOTB.OcorrenciaSubTipo OST
-            WHERE 
-                OST.idOcorrenciaTipo = ${idParameter}`)
-        }
-
-        console.log('Resultado da consulta listar:', retornoBancoList);
-
-
-        res.json(retornoBancoList);
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaSubTipoByTipoOcorrencia", {idOcorrenciaTipo: idParameter});
+       
+        res.json(retornoBancoDados);
 
     } catch (error) {
-        console.error('Erro ao listar ocorrências:', error);
-        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        console.error('Erro ao listar Sub Tipo Ocorrência:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaSubTipoRoute)' });
+    } 
+});
+
+
+/**
+ * Prepara a tela inicial de manter
+ * Tanto inclusão de uma nova quanto manter uma existente
+ */
+router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
+    
+    const idParameter = req.params.id;
+
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaSubTipo", {idOcorrenciaSubTipo: idParameter});
+        
+        if (idParameter > 0 && retornoBancoDados.length > 0){
+            
+            const primeiraLinha = retornoBancoDados[0];
+
+            res.render(
+                'pages/ocorrenciaSubTipoManter', 
+                { 
+                    rota: '/api/ocorrenciaSubTipo/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Ocorrência SubTipo', 
+                    subCabecalho: 'Incluir',
+                    
+                    idOcorrenciaSubTipo: primeiraLinha.idOcorrenciaSubTipo,
+                    nmOcorrenciaSubTipo: primeiraLinha.nmOcorrenciaSubTipo,
+                    
+
+                    idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo
+                    
+                });
+        }else {
+
+            res.render(
+                'pages/ocorrenciaSubTipoManter', 
+                { 
+                    rota: '/api/ocorrenciaSubTipo/salvar',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Ocorrência SubTipo', 
+                    subCabecalho: 'Incluir',
+                    
+                    idOcorrenciaSubTipo: 0,
+                    nmOcorrenciaSubTipo: '',
+                    
+                    idOcorrenciaTipo: 0
+                    
+                });
+        }
+
+    } catch (error) {
+        console.error('Erro ao listar Ocorrência SubTipo:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaSubTipoRoute)' });
     } 
 });
 
 
 
 /**
- * Rota para pesquisar uma ocorrência
+ * Para salvar um novo registro ou atualizar um existente
  */
-router.get('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
-    const ocorrenciaId = req.params.id;
-
-    let usuarioLogado = req.session.usuario;
+router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
+    
+    const { idOcorrenciaSubTipo, idOcorrenciaTipo, nmOcorrenciaSubTipo } = req.body;
 
     try {
-        let retornoBancoDados = await query(`
-            SELECT 
-                 OCO.idOcorrencia
-                ,OCO.deOcorrencia
-                ,OCO.dtOcorrencia
-                ,OCO.idLocal	
-                ,OCO.idPessoa
-                ,OCO.idOcorrenciaSubTipo
-                ,OCO.idCurso
-                ,OS.deOcorrenciaSituacao
-            FROM 
-                OCOTB.Ocorrencia OCO
-                INNER JOIN OCOTB.Pessoa P ON OCO.idPessoa = OCO.idPessoa
-                INNER JOIN OCOTB.OcorrenciaHistoricoSituacao CHS ON CHS.idOcorrencia = OCO.idOcorrencia AND CHS.icAtivo = 1
-                INNER JOIN OCOTB.OcorrenciaSituacao OS ON OS.idOcorrenciaSituacao = CHS.idOcorrenciaSituacao
-            WHERE 
-                P.idPessoa = ${usuarioLogado.idPessoa}`);
-
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_setOcorrenciaSubTipo", 
+            {
+                idOcorrenciaSubTipo: idOcorrenciaSubTipo,
+                idOcorrenciaTipo: idOcorrenciaTipo,
+                nmOcorrenciaSubTipo: nmOcorrenciaSubTipo
+            });
+        
         console.log('Resultado da consulta:', retornoBancoDados);
 
-
-        res.render('pages/ocorrenciaManter', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
+        return res.redirect('/api/ocorrenciaSubTipo/listar/0');
 
     } catch (error) {
-        console.error('Erro ao listar ocorrências:', error);
-        res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        console.log(error);
+        console.error('Erro ao salvar ocorrenciaTipo:', error);
+        
+        req.session.mensagemErro = {
+            id: 0,
+            cssClass: [' alert-danger '],
+            mensagem: error
+       };
+
+        return res.redirect('/api/ocorrenciaSubTipo/listar/0');
     } 
 });
-
 module.exports = router;
