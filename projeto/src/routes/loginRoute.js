@@ -4,6 +4,7 @@ const path = require('path');
 //const telegram = require('../util/telegram');
 //const whatsapp = require('../util/whatsapp');
 //const WhatsAppSender = require('../util/whatsappClass');
+const emailSendGrid = require('../util/email_SendGrid');
 const { conectarBanco, querySoredProcedure } = require('../midleware/database_middleware');
 
 
@@ -88,11 +89,11 @@ router.get('/logout', conectarBanco, async (req, res) => {
  * Realiza de fato a recuperação da senha e usuario.
  */
 router.post('/loginRecuperaSenha', conectarBanco, async (req, res) => {
-    const { coAcesso, nuCPF } = req.body;
+    const { coAcesso, nuCPF, edMail } = req.body;
 
     try {
 
-        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getLoginRecuperaUsuarioSenha", {coAcesso: coAcesso, nuCPF: nuCPF});
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getLoginRecuperaUsuarioSenha", {coAcesso: coAcesso, nuCPF: nuCPF, edMail: edMail});
         let mensagemRetorno;
 
         console.log('Resultado da consulta:', retornoBancoDados);
@@ -105,8 +106,9 @@ router.post('/loginRecuperaSenha', conectarBanco, async (req, res) => {
             //const whatsappSender = new WhatsAppSender();
 
             //telegram.enviaMensagem(primeiraLinha.nuTelefone, 'Seu usuário e senha são ' + primeiraLinha.coAcesso + ' e ' + primeiraLinha.coSenha)    
-
-            mensagemRetorno = 'Dandos de login enviado para o telegran ' + primeiraLinha.nuTelefone;
+            //mensagemRetorno = 'Dandos de login enviado para o telegran ' + primeiraLinha.nuTelefone;
+            emailSendGrid.enviaMensagem(primeiraLinha.edMail, 'Sistema Registro de Ocorrências - Recuperação de senha', 'Seu usuário e senha são ' + primeiraLinha.coAcesso + ' e ' + primeiraLinha.coSenha)
+            mensagemRetorno = 'Dados de login enviado para o email ' + primeiraLinha.edMail;
 
         }else {
 

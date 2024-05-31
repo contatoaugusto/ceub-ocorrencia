@@ -123,3 +123,18 @@ legend {
     --tw-bg-opacity: 1;
     background-color: #43054e;
 }
+
+
+.container {
+    margin-top: 50px;
+  }
+  .list-container, .selected-container {
+    height: 300px;
+    overflow-y: auto;
+  }
+  .list-group-item {
+    font-size: 0.875rem; /* Define letras pequenas */
+  }
+  .btn-add, .btn-remove {
+    font-size: 0.75rem; /* Define letras pequenas nos botões */
+  }

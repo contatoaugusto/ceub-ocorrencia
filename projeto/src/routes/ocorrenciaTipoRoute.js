@@ -72,6 +72,15 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
             
             const primeiraLinha = retornoBancoDados[0];
 
+            let retornoBancoDadosTipoOcorrencia_Pessoa = await querySoredProcedure("OCOTB.SP_getPessoaByOcorrenciaTipo", {idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo});
+            let retornoBancoDadosTipoOcorrencia_Perfil = await querySoredProcedure("OCOTB.SP_getPerfilByOcorrenciaTipo", {idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo});
+
+            const idPessoaConfiguradaComoResponsaveisList = retornoBancoDadosTipoOcorrencia_Pessoa.map(ocorrencia => ocorrencia.idPessoa);
+            const pessoasFiltradas = retornoBancoDadosPessoa.filter(pessoa => idPessoaConfiguradaComoResponsaveisList.length == 0 || !idPessoaConfiguradaComoResponsaveisList.includes(pessoa.idPessoa));
+
+            const idPerfilConfiguradaComoResponsaveisList = retornoBancoDadosTipoOcorrencia_Perfil.map(ocorrencia => ocorrencia.idPerfil);
+            const peefilFiltradas = retornoBancoDadosPerfil.filter(pessoa => idPerfilConfiguradaComoResponsaveisList.length == 0 || !idPerfilConfiguradaComoResponsaveisList.includes(pessoa.idPerfil));
+
             res.render(
                 'pages/ocorrenciaTipoManter', 
                 { 
@@ -82,9 +91,10 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo,
                     nmOcorrenciaTipo: primeiraLinha.nmOcorrenciaTipo,
                     icResponsavelCoordenadorCurso: primeiraLinha.icResponsavelCoordenadorCurso,
-                    pessoaList: retornoBancoDadosPessoa,
-                    perfilList: retornoBancoDadosPerfil,
-                    responsavelConfiguradoList: {}
+                    pessoaList: pessoasFiltradas,
+                    perfilList: peefilFiltradas,
+                    pessoaList_Configurado: retornoBancoDadosTipoOcorrencia_Pessoa,
+                    perfilList_Configurado: retornoBancoDadosTipoOcorrencia_Perfil
                });
         }else {
 
@@ -100,7 +110,8 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     icResponsavelCoordenadorCurso: false,
                     pessoaList: retornoBancoDadosPessoa,
                     perfilList: retornoBancoDadosPerfil,
-                    responsavelConfiguradoList: {}
+                    pessoaList_Configurado: [],
+                    perfilList_Configurado: []
                 });
         }
 
@@ -115,7 +126,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  */
 router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
     
-    const { idOcorrenciaTipo, nmOcorrenciaTipo, icResponsavelCoordenadorCurso, responsavelConfiguradoList } = req.body;
+    const { idOcorrenciaTipo, nmOcorrenciaTipo, icResponsavelCoordenadorCurso, hiddenResponsavelConfiguradoList } = req.body;
 
     try {
         
@@ -128,15 +139,17 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
         
         const primeiraLinha = retornoBancoDados[0];
         
-         JSON.parse(responsavelConfiguradoList).forEach( obj => {
-            
+        let retornoBancoDados_Delete = await querySoredProcedure("OCOTB.SP_setOcorrenciaTipoResponsavelDeleteByOcorrencia", {idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo});
+
+        JSON.parse(hiddenResponsavelConfiguradoList).forEach( obj => {
+        
             let idPessoa = 0;
             let idPerfil = 0;
         
-            if (obj.hasOwnProperty("idPessoa") && obj.idPessoa != 0 && obj.idPessoa != '0') {
-                idPessoa  = obj.idPessoa;
-            } else if (obj.hasOwnProperty("idPerfil")  && obj.idPerfil != 0 && obj.idPerfil != '0') {
-                idPerfil  = obj.idPerfil;
+            if (obj.hasOwnProperty("pessoa") && obj.pessoa != 0 && obj.pessoa != '0') {
+                idPessoa  = obj.pessoa;
+            } else if (obj.hasOwnProperty("perfil")  && obj.perfil != 0 && obj.perfil != '0') {
+                idPerfil  = obj.perfil;
             }
 
             let retorno = querySoredProcedure("OCOTB.SP_setOcorrenciaTipoResponsavel", 

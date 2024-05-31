@@ -35,7 +35,7 @@ GO
 			INNER JOIN OCOTB.OcorrenciaSubTipo OST  ON OST.idOcorrenciaSubTipo = OCO.idOcorrenciaSubTipo
 
 			INNER JOIN OCOTB.OcorrenciaTipo	OT ON OT.idOcorrenciaTipo = OST.idOcorrenciaTipo
-			LEFT JOIN OCOTB.OcorrenciaTipoResponsavel	OTR ON OTR.idOcorrenciaTipo = OT.idOcorrenciaTipo
+			LEFT JOIN OCOTB.OcorrenciaTipoResponsavel	OTR ON OTR.idOcorrenciaTipo = OT.idOcorrenciaTipo AND OTR.icAtivo = 1
 			LEFT JOIN OCOTB.Pessoa P ON P.idPessoa = OTR.idPessoa
 			LEFT JOIN OCOTB.Perfil PE ON PE.idPerfil = OTR.idPerfil
 
@@ -78,7 +78,7 @@ GO
 		FROM
 			OCOTB.Pessoa					P
 			INNER JOIN OCOTB.Usuario		U	ON U.idPessoa = P.idPessoa
-			INNER JOIN OCOTB.PerfilUsuario	PU	ON PU.idUsuario = U.idUsuario
+			INNER JOIN OCOTB.PerfilUsuario	PU	ON PU.idUsuario = U.idUsuario AND PU.icAtivo = 1
 			INNER JOIN OCOTB.Perfil			PE	ON PE.idPerfil = PU.idPerfil
 		WHERE
 			P.idPessoa = @idPessoa
@@ -122,7 +122,8 @@ GO
 
 	CREATE PROCEDURE OCOTB.SP_getLoginRecuperaUsuarioSenha (
 		@coAcesso	varchar(10) = null,
-		@nuCPF    	char(11)	= null
+		@nuCPF    	char(11)	= null,
+		@edMail    	varchar(50)	= null
 	)
 	AS
 	BEGIN
@@ -133,6 +134,7 @@ GO
 			P.idPessoa,
 			P.nmPessoa,
 			P.urlFoto,
+			P.edMail,
 			P.nuTelefone,
 			A.idAluno,
 			A.idCurso,
@@ -144,6 +146,7 @@ GO
 		WHERE 
 				1 = (CASE WHEN @coAcesso = '' OR @coAcesso IS NULL OR coAcesso	= @coAcesso THEN 1 ELSE 0 END)
 			AND 1 = (CASE WHEN @nuCPF = '' OR @nuCPF IS NULL OR nuCPF	= @nuCPF THEN 1 ELSE 0 END)
+			AND 1 = (CASE WHEN @edMail = '' OR @edMail IS NULL OR edMail	= @edMail THEN 1 ELSE 0 END)
 	END
 GO
 
@@ -156,7 +159,8 @@ GO
 		@nmPessoa	VARCHAR(100),
         @nuCPF		CHAR(11),
         @urlFoto	VARCHAR(100),
-		@nuTelefone VARCHAR(12)
+		@nuTelefone VARCHAR(12),
+		@edMail VARCHAR(50)
 	)
 	AS
 	BEGIN
@@ -168,14 +172,16 @@ GO
 				nmPessoa,
 				nuCPF,
 				urlFoto,
-				nuTelefone
+				nuTelefone,
+				edMail
 			)
 			SELECT 
 				(select max(idPessoa) + 1 from OCOTB.Pessoa),
 				@nmPessoa,
 				@nuCPF,
 				@urlFoto,
-				@nuTelefone
+				@nuTelefone,
+				@edMail
 			
 			SET @idPessoa = (select max(idPessoa) from OCOTB.Pessoa)
 		END
@@ -185,7 +191,8 @@ GO
 				nmPessoa	= @nmPessoa,
 				nuCPF		= @nuCPF,
 				urlFoto		= @urlFoto,
-				nuTelefone  = @nuTelefone
+				nuTelefone  = @nuTelefone,
+				edMail		= @edMail
 			WHERE 
 				idPEssoa = @idPessoa
 		END
@@ -210,6 +217,7 @@ GO
             P.nuCPF,
             P.urlFoto,
 			P.nuTelefone,
+			P.edMail,
 
 			-- Usuario
 			U.idUsuario,
@@ -224,6 +232,60 @@ GO
 	END
 GO
 
+
+	drop procedure if exists OCOTB.SP_getPessoaByPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_getPessoaByPerfil (
+		@idPerfil	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            P.idPessoa,
+            P.nmPessoa,
+			P.idPessoa AS id,  	-- Para adequar a construção de elemntos na tela dinamicamente
+            P.nmPessoa AS texto,-- Para adequar a construção de elemntos na tela dinamicamente 
+            P.nuCPF,
+            P.urlFoto,
+			P.nuTelefone,
+			P.edMail,
+
+			PU.idUsuario
+        FROM 
+			OCOTB.Perfil 					PER
+			INNER JOIN OCOTB.PerfilUsuario 	PU 	ON PU.idPerfil = PER.idPerfil AND PU.icAtivo = 1
+			INNER JOIN OCOTB.Usuario 		U 	ON U.idUsuario = PU.idUsuario
+			INNER JOIN OCOTB.Pessoa 		P	ON P.idPessoa = U.idPessoa
+        WHERE 
+           PER.idPerfil = @idPerfil
+	END
+GO
+
+	drop procedure if exists OCOTB.SP_getPessoaByOcorrenciaTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_getPessoaByOcorrenciaTipo (
+		@idOcorrenciaTipo	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            P.idPessoa,
+            P.nmPessoa,
+			P.idPessoa AS id,  	-- Para adequar a construção de elemntos na tela dinamicamente
+            P.nmPessoa AS texto,-- Para adequar a construção de elemntos na tela dinamicamente 
+            P.nuCPF,
+            P.urlFoto,
+			P.nuTelefone,
+			P.edMail
+
+        FROM 
+			OCOTB.OcorrenciaTipoResponsavel OTR	
+			INNER JOIN OCOTB.Pessoa 		P	ON P.idPessoa = OTR.idPEssoa
+        WHERE 
+            OTR.idOcorrenciaTipo = @idOcorrenciaTipo
+			AND OTR.icAtivo = 1
+	END
+GO
 
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Usuário <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -315,6 +377,8 @@ GO
 				(select max(idPerfil) + 1 from OCOTB.Perfil),
 				@nmPerfil,
 				@dePerfil
+
+			SET @idPerfil = (select max(idPerfil) from OCOTB.Perfil)
 		END
 		ELSE
 		BEGIN
@@ -325,6 +389,7 @@ GO
 				idPerfil = @idPerfil
 		END
 
+		SELECT @idPerfil AS idPerfil
 	END
 GO
 
@@ -339,11 +404,120 @@ GO
 		SELECT 
             idPerfil,
 			nmPerfil,
+			idPerfil id,	-- Para adequar a construção de elemntos na tela dinamicamente
+			nmPerfil texto,	-- Para adequar a construção de elemntos na tela dinamicamente
 			dePerfil
         FROM 
 			OCOTB.Perfil
         WHERE 
             1 = (CASE WHEN ISNULL(@idPerfil, 0) = 0  OR idPerfil = @idPerfil THEN 1 ELSE 0 END)
+	END
+GO
+
+drop procedure if exists OCOTB.SP_getPerfilByOcorrenciaTipo
+GO
+	CREATE PROCEDURE OCOTB.SP_getPerfilByOcorrenciaTipo (
+		@idOcorrenciaTipo	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            PER.idPerfil,
+			PER.nmPerfil,
+			PER.idPerfil id,	-- Para adequar a construção de elemntos na tela dinamicamente
+			PER.nmPerfil texto,	-- Para adequar a construção de elemntos na tela dinamicamente
+			PER.dePerfil
+        FROM 
+			OCOTB.OcorrenciaTipoResponsavel OTR	
+			INNER JOIN OCOTB.Perfil 		PER	ON PER.idPerfil = OTR.idPerfil
+        WHERE 
+            OTR.idOcorrenciaTipo = @idOcorrenciaTipo
+			AND OTR.icAtivo = 1
+	END
+GO
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Perfil Usuario <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setPerfilUsuario
+GO
+	CREATE PROCEDURE OCOTB.SP_setPerfilUsuario (
+		@idPerfilUsuario	INT = NULL,
+        @idPerfil			INT,
+		@idUsuario			INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idPerfilUsuario, 0) = 0 OR @idPerfilUsuario = '0' OR @idPerfilUsuario = ''
+		BEGIN
+			INSERT INTO OCOTB.PerfilUsuario (
+				idPerfilUsuario,
+				idPerfil,
+				idUsuario
+			)
+			SELECT 
+				(select max(idPerfilUsuario) + 1 from OCOTB.PerfilUsuario),
+				@idPerfil,
+				@idUsuario
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.PerfilUsuario SET
+				idPerfil	= @idPerfil,
+				idUsuario	= @idUsuario
+			WHERE 
+				idPerfil = @idPerfil
+		END
+
+	END
+GO
+
+drop procedure if exists OCOTB.SP_setPerfilUsuarioDeleteByPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_setPerfilUsuarioDeleteByPerfil (
+		@idPerfil	INT
+	)
+	AS
+	BEGIN
+		UPDATE OCOTB.PerfilUsuario SET icAtivo = 0 WHERE idPerfil = @idPerfil
+	END
+GO
+
+	drop procedure if exists OCOTB.SP_getPerfilUsuario
+GO
+	CREATE PROCEDURE OCOTB.SP_getPerfilUsuario (
+		@idPerfilUsuario	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            idPerfilUsuario,
+			idPerfil,
+			idUsuario
+        FROM 
+			OCOTB.PerfilUsuario
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idPerfilUsuario, 0) = 0  OR idPerfilUsuario = @idPerfilUsuario THEN 1 ELSE 0 END)
+			
+	END
+GO
+
+drop procedure if exists OCOTB.SP_getPerfilUsuarioByPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_getPerfilUsuarioByPerfil (
+		@idPerfil	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+           	idPerfilUsuario,
+			idPerfil,
+			idUsuario
+        FROM 
+			OCOTB.PerfilUsuario
+        WHERE 
+			idPerfil = @idPerfil
 	END
 GO
 
@@ -483,11 +657,13 @@ GO
 
 		IF ISNULL(@idOcorrenciaTipoResponsavel, 0) = 0 OR @idOcorrenciaTipoResponsavel = '0' OR @idOcorrenciaTipoResponsavel = ''
 		BEGIN
+
 			IF ISNULL(@idPessoa, 0) = 0 OR @idPessoa = '0' OR @idPessoa = ''
 				SET @idPessoa = NULL
 			IF ISNULL(@idPerfil, 0) = 0 OR @idPerfil = '0' OR @idPerfil = ''
 				SET @idPerfil = NULL
 
+			
 			INSERT INTO OCOTB.OcorrenciaTipoResponsavel (
 				idOcorrenciaTipo,
 				idPessoa,
@@ -497,7 +673,7 @@ GO
 				@idOcorrenciaTipo,
 				@idPessoa,
 				@idPerfil
-			
+				
 			SET @idOcorrenciaTipoResponsavel = SCOPE_IDENTITY()
 		END
 		ELSE
@@ -514,7 +690,16 @@ GO
 	END
 GO
 
-
+	drop procedure if exists OCOTB.SP_setOcorrenciaTipoResponsavelDeleteByOcorrencia
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaTipoResponsavelDeleteByOcorrencia (
+		@idOcorrenciaTipo	INT
+	)
+	AS
+	BEGIN
+		UPDATE OCOTB.OcorrenciaTipoResponsavel SET icAtivo = 0 WHERE idOcorrenciaTipo = @idOcorrenciaTipo
+	END
+GO
 
 
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Sub Tipo Ocorrencia <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

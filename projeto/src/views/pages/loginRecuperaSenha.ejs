@@ -23,9 +23,9 @@
                     <h1>Reperar Senha</h1>
                     <br>
                     <strong>
-                        <p>Informe seu usuario ou CPF</p>
-                        <p>Será enviado uma mensagem com a nova senha</p>
-                        <p>via Telegram no número celular cadastrado</p>
+                        <p>Informe pelo menos um dos campos abaixo: usuario, CPF ou e-mail</p>
+                        <p>A senha será enviada para o seu e-mail</p>
+                        <!-- <p>via Telegram no número celular cadastrado</p> -->
                     </strong>
                     <div class="form-group">
                         <label for="coAcesso">Usuário:</label>
@@ -34,6 +34,11 @@
                     <div class="form-group">
                         <label for="nuCPF">CPF:</label>
                         <input type="text" name="nuCPF" id="nuCPF" class="form-control" placeholder="Digite seu CPF">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edMail">CPF:</label>
+                        <input type="text" name="edMail" id="edMail" class="form-control" placeholder="Digite seu e-mail">
                     </div>
 
                     <% if (typeof mensagem !== 'undefined') { %>

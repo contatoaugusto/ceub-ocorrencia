@@ -111,3 +111,127 @@
 
         return camposValidos;
     }
+
+
+    /**
+     * Trecho onde é feito o tratamento para os elementos de multiplos valores e seleção
+     */
+    function montaElementoMultiploOptions (botaoAdcionarItem, elementoOptionDisponiveis_ID, elementoOptionSelecionados_ID){
+
+        botaoAdcionarItem.click( function(event) {
+        
+            event.preventDefault();
+
+            let elementoOptionDisponiveis = $('#' + elementoOptionDisponiveis_ID)
+            var availableOptions = elementoOptionDisponiveis.find('li.list-group-item.active');
+            
+            availableOptions.each(function() {
+
+                let option_item = $(this);
+                let data_text = option_item.attr('data-text');
+                let data_value = option_item.attr('data-value');
+                
+                var li_OptionSelecionado = $('<li>');
+
+                li_OptionSelecionado.text(data_text);
+                li_OptionSelecionado.addClass('list-group-item');
+                li_OptionSelecionado.attr('data-value', data_value);
+                li_OptionSelecionado.attr('data-text', data_text);
+                
+                $('#' + elementoOptionSelecionados_ID).append(li_OptionSelecionado);
+                montaElementoMultiploOptions_botaoRemover (elementoOptionDisponiveis_ID, elementoOptionSelecionados_ID);
+
+                // Remover a opção selecionada da lista de disponíveis
+                option_item.remove();
+            });
+
+        });
+
+        // Chama o evento e ações para o botão Remover item das opções selecionadas
+        montaElementoMultiploOptions_botaoRemover(elementoOptionDisponiveis_ID, elementoOptionSelecionados_ID);
+
+        montaElementoMultiploOptions_eventosClassActive (elementoOptionDisponiveis_ID);
+
+    }
+
+    /**
+     * Basica registra os eventos para troca de classes e itens selcionados nas opções disponíveis do componente
+     */
+    function montaElementoMultiploOptions_eventosClassActive (elementoOptionDisponiveis_ID) {
+
+        // Permitir múltipla seleção com clique
+        $('#' + elementoOptionDisponiveis_ID).find('li.list-group-item').each(function() {
+
+            $(this).on('click', function() {
+
+                if ($(this).hasClass('active'))
+                    $(this).removeClass('active');
+                else
+                    $(this).addClass('active');
+            });
+        });
+    }
+
+    
+    /**
+     * Avalia o elemento com os ítens selecionados e adiciona um um botão remover no final de cada linha
+     */
+    function montaElementoMultiploOptions_botaoRemover (elementoOptionDisponiveis_ID, elementoOptionSelecionados_ID){
+
+        $('#' + elementoOptionSelecionados_ID).find('li').each(function() {
+
+            let itemSelecionado = $(this);
+
+            if (itemSelecionado.find('i').length <= 0){
+                
+                let removeBtn = $('<i>');
+                //removeBtn.text('Remover');
+                //removeBtn.addClass('<i class="fa-solid fa-trash fa-lg"> btn btn-danger btn-sm float-right');
+                removeBtn.addClass('fa-solid fa-trash fa-lg float-right btn');
+                itemSelecionado.append(removeBtn);
+         
+                // Remove o item das opções de responsáveis
+                removeBtn.on('click', function() {
+
+                    let li_selecionado = $(this).parent();
+
+                    $(this).remove();
+
+                    $('#' + elementoOptionDisponiveis_ID).append(li_selecionado.clone());
+
+                    // Remover o item da lista de selecionados
+                    li_selecionado.remove();
+
+                    montaElementoMultiploOptions_eventosClassActive (elementoOptionDisponiveis_ID)
+                }); 
+            }           
+        });
+
+    }
+
+    /**
+    * Ao passar como parâmetro o elemtno sabidamente do tipo UL, seleciona todos os seus valores LI e monta o JSON a ser enviado para o backend
+    */
+    function montaJsonElementosSelecionados (elementoOptionSelecionados, hiddenElementosTarget){
+        
+        let json_list = [];
+        
+        if (hiddenElementosTarget.val() != undefined && hiddenElementosTarget.val().length > 0 )
+            json_list = JSON.parse(hiddenElementosTarget.val());
+        
+        
+        elementoOptionSelecionados.find('li').each(function() {
+
+            let itemSelecionadoArray = $(this).attr('data-value').split(':');
+            
+            let json_item = {
+                [itemSelecionadoArray[0]]: itemSelecionadoArray[1]
+            };
+            
+            json_list.push(json_item);
+
+        });
+
+        hiddenElementosTarget.val(JSON.stringify(json_list))
+        console.log(json_list);
+    }

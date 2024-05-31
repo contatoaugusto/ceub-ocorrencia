@@ -40,11 +40,12 @@
                         <div class="mb-3 row">
                             <div class="col-md-12">
                                 <fieldset>
-                                    <legend><h5>Resposável Tipo Ocorrência</h5></legend>
+                                    <legend><h5>Resposável Tipo Ocorrência</h5></legend>  
                                     <div class="col-sm-12">
                                         
                                         
-                                        <input type="hidden" id="responsavelConfiguradoList" name="responsavelConfiguradoList" value="<%- responsavelConfiguradoList %>">
+                                        <input type="hidden" id="hiddenResponsavelConfiguradoList" name="hiddenResponsavelConfiguradoList" value="">
+
                         
                                         <!-- Pessoa -->
                                         <div class="container">
@@ -58,23 +59,31 @@
                                                     <% 
                                                         pessoaList.forEach(item => { 
                                                     %>
-                                                            <li class="list-group-item" data-value="<%- item.idPessoa %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
+                                                            <li class="list-group-item" data-value="pessoa:<%- item.idPessoa %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
                                                     <%
                                                         });
                                                     %>  
                                                   </ul>
                                                 </div>
                                               </div>
+                                              
                                               <div class="col-md-2 d-flex align-items-center justify-content-center">
                                                 <button id="optionsOcorrenciaBotaoAddPessoa" class="btn btn-primary">Adicionar</button>
                                               </div>
+
                                               <div class="col-md-5">
                                                 <div class="card selected-container">
                                                   <div class="card-header">
                                                     <h5 class="card-title">Pessoas Selecionadas</h5>
                                                   </div>
                                                   <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPessoa">
-                                                    <!-- Opções selecionadas aparecerão aqui -->
+                                                  <% 
+                                                    pessoaList_Configurado.forEach(item => { 
+                                                  %>
+                                                      <li class="list-group-item" data-value="pessoa:<%- item.idPessoa %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
+                                                  <%
+                                                    });
+                                                  %>  
                                                   </ul>
                                                 </div>
                                               </div>
@@ -98,7 +107,7 @@
                                                     <% 
                                                         perfilList.forEach(item => { 
                                                     %>
-                                                            <li class="list-group-item" data-value="<%- item.idPerfil %>" data-text="<%- item.nmPerfil %>"><%= item.nmPerfil %></li>
+                                                            <li class="list-group-item" data-value="perfil:<%- item.idPerfil %>" data-text="<%- item.nmPerfil %>"><%= item.nmPerfil %></li>
                                                     <%
                                                         });
                                                     %>  
@@ -114,8 +123,14 @@
                                                     <h5 class="card-title">Perfis Selecionadas</h5>
                                                   </div>
                                                   <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPerfil">
-                                                    <!-- Opções selecionadas aparecerão aqui -->
-                                                  </ul>
+                                                    <% 
+                                                      perfilList_Configurado.forEach(item => { 
+                                                    %>
+                                                        <li class="list-group-item" data-value="perfil:<%- item.idPerfil %>" data-text="<%- item.nmPerfil %>"><%= item.nmPerfil %></li>
+                                                    <%
+                                                      });
+                                                    %>  
+                                                    </ul>
                                                 </div>
                                               </div>
                                             </div>
@@ -136,20 +151,6 @@
             </div>
         </div>
    
-    <script src="/javascript/tipoocorrencia_javascript.js"></script>
+    <script src="/javascript/ocorrenciatipo_javascript.js"></script>
 
-    <style>
-        .container {
-          margin-top: 50px;
-        }
-        .list-container, .selected-container {
-          height: 300px;
-          overflow-y: auto;
-        }
-        .list-group-item {
-          font-size: 0.875rem; /* Define letras pequenas */
-        }
-        .btn-add, .btn-remove {
-          font-size: 0.75rem; /* Define letras pequenas nos botões */
-        }
-      </style>
+   

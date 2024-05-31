@@ -33,6 +33,51 @@
                             </div>
                         </div>
 
+
+                        <input type="hidden" id="hiddenResponsavelConfiguradoList" name="hiddenResponsavelConfiguradoList" value="">
+                        
+                        <!-- Pessoa -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-5">
+                                <div class="card list-container">
+                                    <div class="card-header">
+                                    <h5 class="card-title">Pessoas/Usuário Disponíveis</h5>
+                                    </div>
+                                    <ul class="list-group list-group-flush" id="optionsOcorrenciaDisponiveisPessoa">
+                                    <% 
+                                        pessoaList.forEach(item => { 
+                                    %>
+                                            <li class="list-group-item" data-value="usuario:<%- item.idUsuario %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
+                                    <%
+                                        });
+                                    %>  
+                                    </ul>
+                                </div>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                <button id="optionsOcorrenciaBotaoAddPessoa" class="btn btn-primary">Adicionar</button>
+                                </div>
+                                <div class="col-md-5">
+                                <div class="card selected-container">
+                                    <div class="card-header">
+                                    <h5 class="card-title">Pessoas Selecionadas</h5>
+                                    </div>
+                                    
+                                    <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPessoa">
+                                    <% 
+                                        pessoaList_Configurado.forEach(item => { 
+                                    %>
+                                        <li class="list-group-item" data-value="usuario:<%- item.idUsuario %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
+                                    <%
+                                        });
+                                    %>  
+                                    </ul>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
                         <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/perfil/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
                     </form>

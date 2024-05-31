@@ -54,10 +54,20 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
     try {
         
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPerfil", {idPerfil: idParameter});
-        
+        let retornoBancoDadosPessoa = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: 0});
+
         if (idParameter > 0 && retornoBancoDados.length > 0){
             
             const primeiraLinha = retornoBancoDados[0];
+
+            let retornoBancoDadosPessoa_Configurado = await querySoredProcedure("OCOTB.SP_getPessoaByPerfil", {idPerfil: primeiraLinha.idPerfil});
+
+            const idPessoaConfiguradaComoResponsaveisList = retornoBancoDadosPessoa_Configurado.map(ocorrencia => ocorrencia.idPessoa);
+            const pessoasFiltradas = retornoBancoDadosPessoa.filter(pessoa => 
+                pessoa.idUsuario > 0 &&
+                (idPessoaConfiguradaComoResponsaveisList.length == 0 || 
+                !idPessoaConfiguradaComoResponsaveisList.includes(pessoa.idPessoa)));
+
 
             res.render(
                 'pages/perfilManter', 
@@ -68,7 +78,9 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     subCabecalho: 'Incluir',
                     idPerfil: primeiraLinha.idPerfil,
                     nmPerfil: primeiraLinha.nmPerfil,
-                    dePerfil: primeiraLinha.dePerfil
+                    dePerfil: primeiraLinha.dePerfil,
+                    pessoaList: pessoasFiltradas,
+                    pessoaList_Configurado: retornoBancoDadosPessoa_Configurado
                });
         }else {
 
@@ -81,7 +93,9 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     subCabecalho: 'Incluir',
                     idPerfil: 0,
                     nmPerfil: '',
-                    dePerfil: ''
+                    dePerfil: '',
+                    pessoaList: retornoBancoDadosPessoa,
+                    pessoaList_Configurado: {}
                 });
         }
 
@@ -96,7 +110,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  */
 router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
     
-    const { idPerfil, nmPerfil, dePerfil } = req.body;
+    const { idPerfil, nmPerfil, dePerfil, hiddenResponsavelConfiguradoList } = req.body;
 
     try {
         
@@ -107,9 +121,26 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
                 dePerfil: dePerfil
             });
         
-        console.log('Resultado da consulta:', retornoBancoDados);
+        const primeiraLinha = retornoBancoDados[0];
 
-        //res.render('pages/ocorrenciaManter', { session: req.session, tituloCabecalho: 'Ocorrências', ocorrenciasMinhas: retornoBancoDados});
+        let retornoBancoDados_Delete = await querySoredProcedure("OCOTB.SP_setPerfilUsuarioDeleteByPerfil", {idPerfil: primeiraLinha.idPerfil});
+
+        JSON.parse(hiddenResponsavelConfiguradoList).forEach( obj => {
+        
+            let idUsuario = 0;
+        
+            if (obj.hasOwnProperty("usuario") && obj.usuario != 0 && obj.usuario != '0')
+                idUsuario  = obj.usuario;
+            
+            let retorno = querySoredProcedure("OCOTB.SP_setPerfilUsuario", 
+            {
+                idPerfilUsuario: 0,
+                idPerfil: primeiraLinha.idPerfil,
+                idUsuario: idUsuario
+            });
+        });
+
+
         return res.redirect('/api/perfil/listar/0');
 
     } catch (error) {

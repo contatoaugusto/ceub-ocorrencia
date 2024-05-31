@@ -29,6 +29,7 @@
 	 [nuCPF]    char(11) NOT NULL,
 	 [urlFOto]  varchar(100) NULL,
 	 [nuTelefone]  varchar(12) NULL,
+	 [edMail]  varchar(50) NOT NULL,
 	 
 	 CONSTRAINT [PK_Pessoa] PRIMARY KEY CLUSTERED ([idPessoa] ASC),
 	 CONSTRAINT [UK_Pessoa_CPF] UNIQUE NONCLUSTERED ([nuCPF] ASC)
@@ -114,6 +115,7 @@
 		[idPerfilUsuario]	int NOT NULL,
 		[idPerfil]			int NOT NULL,
 		[idUsuario]			int NOT NULL,
+		[icAtivo]			bit	NOT NULL DEFAULT(1),
 
 		CONSTRAINT [FK_PerfilUsuario_Perfil] FOREIGN KEY ([idPerfil])  REFERENCES OCOTB.Perfil([idPerfil]),
 		CONSTRAINT [FK_PerfilUsuario_Usuario] FOREIGN KEY ([idUsuario])  REFERENCES [OCOTB].[Usuario]([idUsuario])
@@ -158,20 +160,23 @@
 
 	
 	-- ************************************** [OCOTB].[ResponsavelTipoOcorrencia]
-	CREATE TABLE [OCOTB].[OcorrenciaTipoResponsavel]
+	CREATE TABLE OCOTB.OcorrenciaTipoResponsavel
 	(
 		[idOcorrenciaTipoResponsavel]	int IDENTITY (1, 1) NOT NULL ,
 		[idOcorrenciaTipo]				tinyint NOT NULL ,
 		[idPessoa]						int		NULL ,
 		[idPerfil]						int		NULL ,  -- Nesse caso deve integrar com o SGI e ler a tabela SISTB.PerfilUsuario para descobrir todos os usuários que tem acesso a esse perfil,
+		[icAtivo]						bit		NOT NULL DEFAULT(1),
 		
 		 CONSTRAINT [PK_OcorrenciaTipoResponsavel] PRIMARY KEY CLUSTERED ([idOcorrenciaTipoResponsavel] ASC),
-		 CONSTRAINT [UK_OcorrenciaTipoResponsavel_Pessoa_Perfil_OcorrenciaTipo] UNIQUE NONCLUSTERED ([idPessoa] ASC, [idPerfil] ASC, [idOcorrenciaTipo] ASC),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_Pessoa] FOREIGN KEY ([idPessoa])  REFERENCES [OCOTB].[Pessoa]([idPessoa]),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_Perfil] FOREIGN KEY ([idPerfil])  REFERENCES [OCOTB].[Perfil]([idPerfil]),
 		 CONSTRAINT [FK_OcorrenciaTipoResponsavel_OcorrenciaTipo] FOREIGN KEY ([idOcorrenciaTipo])  REFERENCES [OCOTB].[OcorrenciaTipo]([idOcorrenciaTipo])
 	);
 	GO
+
+	CREATE UNIQUE INDEX UQ_OcorrenciaTipoResponsavel_Pessoa_Perfil_icAtivo ON OCOTB.OcorrenciaTipoResponsavel (idPessoa, idPerfil, idOcorrenciaTipo) WHERE icAtivo = 1;
+	GO 
 
 	CREATE NONCLUSTERED INDEX [IX_OcorrenciaTipoResponsavel_Pessoa] ON [OCOTB].[OcorrenciaTipoResponsavel] ([idPessoa] ASC)
 	GO
@@ -305,20 +310,21 @@
 		nmPessoa,
 		nuCPF,
 		urlFoto,
-		nuTelefone)
+		nuTelefone,
+		edMail)
 	VALUES
-		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4', '6199999999'),
-		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti', '6199999999'),
-		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4', '61992737257'),
-		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999'),
-		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999')
+		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4', '6199999999', 'emailTeste@email.com'),
+		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti', '6199999999', 'emailTeste@email.com'),
+		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4', '61992737257', 'contatoaugusto@gmail.com'),
+		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
+		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com')
 	GO
 
 
