@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail')
 
 // É preciso adicionar a chave da API gerada no servidor de SMPT https://sendgrid.com
 // O github não permite que essa informação seja versionada
-//sgMail.setApiKey()
+
 
 function enviaMensagem (emailTo, assunto, mensagem){
 
