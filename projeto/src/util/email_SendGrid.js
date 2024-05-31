@@ -1,7 +1,8 @@
 const sgMail = require('@sendgrid/mail')
 
-// É preciso descomentar a linha abaixo para funcionar o envio de e-mail
-//sgMail.setApiKey('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')
+// É preciso adicionar a chave da API gerada no servidor de SMPT https://sendgrid.com
+// O github não permite que essa informação seja versionada
+//sgMail.setApiKey()
 
 function enviaMensagem (emailTo, assunto, mensagem){
 
