@@ -1,6 +1,7 @@
 const sgMail = require('@sendgrid/mail')
 
-sgMail.setApiKey('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')
+// É preciso descomentar a linha abaixo para funcionar o envio de e-mail
+//sgMail.setApiKey('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')
 
 function enviaMensagem (emailTo, assunto, mensagem){
 
