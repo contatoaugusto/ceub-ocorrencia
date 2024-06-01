@@ -42,8 +42,9 @@
                                 <div class="col-md-5">
                                 <div class="card list-container">
                                     <div class="card-header">
-                                    <h5 class="card-title">Pessoas/Usuário Disponíveis</h5>
+                                        <h5 class="card-title">Pessoas/Usuário Disponíveis</h5>
                                     </div>
+
                                     <ul class="list-group list-group-flush" id="optionsOcorrenciaDisponiveisPessoa">
                                     <% 
                                         pessoaList.forEach(item => { 
@@ -54,26 +55,27 @@
                                     %>  
                                     </ul>
                                 </div>
+                                
                                 </div>
-                                <div class="col-md-2 d-flex align-items-center justify-content-center">
-                                <button id="optionsOcorrenciaBotaoAddPessoa" class="btn btn-primary">Adicionar</button>
+                                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                    <button id="optionsOcorrenciaBotaoAddPessoa" class="btn btn-primary">Adicionar</button>
                                 </div>
                                 <div class="col-md-5">
-                                <div class="card selected-container">
-                                    <div class="card-header">
-                                    <h5 class="card-title">Pessoas Selecionadas</h5>
+                                    <div class="card selected-container">
+                                        <div class="card-header">
+                                        <h5 class="card-title">Pessoas Selecionadas</h5>
+                                        </div>
+                                        
+                                        <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPessoa">
+                                        <% 
+                                            pessoaList_Configurado.forEach(item => { 
+                                        %>
+                                            <li class="list-group-item" data-value="usuario:<%- item.idUsuario %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
+                                        <%
+                                            });
+                                        %>  
+                                        </ul>
                                     </div>
-                                    
-                                    <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPessoa">
-                                    <% 
-                                        pessoaList_Configurado.forEach(item => { 
-                                    %>
-                                        <li class="list-group-item" data-value="usuario:<%- item.idUsuario %>" data-text="<%- item.nmPessoa %>"><%= item.nmPessoa %></li>
-                                    <%
-                                        });
-                                    %>  
-                                    </ul>
-                                </div>
                                 </div>
                             </div>
                         </div>

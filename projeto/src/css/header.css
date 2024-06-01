@@ -138,3 +138,7 @@ legend {
   .btn-add, .btn-remove {
     font-size: 0.75rem; /* Define letras pequenas nos botões */
   }
+
+  .bordaDireitaTableLinha {
+    border-left: 4px solid #ffc107;
+  }

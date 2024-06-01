@@ -16,6 +16,7 @@
                             <tr>
                                 <th scope="col">Perfil</th>
                                 <th scope="col">Descrição</th>
+                                <th scope="col">Pessoas</th>
                                 <th scope="col">Ações</th>
                             </tr>
                             </thead>
@@ -23,13 +24,20 @@
 
                                 <% 
                                     perfilList.forEach(item => { 
+
+                                        let blocoHtmlResponsavel = "";
+
+                                        let pessoasContidaPerfil_List = 
+                                            pessoaList_Configurado.filter( x => x.idPerfil === item.idPerfil);
+                                        
+                                        pessoasContidaPerfil_List.forEach(z => { 
+                                            blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + z.nmPessoa + '<br>';
+                                        });
                                 %>
                                         <tr>
                                             <td><%= item.nmPerfil %></td>
-                                            
-                                            <td>
-                                                <%= item.dePerfil %>
-                                            </td>
+                                            <td><%= item.dePerfil %></td>
+                                            <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
                                             <td>
                                                 <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/perfil/incluirInit/<%= item.idPerfil %>');">
                                                     <i class="fa-solid fa-pen-to-square"></i>

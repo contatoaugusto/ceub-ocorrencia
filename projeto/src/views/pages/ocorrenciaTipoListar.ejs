@@ -16,6 +16,7 @@
                             <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col">Coordenador do Curso é Responsável</th>
+                                <th scope="col">Responsáveis</th>
                                 <th scope="col">Ações</th>
                             </tr>
                             </thead>
@@ -23,13 +24,26 @@
 
                                 <% 
                                 tipoOcorrenciaList.forEach(item => { 
+                                    
+                                    let blocoHtmlResponsavel = "";
+
+                                    let pessoasContida_List = 
+                                        pessoaList_Configurado.filter( x => x.idOcorrenciaTipo === item.idOcorrenciaTipo);
+                                    let perfisContida_List = 
+                                        perfilList_Configurado.filter( x => x.idOcorrenciaTipo === item.idOcorrenciaTipo);
+                                    
+                                    pessoasContida_List.forEach(z => { 
+                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + z.nmPessoa + '<br>';
+                                    });
+                                    perfisContida_List.forEach(z => { 
+                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + z.nmPerfil + '<br>';
+                                    });
                                 %>
                                         <tr>
                                             <td><%= item.nmOcorrenciaTipo %></td>
                                             
-                                            <td>
-                                                <%= item.icResponsavelCoordenadorCurso ? 'Sim' : '' %>
-                                            </td>
+                                            <td><%= item.icResponsavelCoordenadorCurso ? 'Sim' : '' %></td>
+                                            <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
                                             <td>
                                                 <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/ocorrenciaTipo/incluirInit/<%= item.idOcorrenciaTipo %>');">
                                                     <i class="fa-solid fa-pen-to-square"></i>

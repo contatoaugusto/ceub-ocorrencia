@@ -10,11 +10,14 @@ router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
     try {
         
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPerfil", {idPerfil: idParameter});
-       
+        let retornoBancoDadosPessoa_Configurado = await querySoredProcedure("OCOTB.SP_getPerfilUsuario_Todos");
+
         res.render('pages/perfilListar', {
             tituloCabecalho: 'Lista Perfil', 
             subCabecalho: 'Listar',
-            perfilList: retornoBancoDados}
+            perfilList: retornoBancoDados,
+            pessoaList_Configurado: retornoBancoDadosPessoa_Configurado
+        }
         );
 
 
@@ -55,19 +58,18 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
         
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getPerfil", {idPerfil: idParameter});
         let retornoBancoDadosPessoa = await querySoredProcedure("OCOTB.SP_getPessoa", {idPessoa: 0});
-
+        
         if (idParameter > 0 && retornoBancoDados.length > 0){
             
             const primeiraLinha = retornoBancoDados[0];
 
-            let retornoBancoDadosPessoa_Configurado = await querySoredProcedure("OCOTB.SP_getPessoaByPerfil", {idPerfil: primeiraLinha.idPerfil});
+            let retornoBancoDadosPessoa_Configurado = await querySoredProcedure("OCOTB.SP_getPerfilUsuarioByPerfil", {idPerfil: idParameter});
 
             const idPessoaConfiguradaComoResponsaveisList = retornoBancoDadosPessoa_Configurado.map(ocorrencia => ocorrencia.idPessoa);
             const pessoasFiltradas = retornoBancoDadosPessoa.filter(pessoa => 
                 pessoa.idUsuario > 0 &&
                 (idPessoaConfiguradaComoResponsaveisList.length == 0 || 
                 !idPessoaConfiguradaComoResponsaveisList.includes(pessoa.idPessoa)));
-
 
             res.render(
                 'pages/perfilManter', 
@@ -95,7 +97,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     nmPerfil: '',
                     dePerfil: '',
                     pessoaList: retornoBancoDadosPessoa,
-                    pessoaList_Configurado: {}
+                    pessoaList_Configurado: []
                 });
         }
 

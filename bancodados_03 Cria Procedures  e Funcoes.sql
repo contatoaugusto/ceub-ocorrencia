@@ -251,17 +251,19 @@ GO
 			P.nuTelefone,
 			P.edMail,
 
-			PU.idUsuario
+			PU.idUsuario,
+			PER.idPerfil
         FROM 
 			OCOTB.Perfil 					PER
 			INNER JOIN OCOTB.PerfilUsuario 	PU 	ON PU.idPerfil = PER.idPerfil AND PU.icAtivo = 1
 			INNER JOIN OCOTB.Usuario 		U 	ON U.idUsuario = PU.idUsuario
 			INNER JOIN OCOTB.Pessoa 		P	ON P.idPessoa = U.idPessoa
         WHERE 
-           PER.idPerfil = @idPerfil
+            @idPerfil = @idPerfil
 	END
 GO
 
+	
 	drop procedure if exists OCOTB.SP_getPessoaByOcorrenciaTipo
 GO
 	CREATE PROCEDURE OCOTB.SP_getPessoaByOcorrenciaTipo (
@@ -493,11 +495,16 @@ GO
 	AS
 	BEGIN
 		SELECT 
-            idPerfilUsuario,
-			idPerfil,
-			idUsuario
+            PU.idPerfilUsuario,
+			PU.idPerfil,
+			PU.idUsuario,
+			P.idPessoa,
+			P.nmPessoa
         FROM 
-			OCOTB.PerfilUsuario
+			OCOTB.PerfilUsuario			PU
+			INNER JOIN OCOTB.Perfil		PER	ON PER.idPerfil = PU.idPerfil
+			INNER JOIN OCOTB.Usuario	U 	ON U.idUsuario = PU.idUsuario
+			INNER JOIN OCOTB.Pessoa 	P	ON P.idPessoa = U.idPessoa
         WHERE 
             1 = (CASE WHEN ISNULL(@idPerfilUsuario, 0) = 0  OR idPerfilUsuario = @idPerfilUsuario THEN 1 ELSE 0 END)
 			
@@ -512,16 +519,47 @@ GO
 	AS
 	BEGIN
 		SELECT 
-           	idPerfilUsuario,
-			idPerfil,
-			idUsuario
+			PU.idPerfilUsuario,
+			PU.idPerfil,
+			PU.idUsuario,
+			P.idPessoa,
+			P.nmPessoa
         FROM 
-			OCOTB.PerfilUsuario
+			OCOTB.PerfilUsuario			PU
+			INNER JOIN OCOTB.Perfil		PER	ON PER.idPerfil = PU.idPerfil
+			INNER JOIN OCOTB.Usuario	U 	ON U.idUsuario = PU.idUsuario
+			INNER JOIN OCOTB.Pessoa 	P	ON P.idPessoa = U.idPessoa
         WHERE 
-			idPerfil = @idPerfil
+			PU.idPerfil = @idPerfil
+			AND PU.icAtivo = 1
 	END
 GO
 
+drop procedure if exists OCOTB.SP_getPerfilUsuario_Todos
+GO
+	CREATE PROCEDURE OCOTB.SP_getPerfilUsuario_Todos
+	AS
+	BEGIN
+		SELECT 
+			PU.idPerfilUsuario,
+            P.idPessoa,
+            P.nmPessoa,
+			P.nuCPF,
+            P.urlFoto,
+			P.nuTelefone,
+			P.edMail,
+
+			PU.idUsuario,
+			PER.idPerfil
+        FROM
+			OCOTB.PerfilUsuario 		PU 	
+			INNER JOIN OCOTB.Perfil		PER	ON PER.idPerfil = PU.idPerfil
+			INNER JOIN OCOTB.Usuario	U 	ON U.idUsuario = PU.idUsuario
+			INNER JOIN OCOTB.Pessoa 	P	ON P.idPessoa = U.idPessoa
+        WHERE 
+            PU.icAtivo = 1 
+	END
+GO
 
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Menu <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -617,10 +655,12 @@ GO
         FROM 
 			OCOTB.Menu 						M
 			LEFT JOIN OCOTB.Menu 			M_Pai 	ON 	M_Pai.idMenu = M.idMenuPai
-			INNER JOIN OCOTB.MenuPerfil		MP    	ON	MP.idMenu = M.idMenu AND MP.icAtivo = 1
+			INNER JOIN OCOTB.MenuPerfil		MP    	ON	MP.idMenu = M.idMenu
 			INNER JOIN OCOTB.PerfilUsuario	PU  	ON	PU.idPerfil = MP.idPerfil
         WHERE 
             PU.idUsuario = @idUsuario
+			AND MP.icAtivo = 1
+			AND PU.icAtivo = 1
 		ORDER BY m.nuOrdem
 	END
 GO
@@ -901,6 +941,46 @@ GO
 GO
 
 
+	drop procedure if exists OCOTB.SP_getOcorrenciaTipoResponsavel_Pessoa
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaTipoResponsavel_Pessoa
+	AS
+	BEGIN
+		SELECT 
+			OTR.idOcorrenciaTipoResponsavel,
+			OTR.idOcorrenciaTipo,
+            P.idPessoa,
+            P.nmPessoa,
+			P.nuCPF,
+            P.urlFoto,
+			P.nuTelefone,
+			P.edMail
+        FROM 
+			OCOTB.OcorrenciaTipoResponsavel OTR	
+			INNER JOIN OCOTB.Pessoa 		P	ON P.idPessoa = OTR.idPEssoa
+        WHERE 
+            OTR.icAtivo = 1
+	END
+GO
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaTipoResponsavel_Perfil
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaTipoResponsavel_Perfil 
+	AS
+	BEGIN
+		SELECT 
+			OTR.idOcorrenciaTipoResponsavel,
+			OTR.idOcorrenciaTipo,
+            PER.idPerfil,
+            PER.nmPerfil,
+            PER.dePerfil
+        FROM 
+			OCOTB.OcorrenciaTipoResponsavel OTR	
+			INNER JOIN OCOTB.Perfil 		PER	ON PER.idPerfil = OTR.idPerfil
+        WHERE 
+            OTR.icAtivo = 1
+	END
+GO
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Sub Tipo Ocorrencia <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	drop procedure if exists OCOTB.SP_setOcorrenciaSubTipo

@@ -38,21 +38,19 @@
                                                 ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
                                                     
                                                     if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
-                                                        blocoHtmlResponsavel += '<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '<br>';
                                                     
                                                     if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
-                                                        blocoHtmlResponsavel += '<i class=\"fa-solid fa-chalkboard-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador   + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-chalkboard-user fa-lg\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador + '<br>';
                                                     
                                                         if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
-                                                        blocoHtmlResponsavel += '<i class=\"fa-solid fa-people-group fa-lg\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '  ' + ocorrenciaResponsavel.idOcorrencia + '<br>';
+                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-lg\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '<br>';
                                                 });
                                     %>
                                                 <tr>
                                                     <td><%= ocorrencia.deOcorrencia %></td>
                                                     
-                                                    <td>
-                                                        <%- blocoHtmlResponsavel %>
-                                                    </td>
+                                                    <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
                                                     <td>
                                                         <%= formataData(ocorrencia.dtOcorrencia) %>
                                                     </td>

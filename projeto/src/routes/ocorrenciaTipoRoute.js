@@ -16,13 +16,18 @@ router.get('/listar/:id', autenticacaoMiddleware, async (req, res) => {
     try {
         
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaTipo", {idOcorrenciaTipo: idParameter});
+        let retornoBancoDadosTipoOcorrencia_Pessoa = await querySoredProcedure("OCOTB.SP_getOcorrenciaTipoResponsavel_Pessoa");
+        let retornoBancoDadosTipoOcorrencia_Perfil = await querySoredProcedure("OCOTB.SP_getOcorrenciaTipoResponsavel_Perfil");
 
         console.log('Resultado da consulta ', retornoBancoDados);
 
         res.render('pages/ocorrenciaTipoListar', {
             tituloCabecalho: 'Lista Tipo Ocorrência', 
             subCabecalho: 'Listar',
-            tipoOcorrenciaList: retornoBancoDados}
+            tipoOcorrenciaList: retornoBancoDados,
+            pessoaList_Configurado: retornoBancoDadosTipoOcorrencia_Pessoa,
+            perfilList_Configurado: retornoBancoDadosTipoOcorrencia_Perfil
+        }
         );
 
 
