@@ -11,6 +11,7 @@ const pessoaRoute = require('./projeto/src/routes/pessoaRoute');
 const reponsavelRoute = require('./projeto/src/routes/reponsavelRoute');
 const usuarioRoute = require('./projeto/src/routes/usuarioRoute');
 const perfilRoute = require('./projeto/src/routes/perfilRoute');
+const menuRoute = require('./projeto/src/routes/menuRoute');
 const autenticacaoMiddleware = require('./projeto/src/midleware/authMiddleware');
 const { CONFIG_DIRETORIO_SRC } = require('./projeto/src/configuracoes');
 
@@ -60,6 +61,7 @@ app.use('/api/pessoa', pessoaRoute);
 app.use('/api/responsavel', reponsavelRoute);
 app.use('/api/usuario', usuarioRoute);
 app.use('/api/perfil', perfilRoute);
+app.use('/api/menu', menuRoute);
 
 /**
  * Determina que a rota raiz do projeto é a pagina de ocorrencias

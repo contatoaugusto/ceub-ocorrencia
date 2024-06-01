@@ -1,0 +1,62 @@
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+        <div class="col-md-12 mb-1" id="divCardsPrincipal">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
+                    <h5 class="card-title mb-0">Menus Cadastradas</h5>
+                    <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrencia"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
+                </div>
+                <div id="divCardOcorrencia" class="collapse show" data-parent="#divCardsPrincipal">
+                    <div class="card-body">
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Menu</th>
+                                <th scope="col">Rota</th>
+                                <th scope="col">Manu Pai</th>
+                                <th scope="col">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                <% 
+                                    menuList.forEach(item => { 
+                                %>
+                                        <tr>
+                                            <td><%= item.nmMenu %></td>
+                                            
+                                            <td>
+                                                <%= item.urlRota %>
+                                            </td>
+
+                                            <td>
+                                                <%= item.nmMenuPai %>
+                                            </td>
+
+                                            <td>
+                                                <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/menu/incluirInit/<%= item.idMenu %>');">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                <%
+                                   });
+
+                                %>  
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4 p-2 flex" style="padding-left: 480px; padding-right: 80px; ">
+            <nav class="navbar bg-light" >
+                <button type="button" id="btnMenuIncluirInit" onclick="carregarConteudoMain('/api/menu/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
+            </nav>
+        </div>
+        

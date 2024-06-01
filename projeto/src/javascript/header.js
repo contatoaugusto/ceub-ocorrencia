@@ -2,7 +2,8 @@
 $(document).ready(function() {
     
     // Carrega sempre a listagem de ocorrências como sendo a página inicial
-    carregarConteudoMain("/api/ocorrencia/listar");
+    carregarConteudoMain ("/api/ocorrencia/listar");
+    carregarConteudoMenu ('/api/menu/montamenuByUsuario');
    
     let mensagemAlert = $('#mensagemAlert');
 
@@ -20,7 +21,16 @@ $(document).ready(function() {
     // });
 
     // Script para controlar a exibição dos submenus
+    //adicionaEventosSubmenu ();
+});
+
+/**
+ * Adiciona eventos para ontrolar a exibição dos submenus
+ */
+function adicionaEventosSubmenu (){
+    
     $('.nav-link').click(function(e) {
+
         e.preventDefault();
         
         $(this).addClass('activeOcorrencia');
@@ -45,7 +55,8 @@ $(document).ready(function() {
        // $(this).nextAll().find('.nav-link').removeClass('activeOcorrencia');
 
     });
-});
+}
+
 
 /**
  *  Monta o conteúdo principal da tela sempre via fetch. Tanto GET quanto POST
@@ -81,4 +92,18 @@ function carregarConteudoMain (rotaPagina, metodo = 'GET', formularioId = {}){
     }).catch(error => {
         console.error('Ocorreu um erro ao carregar a página: ' + rotaPagina, error);
     });
+}
+
+/**
+ * 
+ * @param {*} rotaPagina 
+ */
+async function carregarConteudoMenu (rotaPagina){
+
+    const response = await fetch(rotaPagina);
+    const menuHtml = await response.text();
+
+    $('#ulMenuPricipal').prepend(menuHtml);
+
+    adicionaEventosSubmenu ();
 }

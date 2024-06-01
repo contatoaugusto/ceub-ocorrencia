@@ -1,0 +1,134 @@
+       
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+       <!-- Pessoa -->
+        <div class="col-md-12 mb-4">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia">
+                    <h5 class="card-title "><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formMenuPerfil" novalidate>
+                        <input type="hidden" id="idMenu" name="idMenu" value="<%- idMenu %>">
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="nmMenu" class="form-label">Nome do Menu</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="nmMenu" name="nmMenu" class="form-control" aria-label="Nome do Menu" value="<%- nmMenu %>" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="urlRota" class="form-label">Rota</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="urlRota" name="urlRota" class="form-control" aria-label="Rota" value="<%- urlRota %>" >
+                            </div>
+                        </div>
+
+
+                        <!-- Menu Pai -->
+                        <div class="mb-3 row">
+                            <div class="col-md-12">
+                                <fieldset>
+                                    <legend><h5>Menu Pai</h5></legend>
+                                    <div class="col-sm-12">
+                                        
+                                        <input type="hidden" id="idMenuPai" name="idMenuPai" value="<%- idMenuPai %>">
+                        
+                                        <div class="mb-3 row">
+                                            <div class="col-md-2">
+                                                <label for="ddlMenuPai" class="form-label">Menu Pai</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select id="ddlMenuPai" stype="border-color: red;" name="ddlMenuPai" class="form-select form-select-lg form-control" aria-label="Menu Pai" ></select>
+                                                <div id="ddlMenuPai_alert" class="errorMensageAlert text-danger"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>   
+
+                        <div class="mb-3 row">
+                          <div class="col-md-2">
+                              <label for="urlRota" class="form-label">Órdem do Menu</label>
+                          </div>
+                          <div class="col-md-6">
+                              <input type="number" id="nuOrdem" name="nuOrdem" class="form-control" aria-label="Órdem" value="<%- nuOrdem %>" required>
+                          </div>
+                      </div>
+
+
+                        <div class="mb-3 row">
+                          <div class="col-md-12">
+                              <fieldset>
+                                  <legend><h5>Resposável Tipo Ocorrência</h5></legend>  
+                                  
+                                  <div class="col-sm-12">
+
+                                    <input type="hidden" id="hiddenMenuPerfilConfiguradoList" name="hiddenMenuPerfilConfiguradoList" value="">
+
+                                    <!-- Perfil -->
+                                    <div class="container">
+                                        <div class="row">
+                                          <div class="col-md-5">
+                                            <div class="card list-container">
+                                              <div class="card-header">
+                                                <h5 class="card-title">Perfis Disponíveis</h5>
+                                              </div>
+                                              <ul class="list-group list-group-flush" id="optionsOcorrenciaDisponiveisPerfil">
+                                                <% 
+                                                    perfilList.forEach(item => { 
+                                                %>
+                                                        <li class="list-group-item" data-value="perfil:<%- item.idPerfil %>" data-text="<%- item.nmPerfil %>"><%= item.nmPerfil %></li>
+                                                <%
+                                                    });
+                                                %>  
+                                              </ul>
+                                            </div>
+                                          </div>
+                                          <div class="col-md-2 d-flex align-items-center justify-content-center">
+                                            <button id="optionsOcorrenciaBotaoAddPerfil" class="btn btn-primary">Adicionar</button>
+                                          </div>
+                                          <div class="col-md-5">
+                                            <div class="card selected-container">
+                                              <div class="card-header">
+                                                <h5 class="card-title">Perfis Selecionadas</h5>
+                                              </div>
+                                              <ul class="list-group list-group-flush" id="optionsOcorrenciaSelecionadoPerfil">
+                                                <% 
+                                                  perfilList_Configurado.forEach(item => { 
+                                                %>
+                                                    <li class="list-group-item" data-value="perfil:<%- item.idPerfil %>" data-text="<%- item.nmPerfil %>"><%= item.nmPerfil %></li>
+                                                <%
+                                                  });
+                                                %>  
+                                                </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  
+                                </fieldset>
+                            </div>
+                        </div>    
+  
+
+                        <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
+                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/perfil/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+   
+    <script src="/javascript/menu_javascript.js"></script>

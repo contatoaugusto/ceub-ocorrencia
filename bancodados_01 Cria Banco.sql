@@ -209,6 +209,39 @@
 	);
 	GO
 
+
+	-- ************************************** OCOTB.Menu
+	CREATE TABLE OCOTB.Menu
+	(
+	 idMenu 	int IDENTITY (1, 1) NOT NULL ,
+	 nmMenu 	varchar(50) NOT NULL ,
+	 urlRota 	varchar(100) NOT NULL ,
+	 idMenuPai 	int	NULL,
+	 nuOrdem	INT NOT NULL,
+
+	 CONSTRAINT [PK_Menu] PRIMARY KEY CLUSTERED ([idMenu] ASC),
+	 CONSTRAINT [FK_Menu_Menu] FOREIGN KEY ([idMenuPai])  REFERENCES [OCOTB].[Menu]([idMenu])
+	);
+	GO
+
+	
+-- ************************************** OCOTB.MenuPerfil
+	CREATE TABLE OCOTB.MenuPerfil
+	(
+	 idMenuPerfil 	int IDENTITY (1, 1) NOT NULL ,
+	 idMenu 		int NOT NULL,
+	 idPerfil 		int NOT NULL,
+	 icAtivo		BIT NOT NULL DEFAULT (1),
+
+	 CONSTRAINT [PK_MenuPerfil] PRIMARY KEY CLUSTERED ([idMenuPerfil] ASC),
+	 CONSTRAINT [FK_MenuPerfil_Menu] FOREIGN KEY ([idMenu])  REFERENCES [OCOTB].[Menu]([idMenu]),
+	 CONSTRAINT [FK_MenuPerfil_Perfil] FOREIGN KEY ([idPerfil])  REFERENCES [OCOTB].[Perfil]([idPerfil])
+	);
+	GO
+
+	CREATE UNIQUE INDEX UQ_MenuPerfil_Menu_Perfil_icAtivo ON OCOTB.MenuPerfil (idMenu, idPerfil) WHERE icAtivo = 1;
+	GO 
+
 	-- ************************************** [OCOTB].[Ocorrencia]
 	CREATE TABLE [OCOTB].[Ocorrencia]
 	(
@@ -302,167 +335,7 @@
 	GO
 
 
-	/*********************************** Cargas table SGI ***********************************/
-	-- As cargas das tabelas que pertencem ao SGI e ja existem será feitas por algum mencanismo de integração ou até mesmo linked server
-	-- Ou se este sistema for de fato implantado dentro do CEUB e rodar no banco que já existe. Ai não precisa fazer mais nada
-	INSERT INTO  OCOTB.Pessoa (
-		idPessoa,
-		nmPessoa,
-		nuCPF,
-		urlFoto,
-		nuTelefone,
-		edMail)
-	VALUES
-		(1, 'Isabelle',	'57336998097', 'https://avatars.githubusercontent.com/u/85378287?v=4', '6199999999', 'emailTeste@email.com'),
-		(2, 'Sergio Cozzetti',	'67256131011', 'https://bit.ly/cozzetti', '6199999999', 'emailTeste@email.com'),
-		(3, 'Antonio Augusto',	'00235385034', 'https://avatars.githubusercontent.com/u/11243840?v=4', '61992737257', 'contatoaugusto@gmail.com'),
-		(4, 'Pessoa Aluno de Teste',	'68917126022', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(5, 'Outra Pessoa Aluno de Teste',	'59482146050', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(6, 'Débora Esther Helena Nunes',	'94180971763', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(7, 'Bryan Anderson Francisco Carvalho', '61469479389', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(8, 'Pessoa Coordenador Análise', '06675655310', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(9, 'Pessoa Coordenador Direito', '06675655311', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(10, 'Pessoa Coordenador Administração', '06675655312', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(11, 'Pessoa Coordenador Medicina', '06675655313', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com'),
-		(12, 'Pessoa Que Cuida Predios', '06675655316', 'https://visualpharm.com/assets/527/Person-595b40b85ba036ed117da7ec.svg', '6199999999', 'emailTeste@email.com')
-	GO
-
-
-	INSERT INTO  OCOTB.Curso (
-		idCurso,
-		nmCurso,
-		idCoordenador)
-	VALUES
-		(1, 'Análise de Sistemas', 8),
-		(2, 'Direito', 9),
-		(3, 'Administração', 10),
-		(4, 'Medicina', 11)
-	GO
-
-
-	INSERT INTO OCOTB.Aluno(
-		idAluno,
-		nuRA,
-		idPessoa,
-		idCurso)
-	VALUES
-		(1, '123456789', 1, 1),
-		(2, '20318227', 4, 1),
-		(3, '22222222', 3, 2)
-	GO
-
-
-	INSERT INTO OCOTB.Funcionario(
-		idFuncionario,
-		deCargo,
-		nuTelefone,
-		idPessoa)
-	VALUES
-		(1, 'Técnico de Suporte', '61992737164', 6),
-		(2, 'Gerente Desenvolvimento Sistemas', '61992737162', 2),
-		(3, 'Gestor de Redes', '61992737164', 7)
-	GO
 	
-	INSERT INTO OCOTB.Usuario (
-		idUsuario,
-		coAcesso,
-		coSenha,
-		deAcesso,
-		idPessoa) 
-	values 
-		(1, '22206600', '123', 'usuario Isabelle', 1),
-		(2, '84354', '123', 'usuario Sergio Cozezetti', 2),
-		(3, '123', '123', 'usuario Antonio Augusto', 3),
-		(4, '1234', '123', 'Usuario Funcionario Teste', 7),
-		(5, '20318227', '123', 'Usuario Coordenador Curso', 4)
-	GO
-
-	INSERT INTO OCOTB.Perfil (
-		idPerfil,
-		nmPerfil,
-		dePerfil)
-	VALUES 
-		(1, 'Perfil Ocorrência Administrador', 'Acesso a tudo'),
-		(2, 'Perfil Ocorrência Desenvolvimento', 'Responsável por sistemas e melhorias'),
-		(3, 'Perfil Ocorrência Suporte de TI', 'Suporte em geral'),
-		(4, 'Perfil Ocorrência Engenharia', 'Resolve problemas de manutenção de espaços físicos'),
-		(5, 'Perfil Ocorrência Cordenador', 'Grupo de cordenadores'),
-		(6, 'Perfil Cuida Praça Alimentação', 'Grupo Alimentação')
-
-	INSERT INTO OCOTB.PerfilUsuario (
-		idPerfilUsuario,
-		idPerfil,
-		idUsuario)
-	VALUES 
-		(1, 1, 4),
-		(2, 5, 5)
-	GO
-	/*********************************** FIM Cargas table SGI ***********************************/
-	
-
-	INSERT INTO [OCOTB].[OcorrenciaTipo]
-		([nmOcorrenciaTipo], icResponsavelCoordenadorCurso)
-	VALUES
-		 ('Professor', 1)
-		,('Sala de Aula', 0)
-		,('Recursos Informática', 0)
-		,('Campus', 0)
-		,('Praça de Alimentação', 0)
-	GO
-
-	
-	INSERT INTO [OCOTB].[OcorrenciaSubTipo]
-		([idOcorrenciaTipo]
-		,[nmOcorrenciaSubTipo])
-	VALUES
-		(1,'Atraso')
-		,(1,'Saída antecipada')
-		,(1,'Falta injustificada')
-		,(1,'Conteúdo não previsto no plano de ensino')
-		,(1, 'Comportamento ')
-		,(2, 'Infra estrutura da Sala')
-	GO
-
-	INSERT INTO OCOTB.OcorrenciaTipoResponsavel
-		(idOcorrenciaTipo,
-		 idPessoa,
-		 idPerfil)
-	VALUES
-		 (2, null, 4)
-		,(2, 12, null)
-		,(5, null, 6)
-
-	INSERT INTO OCOTB.OcorrenciaSituacao (deOcorrenciaSituacao)
-	VALUES
-		('Criada'),
-		('Enviada para Responsável'),
-		('Indeferido'),
-		('Em Atendimento'),
-		('Finalizada')
-
-	INSERT INTO OCOTB.Local(
-		nmBloco,
-		nuSala,
-		nmLocal)
-	VALUES 
-		('Bloco 10', '114', 'Laboratóiro de computação')
-
-	INSERT INTO OCOTB.Ocorrencia(
-		deOcorrencia,
-		idLocal,
-		idPessoa,
-		idOcorrenciaSubTipo,
-		idCurso)
-	VALUES
-		('Providenciar computador na sala 114', 1, 1, 6, 1)
-
-	INSERT INTO OCOTB.OcorrenciaHistoricoSituacao (
-		idOcorrencia,
-		idOcorrenciaSituacao,
-		icAtivo)
-	VALUES
-		(1, 1, 1)
-
 
 	USE OCODB;
 	GO

@@ -100,6 +100,7 @@ GO
 		SELECT 
 			U.coAcesso,
 			U.deAcesso,
+			U.idUsuario,
 			P.idPessoa,
 			P.nmPessoa,
 			P.urlFoto,
@@ -301,7 +302,7 @@ GO
 	AS
 	BEGIN
 
-		IF ISNULL(@idUsuario, 0) = 0
+		IF ISNULL(@idUsuario, 0) = 0 OR @idUsuario = '0' OR @idUsuario = ''
 		BEGIN
 			INSERT INTO OCOTB.Usuario (
 				idUsuario,
@@ -518,6 +519,204 @@ GO
 			OCOTB.PerfilUsuario
         WHERE 
 			idPerfil = @idPerfil
+	END
+GO
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Menu <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setMenu
+GO
+	CREATE PROCEDURE OCOTB.SP_setMenu (
+		@idMenu		INT = NULL,
+		@nmMenu		VARCHAR(50),
+        @urlRota	VARCHAR(100),
+		@idMenuPai	INT,
+		@nuOrdem	INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idMenuPai, 0) = 0 OR @idMenuPai = '0' OR @idMenuPai = ''
+			SET @idMenuPai = NULL
+
+		IF ISNULL(@idMenu, 0) = 0 OR @idMenu = '0' OR @idMenu = ''
+		BEGIN
+
+			INSERT INTO OCOTB.Menu (
+				nmMenu,
+				urlRota,
+				idMenuPai,
+				nuOrdem
+			)
+			SELECT 
+				@nmMenu,
+				@urlRota,
+				@idMenuPai,
+				@nuOrdem
+
+			SET @idMenu	= SCOPE_IDENTITY()
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Menu SET
+				nmMenu		= 	@nmMenu,
+				urlRota		= 	@urlRota,
+				idMenuPai	= 	@idMenuPai,
+				nuOrdem		=	@nuOrdem
+			WHERE 
+				idMenu = @idMenu
+		END
+
+		SELECT @idMenu AS idMenu
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getMenu
+GO
+	CREATE PROCEDURE OCOTB.SP_getMenu (
+		@idMenu	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            M.idMenu,
+			M.nmMenu,
+			M.idMenu AS id,
+			M.nmMenu AS texto,
+			M.urlRota,
+			M.nuOrdem,
+			
+			M.idMenuPai,
+			M_Pai.nmMenu AS nmMenuPai
+        FROM 
+			OCOTB.Menu 				M
+			LEFT JOIN OCOTB.Menu 	M_Pai ON M_Pai.idMenu = M.idMenuPai
+        WHERE 
+			1 = (CASE WHEN ISNULL(@idMenu, 0) = 0  OR  M.idMenu = @idMenu THEN 1 ELSE 0 END)
+		ORDER BY m.nuOrdem
+	END
+GO
+
+drop procedure if exists OCOTB.SP_getMenuByUsuario
+GO
+	CREATE PROCEDURE OCOTB.SP_getMenuByUsuario (
+		@idUsuario	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            M.idMenu,
+			M.nmMenu,
+			M.urlRota,
+			M.nuOrdem,
+			
+			M.idMenuPai,
+			M_Pai.nmMenu AS nmMenuPai
+        FROM 
+			OCOTB.Menu 						M
+			LEFT JOIN OCOTB.Menu 			M_Pai 	ON 	M_Pai.idMenu = M.idMenuPai
+			INNER JOIN OCOTB.MenuPerfil		MP    	ON	MP.idMenu = M.idMenu AND MP.icAtivo = 1
+			INNER JOIN OCOTB.PerfilUsuario	PU  	ON	PU.idPerfil = MP.idPerfil
+        WHERE 
+            PU.idUsuario = @idUsuario
+		ORDER BY m.nuOrdem
+	END
+GO
+
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Menu PERFIL <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setMenuPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_setMenuPerfil (
+		@idMenuPerfil	INT = NULL,
+		@idMenu			INT,
+		@idPerfil		INT
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idMenuPerfil, 0) = 0 OR @idMenuPerfil = '0' OR @idMenuPerfil = ''
+		BEGIN
+			INSERT INTO OCOTB.MenuPerfil (
+				idMenu,
+				idPerfil
+			)
+			SELECT 
+				@idMenu,
+				@idPerfil
+
+			SET @idMenuPerfil	= SCOPE_IDENTITY()
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.MenuPerfil SET
+				idMenu		= @idMenu,
+				idPerfil	= @idPerfil
+			WHERE 
+				idMenuPerfil = @idMenuPerfil
+		END
+
+		SELECT @idMenuPerfil AS idMenuPerfil
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getMenuPerfil
+GO
+	CREATE PROCEDURE OCOTB.SP_getMenuPerfil (
+		@idMenuPerfil	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+            idMenuPerfil,
+			idMenu,
+			idPerfil
+        FROM 
+			OCOTB.MenuPerfil
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idMenuPerfil, 0) = 0  OR idMenuPerfil = @idMenuPerfil THEN 1 ELSE 0 END)
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getMenuPerfilByMenu
+GO
+	CREATE PROCEDURE OCOTB.SP_getMenuPerfilByMenu (
+		@idMenu	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+            MP.idMenuPerfil,
+			MP.idMenu,
+			MP.idPerfil,
+
+			P.nmPerfil,
+			M.nmMenu
+        FROM 
+			OCOTB.MenuPerfil		MP
+			INNER JOIN OCOTB.Perfil P	ON	P.idPerfil = MP.idPerfil
+			INNER JOIN OCOTB.Menu 	M	ON	M.idMenu = MP.idMenu
+        WHERE 
+            MP.idMenu = @idMenu
+			AND MP.icAtivo = 1
+	END
+GO
+
+
+drop procedure if exists OCOTB.SP_setMenuPerfilDeleteByMenu
+GO
+	CREATE PROCEDURE OCOTB.SP_setMenuPerfilDeleteByMenu (
+		@idMenu	INT
+	)
+	AS
+	BEGIN
+		UPDATE OCOTB.MenuPerfil SET icAtivo = 0 WHERE idMenu = @idMenu
 	END
 GO
 

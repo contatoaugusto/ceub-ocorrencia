@@ -44,6 +44,8 @@ router.post('/login', conectarBanco, async (req, res) => {
            
             const primeiraLinha = retornoBancoDados[0];
            
+            //let retornoBancoDados_menu = await querySoredProcedure("OCOTB.SP_getMenuByUsuario", {idUsuario: primeiraLinha.idUsuario});
+
             req.session.usuario = {
                 coAcesso: primeiraLinha.coAcesso,
                 deAcesso: primeiraLinha.deAcesso,
@@ -53,7 +55,8 @@ router.post('/login', conectarBanco, async (req, res) => {
                 idAluno: primeiraLinha.idAluno,
                 idCurso: primeiraLinha.idCurso,
                 nuRA: primeiraLinha.nuRA,
-                nuTelefone: primeiraLinha.nuTelefone
+                nuTelefone: primeiraLinha.nuTelefone,
+                idUsuario: primeiraLinha.idUsuario
            };
 
             const urlOriginal = req.session.originalUrl || '/';
