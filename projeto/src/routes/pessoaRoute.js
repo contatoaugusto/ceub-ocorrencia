@@ -156,8 +156,7 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
                 nmPessoa: nmPessoa,
                 nuCPF: nuCPF,
                 urlFoto: urlFoto,
-                nuTelefone: nuTelefone,
-                edMail: edMail
+                nuTelefone: nuTelefone
             });
         
         const primeiraLinha = retornoBancoDados[0];

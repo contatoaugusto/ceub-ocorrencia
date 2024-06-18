@@ -16,6 +16,7 @@
                             <tr>
                                 <th scope="col">Nome</th>
                                 <th scope="col">CPF</th>
+                                <th scope="col">E-Mail</th>
                                 <th scope="col">Foto</th>
                                 <th scope="col">Ações</th>
                             </tr>
@@ -28,9 +29,8 @@
                                         <tr>
                                             <td><%= pessoa.nmPessoa %></td>
                                             
-                                            <td>
-                                                <%= pessoa.nuCPF %>
-                                            </td>
+                                            <td><%= pessoa.nuCPF %></td>
+                                            <td><%= pessoa.edMail %></td>
                                             <td>
                                                 <img src="<%- pessoa.urlFoto %>" alt="" width="35" height="35" class="rounded-circle  d-none d-md-block">
                                             </td>
