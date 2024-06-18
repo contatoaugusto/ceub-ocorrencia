@@ -644,7 +644,7 @@ GO
 	)
 	AS
 	BEGIN
-		SELECT 
+		SELECT DISTINCT
             M.idMenu,
 			M.nmMenu,
 			M.urlRota,
@@ -658,9 +658,12 @@ GO
 			INNER JOIN OCOTB.MenuPerfil		MP    	ON	MP.idMenu = M.idMenu
 			INNER JOIN OCOTB.PerfilUsuario	PU  	ON	PU.idPerfil = MP.idPerfil
         WHERE 
-            PU.idUsuario = @idUsuario
-			AND MP.icAtivo = 1
-			AND PU.icAtivo = 1
+             (
+				PU.idUsuario = @idUsuario
+				AND MP.icAtivo = 1
+				AND PU.icAtivo = 1
+			)  
+			OR M.idMenu = 1
 		ORDER BY m.nuOrdem
 	END
 GO
@@ -1121,23 +1124,50 @@ GO
             ,OCO.idOcorrenciaSubTipo
             ,OCO.idCurso
             ,OS.deOcorrenciaSituacao
-			,Responsavel.idPessoa AS idPessoaResponsavel
-			,Responsavel.idPerfil AS idPerfilResponsavel
-			,Responsavel.nmPessoa AS nmPessoaResponsavel
-			,Responsavel.nmPerfil AS nmPerfilResponsavel
+			,ResponsavelPessoa.idPessoa AS idPessoaResponsavel
+			,ResponsavelPerfil.idPerfil AS idPerfilResponsavel
+			,ResponsavelPessoa.nmPessoa AS nmPessoaResponsavel
+			,ResponsavelPerfil.nmPerfil AS nmPerfilResponsavel
 
-			,PessoaOcorrenciaSobSuaResponsabilidade.idPessoa idPessoaResponsavelLogada
-			,PessoaOcorrenciaSobSuaResponsabilidade.nmPessoa nmPessoaResponsavelLogada
+			,P_Logado.idPessoa idPessoaResponsavelLogada
+			,P_Logado.nmPessoa nmPessoaResponsavelLogada
         FROM 
             OCOTB.Ocorrencia OCO
             INNER JOIN OCOTB.Pessoa P ON P.idPessoa = OCO.idPessoa
             INNER JOIN OCOTB.OcorrenciaHistoricoSituacao CHS ON CHS.idOcorrencia = OCO.idOcorrencia AND CHS.icAtivo = 1
             INNER JOIN OCOTB.OcorrenciaSituacao OS ON OS.idOcorrenciaSituacao = CHS.idOcorrenciaSituacao
+			
+			INNER JOIN OCOTB.OcorrenciaResponsavel ORES ON ORES.idOcorrencia = OCO.idOcorrencia
 
-			-- TOdos os responsáveis dessa
-			CROSS APPLY OCOTB.FC_getResponsavelOcorrencia (OCO.idOcorrencia) AS Responsavel
+			-- Responsáveis pela ocorrência
+			-- Pessoa
+			LEFT JOIN (
+				SELECT
+					idPessoa,
+					nmPessoa
+				FROM
+					OCOTB.Pessoa 
+			) AS ResponsavelPessoa ON ResponsavelPessoa.idPessoa = ORES.idPessoa
 
-			CROSS APPLY OCOTB.FC_getPerfilByPessoa(@idPessoa) PessoaOcorrenciaSobSuaResponsabilidade
+			-- Perfil
+			LEFT JOIN (
+				SELECT
+					P.idPessoa,
+					P.nmPessoa,
+					PER.idPerfil,
+					PER.nmPerfil
+				FROM
+					OCOTB.Perfil PER
+					INNER JOIN OCOTB.PerfilUsuario PU ON PER.idPerfil = PU.idPerfil
+					INNER JOIN OCOTB.Usuario U ON U.idUsuario = PU.idUsuario
+					INNER JOIN OCOTB.Pessoa  P  ON P.idPessoa = U.idPessoa
+			) AS ResponsavelPerfil ON ResponsavelPerfil.idPerfil = ORES.idPerfil
+			
+			INNER JOIN OCOTB.Pessoa P_Logado On P_Logado.idPessoa = @idPessoa
+		WHERE
+			ResponsavelPessoa.idPessoa = @idPessoa
+			OR
+			ResponsavelPerfil.idPessoa = @idPessoa
 		
 		ORDER BY OCO.idOcorrencia
 	END

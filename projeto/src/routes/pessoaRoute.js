@@ -103,6 +103,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     nuCPF: primeiraLinha.nuCPF,
                     urlFoto: primeiraLinha.urlFoto,
                     nuTelefone: primeiraLinha.nuTelefone,
+                    edMail: primeiraLinha.edMail,
 
                     // Usuario
                     idUsuario: primeiraLinha.idUsuario,
@@ -124,6 +125,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
                     nuCPF: '',
                     urlFoto: '',
                     nuTelefone: '',
+                    edMail: '',
 
                     // Usuario
                     idUsuario: 0,
@@ -144,7 +146,7 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  */
 router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
     
-    const { idPessoa, nmPessoa, nuCPF, urlFoto, nuTelefone, idUsuario, coAcesso, coSenha, deAcesso } = req.body;
+    const { idPessoa, nmPessoa, nuCPF, urlFoto, nuTelefone, idUsuario, coAcesso, coSenha, deAcesso, edMail } = req.body;
 
     try {
         
@@ -154,7 +156,8 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
                 nmPessoa: nmPessoa,
                 nuCPF: nuCPF,
                 urlFoto: urlFoto,
-                nuTelefone: nuTelefone
+                nuTelefone: nuTelefone,
+                edMail: edMail
             });
         
         const primeiraLinha = retornoBancoDados[0];
@@ -183,7 +186,7 @@ router.post('/salvar', autenticacaoMiddleware, async (req, res) => {
             mensagem: error
        };
 
-        return res.redirect('/api/pessoa/listar/0');
+        return;
     } 
 });
 

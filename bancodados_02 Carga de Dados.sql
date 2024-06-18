@@ -32,10 +32,10 @@
 			nmCurso,
 			idCoordenador)
 		VALUES
-			(1, 'Análise de Sistemas', 8),
-			(2, 'Direito', 9),
-			(3, 'Administração', 10),
-			(4, 'Medicina', 11)
+			(1, 'Análise de Sistemas', 9),
+			(2, 'Direito', 10),
+			(3, 'Administração', 11),
+			(4, 'Medicina', 12)
 		GO
 
 
