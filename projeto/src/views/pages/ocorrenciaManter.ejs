@@ -13,8 +13,14 @@
 
                    
                     <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterOcorrencia" novalidate>
+                        <input type="hidden" id="idOcorrencia" name="idOcorrencia" value="<%- idOcorrencia %>"/>
+
                         <input type="hidden" id="hdnidCurso_alunologado" value="<%- session.usuario.idCurso %>"/>
                         <input type="hidden" id="hdnResponsavelFinanceiroList" name="hdnResponsavelFinanceiroList"/>
+                        
+                        <input type="hidden" id="idCurso" name="idCurso" value="<%- idCurso %>"/>
+                        <input type="hidden" id="idOcorrenciaTipo" name="idOcorrenciaTipo" value="<%- idOcorrenciaTipo %>"/>
+                        <input type="hidden" id="idOcorrenciaSubTipo" name="idOcorrenciaSubTipo" value="<%- idOcorrenciaSubTipo %>"/>
                         
                         <!-- Curso -->
                         <div class="mb-3 row">

@@ -1,6 +1,11 @@
 var dblOcorrenciaTipo = $('#ddlOcorrenciaTipo');
 var ddlCurso = $('#ddlCurso');
 var hdnidCurso_AlunoLogado = $('#hdnidCurso_alunologado');
+
+var hdnidCurso = $('#idCurso');
+var hdnidOcorrenciaTipo = $('#idOcorrenciaTipo');
+var hdnidOcorrenciaSubTipo = $('#idOcorrenciaSubTipo');
+
 var ulResponsavelOcorrencia = $('#ulResponsavelOcorrencia');    
 var hdnResponsavelFinanceiroList = $('#hdnResponsavelFinanceiroList');
 var formManter = $('#formManterOcorrencia');
@@ -9,13 +14,13 @@ var formManter = $('#formManterOcorrencia');
  *  Funcção principal que roda quando todo o documento DOM é carregado
  */
 $(document).ready(function() {
-    
+
      // Monta dinamicamente Curso
      selectElementCriarOpionDinamicamente (
         '/api/curso/listarJson/0', 
         ddlCurso.attr('id'), 
         true, 
-        hdnidCurso_AlunoLogado.val());
+        (hdnidCurso.length ? hdnidCurso.val() : hdnidCurso_AlunoLogado.val()));
     
     ddlCurso.on('change', function() {
         if (this.value > 0)
@@ -27,13 +32,22 @@ $(document).ready(function() {
     });
 
     // Monta dinamicamente Tipo de Ocorrências
-    selectElementCriarOpionDinamicamente (`/api/ocorrenciaTipo/listarJson/0`, dblOcorrenciaTipo.attr('id'));
+    selectElementCriarOpionDinamicamente (
+        `/api/ocorrenciaTipo/listarJson/0`, 
+        dblOcorrenciaTipo.attr('id'), 
+        false, 
+        hdnidOcorrenciaTipo.val());
+    
     dblOcorrenciaTipo.on('change', function() {
 
         validacoes ('/api/ocorrenciaTipo/listarJson/'+ this.value);
 
         // Monta dinamicamente o dropdownlist de Subtipo Ocorrências
-        selectElementCriarOpionDinamicamente ('/api/ocorrenciaSubTipo/listarJsonByTipoOcorrencia/'+ this.value, 'ddlOcorrenciaSubTipo');
+        selectElementCriarOpionDinamicamente (
+            '/api/ocorrenciaSubTipo/listarJsonByTipoOcorrencia/'+ this.value, 
+            'ddlOcorrenciaSubTipo',
+            false,
+            hdnidOcorrenciaSubTipo.val());
 
         montaElementoReponsavelOcorrencia(ddlCurso.val());
     });
@@ -49,7 +63,6 @@ $(document).ready(function() {
         if (validacoes())
             this.submit();
     });
-
 });
 
 
@@ -106,10 +119,6 @@ async function montaElementoReponsavelOcorrencia (idCurso){
             hdnResponsavelFinanceiroList.val(hdnResponsavelFinanceiroList.val() + (hdnResponsavelFinanceiroList.val().slice(-1) == '#' ? '' : '#'));
         });
     }
-    
-    // Se não tiver nenhum responsável financeiro cadastrado, não pode prosseguir
-    //if (ulResponsavelOcorrencia.children('li').length === 0) {
-
 }
 
 function validacoes (rotaAPIValidar) {

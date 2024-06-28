@@ -22,6 +22,7 @@
                             </div>
                             <div class="col-md-6">
                                 <input type="text" id="nmCurso" name="nmCurso" class="form-control" aria-label="Nome" value="<%- nmCurso %>" required>
+                                <div id="nmCurso_alert" class="errorMensageAlert text-danger"></div>
                             </div>
                         </div>
                         
@@ -36,7 +37,7 @@
                         </div>
 
                         <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
-                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/perfil/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                        <button type="button" id="btnPessoaCancelar" onclick="carregarConteudoMain('/api/curso/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
                     </form>
                     
                 </div>

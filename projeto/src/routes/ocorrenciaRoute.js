@@ -53,25 +53,51 @@ router.get('/listar', autenticacaoMiddleware, async (req, res) => {
  */
 router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
     
-    const ocorrenciaId = req.params.id;
+    const idParameter = req.params.id;
 
     try {
         
-        console.log('Chamou incluirInit/:id');
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrencia", {idOcorrencia: idParameter});
+        
+        if (idParameter > 0 && retornoBancoDados.length > 0){
+            
+            const primeiraLinha = retornoBancoDados[0];
 
-        res.render(
-            'pages/ocorrenciaManter', 
-            { 
-                rota: '/api/ocorrencia/salvar/0',
-                session: req.session, 
-                tituloCabecalho: 'Manter Ocorrência', 
-                subCabecalho: 'Incluir',
-                deOcorrencia: '',
-                idLocal: 0,
-                idPessoa: 0,
-                idOcorrenciaSubTipo: 0,
-                idCurso: 0
-            });
+            res.render(
+                'pages/ocorrenciaManter', 
+                { 
+                    rota: '/api/ocorrencia/salvar/0',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Ocorrência', 
+                    subCabecalho: 'Incluir',
+                    
+                    idOcorrencia: primeiraLinha.idOcorrencia,
+                    deOcorrencia: primeiraLinha.deOcorrencia,
+                    idLocal: primeiraLinha.idLocal,
+                    idPessoa: primeiraLinha.idPessoa,
+                    idOcorrenciaTipo: primeiraLinha.idOcorrenciaTipo,
+                    idOcorrenciaSubTipo: primeiraLinha.idOcorrenciaSubTipo,
+                    idCurso: primeiraLinha.idCurso
+                    
+                });
+        }else {
+
+            res.render(
+                'pages/ocorrenciaManter', 
+                { 
+                    rota: '/api/ocorrencia/salvar/0',
+                    session: req.session, 
+                    tituloCabecalho: 'Manter Ocorrência', 
+                    subCabecalho: 'Incluir',
+                    idOcorrencia: 0,
+                    deOcorrencia: '',
+                    idLocal: 0,
+                    idPessoa: 0,
+                    idOcorrenciaTipo: 0,
+                    idOcorrenciaSubTipo: 0,
+                    idCurso: 0
+                });
+        }        
 
     } catch (error) {
         console.error('Erro ao listar ocorrências:', error);
@@ -84,9 +110,8 @@ router.get('/incluirInit/:id', autenticacaoMiddleware, async (req, res) => {
  * Para salvar uma deteminada ocorrência
  */
 router.post('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
-    const ocorrenciaId = req.params.id;
-    const ddlCursoTeste =  req.body.ddlCurso;
-    const { ddlCurso, ddlOcorrenciaTipo, ddlOcorrenciaSubTipo, deOcorrencia, hdnResponsavelFinanceiroList } = req.body;
+    
+    const { idOcorrencia, ddlCurso, ddlOcorrenciaTipo, ddlOcorrenciaSubTipo, deOcorrencia, hdnResponsavelFinanceiroList } = req.body;
 
     let usuarioLogado = req.session.usuario;
 
@@ -99,6 +124,7 @@ router.post('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
 
         let retornoBancoDados = await querySoredProcedure("OCOTB.SP_setOcorrencia", 
             {
+                idOcorrencia: idOcorrencia,
                 deOcorrencia: deOcorrencia, 
                 idLocal: null,
                 idPessoa: usuarioLogado.idPessoa,
@@ -124,6 +150,22 @@ router.post('/salvar/:id', autenticacaoMiddleware, async (req, res) => {
        };
 
         return res.redirect('/api/ocorrencia/init');
+    } 
+});
+
+router.get('/listarJsonHistoricoOcorrencia/:id', autenticacaoMiddleware, async (req, res) => {
+   
+    const idParameter = req.params.id;
+    
+    try {
+        
+        let retornoBancoDados = await querySoredProcedure("OCOTB.SP_getOcorrenciaHistoricoSituacaoByOcorrencia", {idOcorrencia: idParameter});
+       
+        res.json(retornoBancoDados);
+
+    } catch (error) {
+        console.error('Erro ao listar pessoas:', error);
+        res.status(500).json({ message: 'Erro interno do servidor (pessoaRoute)' });
     } 
 });
 

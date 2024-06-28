@@ -1,0 +1,36 @@
+       
+        <div class="mb-4">
+            <h2><%- tituloCabecalho %></h2>
+        </div>
+
+       <!-- Pessoa -->
+        <div class="col-md-12 mb-4">
+            <div class="card card-ocorrencia">
+                <div class="card-header card-header-ocorrencia">
+                    <h5 class="card-title "><%= subCabecalho %></h5>
+                </div>
+                <div class="card-body">
+
+                   
+                    <form class="g-3 needs-validation" action="<%- rota %>" method="post" id="formManterocorrenciaSituacao" novalidate>
+                        <input type="hidden" id="idOcorrenciaSituacao" name="idOcorrenciaSituacao" value="<%- idOcorrenciaSituacao %>">
+                        
+                        <div class="mb-3 row">
+                            <div class="col-md-2">
+                                <label for="deOcorrenciaSituacao" class="form-label">Nome Situação</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" id="deOcorrenciaSituacao" name="deOcorrenciaSituacao" class="form-control" aria-label="Situação" value="<%- deOcorrenciaSituacao %>" required>
+                                <div id="deOcorrenciaSituacao_alert" class="errorMensageAlert text-danger"></div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Salvar</button> 
+                        <button type="button" id="btnSituacaoCancelar" onclick="carregarConteudoMain('/api/ocorrenciaSituacao/listar/0')" class="btn card-header-ocorrencia hover:bg-fuchsia-700">Cancelar</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+   
+    <script src="/javascript/ocorrenciaSituacao_javascript.js"></script>

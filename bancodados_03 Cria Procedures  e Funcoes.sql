@@ -1067,6 +1067,46 @@ GO
 
 -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Ocorrências <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+drop procedure if exists OCOTB.SP_getOcorrencia
+GO 
+
+	CREATE PROCEDURE OCOTB.SP_getOcorrencia (
+		@idOcorrencia	INT
+	)
+	AS
+	BEGIN
+		SELECT 
+             OCO.idOcorrencia
+            ,OCO.deOcorrencia
+            ,OCO.dtOcorrencia
+            ,OCO.idLocal	
+            ,OCO.idPessoa
+			,OST.idOcorrenciaTipo
+            ,OCO.idOcorrenciaSubTipo
+            ,OCO.idCurso
+            ,OS.deOcorrenciaSituacao
+			,Responsavel.idPessoa AS idPessoaResponsavel
+			,Responsavel.nmPessoa AS nmPessoaResponsavel
+
+			,Responsavel.idPerfil AS idPerfilResponsavel
+			,Responsavel.nmPerfil AS nmPerfilResponsavel
+
+			,Responsavel.idPessoaCoordenador AS idPessoaResponsavelCoordenador
+			,Responsavel.nmPessoaCoordenador AS nmPessoaResponsavelCoordenador
+        FROM 
+            OCOTB.Ocorrencia OCO
+			INNER JOIN OCOTB.OcorrenciaSubTipo OST ON OST.idOcorrenciaSubTipo = OCO.idOcorrenciaSubTipo
+            INNER JOIN OCOTB.Pessoa P ON P.idPessoa = OCO.idPessoa
+            INNER JOIN OCOTB.OcorrenciaHistoricoSituacao CHS ON CHS.idOcorrencia = OCO.idOcorrencia AND CHS.icAtivo = 1
+            INNER JOIN OCOTB.OcorrenciaSituacao OS ON OS.idOcorrenciaSituacao = CHS.idOcorrenciaSituacao
+
+			CROSS APPLY OCOTB.FC_getResponsavelOcorrencia (OCO.idOcorrencia) AS Responsavel
+        WHERE 
+            OCO.idOcorrencia = @idOcorrencia
+		ORDER BY CHS.idOcorrenciaHistoricoSituacao
+	END
+GO
+
 	drop procedure if exists OCOTB.SP_getOcorrenciaByPessoa
 GO 
 
@@ -1177,15 +1217,9 @@ GO
 	/************************** Insere Ocorrencia **************************/
 	drop procedure if exists OCOTB.SP_setOcorrencia
 	GO 
-/*
-BEGIN TRANSACTION
-	exec OCOTB.SP_setOcorrencia @deOcorrencia=N'Quero providencias para essa demanda',@idLocal=NULL,@idPessoa=2,@idOcorrenciaSubTipo=N'0',@idCurso=N'2',@idPessoaResponsavelArray=N'9##6#'
-ROLLBACK
 
-
-select * from  OCOTB.Ocorrencia
-*/
 	CREATE PROCEDURE OCOTB.SP_setOcorrencia (
+		@idOcorrencia				int = NULL,
 		@deOcorrencia				text,
 		@idLocal					int		= NULL ,
 		@idPessoa					int,
@@ -1211,31 +1245,51 @@ select * from  OCOTB.Ocorrencia
 	
 		SET @idPessoaResponsavelArray = REPLACE(@idPessoaResponsavelArray, @_SEPARADOR_RESPONSAVEIS + @_SEPARADOR_RESPONSAVEIS, @_SEPARADOR_RESPONSAVEIS)
 
-		INSERT INTO OCOTB.Ocorrencia(
-			deOcorrencia,
-			idLocal,
-			idPessoa,
-			idOcorrenciaSubTipo,
-			idCurso)
-		SELECT
-			@deOcorrencia,
-			@idLocal,   
-			@idPessoa, -- A pessoa que abriu a ocorrêcia
-			@idOcorrenciaSubTipo,
-			@idCurso
+		IF ISNULL(@idOcorrencia, 0) = 0 OR @idOcorrencia = '0' OR @idOcorrencia = ''
+		BEGIN
 		
-		SET @_idOcorrencia = SCOPE_IDENTITY()
+			INSERT INTO OCOTB.Ocorrencia(
+				deOcorrencia,
+				idLocal,
+				idPessoa,
+				idOcorrenciaSubTipo,
+				idCurso)
+			SELECT
+				@deOcorrencia,
+				@idLocal,   
+				@idPessoa, -- A pessoa que abriu a ocorrêcia
+				@idOcorrenciaSubTipo,
+				@idCurso
+			
+			SET @_idOcorrencia = SCOPE_IDENTITY()
 
-		-- Salvar o OcorrenciaHistoricoSituacao
-		INSERT INTO OCOTB.OcorrenciaHistoricoSituacao (
-			idOcorrencia,
-			idOcorrenciaSituacao,
-			icAtivo)
-		SELECT
-			@_idOcorrencia,
-			1,
-			1
-		
+			-- Salvar o OcorrenciaHistoricoSituacao
+			INSERT INTO OCOTB.OcorrenciaHistoricoSituacao (
+				idOcorrencia,
+				idOcorrenciaSituacao,
+				icAtivo,
+				deOcorrenciaHistoricoSituacao)
+			SELECT
+				@_idOcorrencia,
+				1,
+				1,
+				'Criado automaticamente pelo sistema'
+		END 
+		ELSE
+		BEGIN
+			UPDATE OCOTB.Ocorrencia SET
+				deOcorrencia		= @deOcorrencia,
+				idLocal				= @idLocal,
+				idPessoa			= @idPessoa,
+				idOcorrenciaSubTipo	= @idOcorrenciaSubTipo,
+				idCurso				= @idCurso
+			WHERE
+				idOcorrencia = @idOcorrencia  
+			
+			SET @_idOcorrencia = @idOcorrencia
+			
+			DELETE OCOTB.OcorrenciaResponsavel WHERE idOcorrencia = @idOcorrencia
+		END
 		
 		WHILE CHARINDEX(@_SEPARADOR_RESPONSAVEIS, @idPessoaResponsavelArray)  > 0
 		BEGIN
@@ -1268,5 +1322,109 @@ select * from  OCOTB.Ocorrencia
 			SET @idPessoaResponsavelArray = SUBSTRING(@idPessoaResponsavelArray, @_nuPosicao + 1, LEN(@idPessoaResponsavelArray) - @_nuPosicao)
 		END
 		
+	END
+GO
+
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Ocorrencia Situação <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setOcorrenciaSituacao
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaSituacao (
+		@idOcorrenciaSituacao	INT = NULL,
+        @deOcorrenciaSituacao	VARCHAR(100)
+	)
+	AS
+	BEGIN
+
+		IF ISNULL(@idOcorrenciaSituacao, 0) = 0 OR @idOcorrenciaSituacao = '0' OR @idOcorrenciaSituacao = ''
+		BEGIN
+			INSERT INTO OCOTB.OcorrenciaSituacao (
+				deOcorrenciaSituacao
+			)
+			SELECT @deOcorrenciaSituacao
+		END
+		ELSE
+		BEGIN
+			UPDATE OCOTB.OcorrenciaSituacao SET
+				deOcorrenciaSituacao	= @deOcorrenciaSituacao
+			WHERE 
+				idOcorrenciaSituacao = @idOcorrenciaSituacao
+		END
+
+	END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaSituacao
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaSituacao (
+		@idOcorrenciaSituacao	INT = NULL
+	)
+	AS
+	BEGIN
+		SELECT 
+			idOcorrenciaSituacao,
+			deOcorrenciaSituacao,
+
+			idOcorrenciaSituacao AS id,		-- Para adequar a construção de elemntos na tela dinamicamente
+			deOcorrenciaSituacao AS texto   -- Para adequar a construção de elemntos na tela dinamicamente 
+		FROM 
+			OCOTB.OcorrenciaSituacao
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idOcorrenciaSituacao, 0) = 0  OR idOcorrenciaSituacao = @idOcorrenciaSituacao THEN 1 ELSE 0 END)
+	END
+GO
+
+
+
+-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  Ocorrencia Histórico Situação <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	drop procedure if exists OCOTB.SP_setOcorrenciaHistoricoSituacao
+GO
+	CREATE PROCEDURE OCOTB.SP_setOcorrenciaHistoricoSituacao (
+		 @idOcorrencia			INT
+      	,@idOcorrenciaSituacao	INT
+      	,@icAtivo				BIT
+	)
+	AS
+	BEGIN
+
+		INSERT INTO OCOTB.OcorrenciaHistoricoSituacao (
+			idOcorrencia,
+			idOcorrenciaSituacao,
+			icAtivo,
+			dtOcorrenciaSituacao
+		)
+		SELECT 
+			@idOcorrencia,
+			@idOcorrenciaSituacao,
+			@icAtivo,
+			GETDATE()
+END
+GO
+
+
+	drop procedure if exists OCOTB.SP_getOcorrenciaHistoricoSituacaoByOcorrencia
+GO
+	CREATE PROCEDURE OCOTB.SP_getOcorrenciaHistoricoSituacaoByOcorrencia (
+		@idOcorrencia	INT = NULL
+	)
+	AS
+	BEGIN
+		
+		SELECT 
+			 idOcorrenciaHistoricoSituacao
+			,idOcorrencia
+			,dtOcorrenciaSituacao
+			,idOcorrenciaSituacao
+			,icAtivo
+			,deOcorrenciaHistoricoSituacao
+		FROM 
+			OCOTB.OcorrenciaHistoricoSituacao OHS
+        WHERE 
+            1 = (CASE WHEN ISNULL(@idOcorrencia, 0) = 0  OR idOcorrencia = @idOcorrencia THEN 1 ELSE 0 END)
+		ORDER BY idOcorrenciaHistoricoSituacao
 	END
 GO

@@ -271,6 +271,7 @@
 	 [dtOcorrenciaSituacao]				datetime NOT NULL DEFAULT(GETDATE()),
 	 [idOcorrenciaSituacao]				tinyint NOT NULL,
 	 [icAtivo]							bit	NOT NULL DEFAULT (1),
+	 [deOcorrenciaHistoricoSituacao]	varchar(200) NULL,
 
 	 CONSTRAINT [PK_OcorrenciaHistoricoSituacao] PRIMARY KEY CLUSTERED ([idOcorrenciaHistoricoSituacao] ASC),
 	 CONSTRAINT [FK_OcorrenciaHistoricoSituacao_Ocorrencia] FOREIGN KEY ([idOcorrencia])  REFERENCES [OCOTB].[Ocorrencia]([idOcorrencia]),

@@ -30,8 +30,12 @@
                 option.val(item.id);
                 option.text(item.texto);
 
-                if (valorElementoSelecionado != null && valorElementoSelecionado != undefined && item.id == valorElementoSelecionado || data.length == 1) {
-                    option.prop('selected', true);
+                if (valorElementoSelecionado != null && 
+                    valorElementoSelecionado != undefined && 
+                    valorElementoSelecionado != 0 && 
+                    valorElementoSelecionado != '0' &&
+                    item.id == valorElementoSelecionado || data.length == 1) {
+                        option.prop('selected', true);
                 }
 
                 elementoSelect.append(option);
@@ -234,4 +238,17 @@
 
         hiddenElementosTarget.val(JSON.stringify(json_list))
         console.log(json_list);
+    }
+
+
+    function formatarDataFrom(dataISO) {
+        let data = new Date(dataISO);
+    
+        let dia = data.getDate().toString().padStart(2, '0');
+        let mes = (data.getMonth() + 1).toString().padStart(2, '0'); // Mês é zero-indexado
+        let ano = data.getFullYear();
+        let horas = data.getHours().toString().padStart(2, '0');
+        let minutos = data.getMinutes().toString().padStart(2, '0');
+    
+        return `${dia}-${mes}-${ano} ${horas}:${minutos}`;
     }

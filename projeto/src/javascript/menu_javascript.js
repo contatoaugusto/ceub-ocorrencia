@@ -30,4 +30,9 @@
             $('#optionsOcorrenciaDisponiveisPerfil').attr('id'), 
             $('#optionsOcorrenciaSelecionadoPerfil').attr('id'));
 
+    
+        $('#ddlMenuPai').on('change', function() {
+            if (this.value > 0)
+                $('#idMenuPai').val((this.value));
+        });
     });

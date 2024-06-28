@@ -165,9 +165,10 @@
 		INSERT INTO OCOTB.OcorrenciaHistoricoSituacao (
 			idOcorrencia,
 			idOcorrenciaSituacao,
-			icAtivo)
+			icAtivo,
+			deOcorrenciaHistoricoSituacao)
 		VALUES
-			(1, 1, 1)
+			(1, 1, 1, 'Teste de situação histórico ocorrência')
 		GO
 
 	/************************************** MENU **************************************/
@@ -386,6 +387,41 @@
 			((@_idMenu -1) , 1),
 			(@_idMenu, 1)
 
+
+	-- Ocorrencia Situaçao
+	INSERT INTO OCOTB.Menu(
+		nmMenu,
+		urlRota,
+		idMenuPai,
+		nuOrdem)
+	VALUES 
+		('Ocorrência Situação', '', @_idMenu_Cadastros, 60)
+
+	SET @_idMenu = SCOPE_IDENTITY() 
+
+	INSERT INTO OCOTB.MenuPerfil(
+		idMenu,
+		idPerfil)
+	VALUES 
+		(@_idMenu, 1)
+
+	INSERT INTO OCOTB.Menu(
+		nmMenu,
+		urlRota,
+		idMenuPai,
+		nuOrdem)
+	VALUES 
+		('Lista', '/api/ocorrenciaSituacao/listar/0', @_idMenu, 61),
+		('Incluir', '/api/ocorrenciaSituacao/incluirInit/0', @_idMenu, 62)
+	
+	SET @_idMenu = SCOPE_IDENTITY()
+
+	INSERT INTO OCOTB.MenuPerfil(
+		idMenu,
+		idPerfil)
+	VALUES 
+		((@_idMenu -1) , 1),
+		(@_idMenu, 1)
 
 
 

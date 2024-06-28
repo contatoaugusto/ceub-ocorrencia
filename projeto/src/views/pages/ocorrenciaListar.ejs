@@ -3,90 +3,113 @@
         </div>
         
         <!-- Minhas Ocorrências -->
-        <div class="col-md-12 mb-1" id="divCardsOcorrencia">
-            <div class="card card-ocorrencia">
-                <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
-                    <h5 class="card-title mb-0">Minhas Ocorrências</h5>
-                    <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaMinhas"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
-                </div>
-                <div id="divCardOcorrenciaMinhas" class="collapse show" data-parent="#divCardsOcorrencia">
-                    <div class="card-body">
-                        <%
-                            if (ocorrenciasMinhas.length > 0) {
-                        %>    
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Ocorrência</th>
-                                    <th scope="col">Responsável</th>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Situação</th>
-                                    <th scope="col">Ações</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                    <% 
-                                        let idOcorrencia;
-                                        ocorrenciasMinhas.forEach(ocorrencia => { 
-
-                                            if (idOcorrencia != ocorrencia.idOcorrencia) {
-                                                
-                                                const ocorrenciasResponsavelList_Filtrado = ocorrenciasMinhas.filter(ocorrenciaFilter => ocorrenciaFilter.idOcorrencia === ocorrencia.idOcorrencia);
-                                                let blocoHtmlResponsavel = "";
-                                                
-                                                ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
-                                                    
-                                                    if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
-                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '<br>';
-                                                    
-                                                    if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
-                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-chalkboard-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador + '<br>';
-                                                    
-                                                        if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
-                                                        blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-md\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '<br>';
-                                                });
-                                    %>
-                                                <tr>
-                                                    <td><%= ocorrencia.deOcorrencia %></td>
-                                                    
-                                                    <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
-                                                    <td>
-                                                        <%= formataData(ocorrencia.dtOcorrencia) %>
-                                                    </td>
-
-                                                    <td><%= ocorrencia.deOcorrenciaSituacao %></td>
-                                                    <td><i class="fa-solid fa-pen-to-square fa-lg"></i> &nbsp;&nbsp; <i class="fa-solid fa-trash fa-lg"></i></i></td>
-                                                </tr>
-                                    <%
-                                            }
-                                            
-                                            idOcorrencia = ocorrencia.idOcorrencia;
-                                        });
-
-                                    %>  
-                                
-                                </tbody>
-                            </table>
-                        <%} else {%>
-                            <div class="col-md-12">
-                                <h5>Sem registros</h5>
-                            </div>
-                        <%}%>
-                    </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9 mb-1" id="divCardsOcorrencia">
                     
+                    <div class="card card-ocorrencia" >
+                        <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
+                            <h5 class="card-title mb-0">Minhas Ocorrências</h5>
+                            <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaMinhas"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
+                        </div>
+                        <div id="divCardOcorrenciaMinhas" class="collapse show" data-parent="#divCardsOcorrencia">
+                            <div class="card-body">
+                                <%
+                                    if (ocorrenciasMinhas.length > 0) {
+                                %>    
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col" width="5%">ID</th>
+                                            <th scope="col" width="40%">Ocorrência</th>
+                                            <th scope="col" width="30%">Responsável</th>
+                                            <th scope="col">Data</th>
+                                            <th scope="col">Situação</th>
+                                            <th scope="col">Ações</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <% 
+                                                let idOcorrencia;
+                                                ocorrenciasMinhas.forEach(ocorrencia => { 
+
+                                                    if (idOcorrencia != ocorrencia.idOcorrencia) {
+                                                        
+                                                        const ocorrenciasResponsavelList_Filtrado = ocorrenciasMinhas.filter(ocorrenciaFilter => ocorrenciaFilter.idOcorrencia === ocorrencia.idOcorrencia);
+                                                        let blocoHtmlResponsavel = "";
+                                                        
+                                                        ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
+                                                            
+                                                            if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
+                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '<br>';
+                                                            
+                                                            if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
+                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-chalkboard-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador + '<br>';
+                                                            
+                                                                if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
+                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-md\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '<br>';
+                                                        });
+                                            %>
+                                                        <tr id="trOcorrenciaMinhas<%= ocorrencia.idOcorrencia %>" data-id-ocorrencia="<%= ocorrencia.idOcorrencia %>">
+                                                            <td><%= ocorrencia.idOcorrencia %></td>
+                                                            <td><%= ocorrencia.deOcorrencia %></td>
+                                                            
+                                                            <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
+                                                            <td>
+                                                                <%= formataData(ocorrencia.dtOcorrencia) %>
+                                                            </td>
+
+                                                            <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                                            <td>
+                                                                <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/<%= ocorrencia.idOcorrencia %>');">
+                                                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                            <%
+                                                    }
+                                                    
+                                                    idOcorrencia = ocorrencia.idOcorrencia;
+                                                });
+
+                                            %>  
+                                        
+                                        </tbody>
+                                    </table>
+                                <%} else {%>
+                                    <div class="col-md-8">
+                                        <h5>Sem registros</h5>
+                                    </div>
+                                <%}%>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 card ">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        Histórico da Ocorrência <span id="spanHistoricoOcorrenciaMinhas">
+                    </div>
+
+                    <div class="card-body" id="divOcorrenciaHistorico" style="padding-left: 0px !important;padding-right: 0px !important; ">
+                        
+                    </div>
                 </div>
             </div>
-        </div>
-        
+        </div>            
+                
         <div class="col-md-12 mb-4 p-2 flex" style="padding-left: 480px; padding-right: 80px; ">
             <nav class="navbar bg-light" >
                 <button type="button" id="btnOcorrenciaIncluirInit" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
             </nav>
         </div>
 
-         <!-- Ocorrências Minha Responsabilidade -->
-         <div class="col-md-12 mb-4" id="divCardsOcorrenciaR">
+
+        <!-- Ocorrências Minha Responsabilidade -->
+        <div class="col-md-12 mb-4" id="divCardsOcorrenciaR">
+            
             <div class="card card-ocorrencia" >
                 <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
                     <h5 class="card-title mb-0">Ocorrências sob Minha Responsabilidade</h5>
@@ -147,3 +170,51 @@
             </div>
         </div>
 
+<script>
+
+    let divOcorrenciaHistorico = $('#divOcorrenciaHistorico');
+
+    // Registra o evento de passar ou mouse por cima da linha da listagem de ocorrências e assim deve abrir o histórico de ocorrências
+    $('tr[id^="trOcorrenciaMinhas"]').on('mouseover', function() {
+        montaListagemHistoricoOcorrencia($(this).data('id-ocorrencia'));
+    });
+
+    $('tr[id^="trOcorrenciaMinhas"]').on('mouseleave', function() {
+        divOcorrenciaHistorico.html('');
+    });
+
+    // Conecta no banco de dados e montar o histpiruco de cada ocorrencia ao passa o mouse por cima da linha na listagem de ocorrencias
+    async function montaListagemHistoricoOcorrencia (idOcorrencia){
+        
+        $('#spanHistoricoOcorrenciaMinhas').html('Nº ' + idOcorrencia);
+        
+        conexaoAjaxFetch ('/api/ocorrencia/listarJsonHistoricoOcorrencia/' + idOcorrencia)
+        .then(data => {
+            
+            
+            divOcorrenciaHistorico.html('');
+            
+            let tabelaHistorico = $('<table>');
+
+            data.forEach(item => {
+                let tabelaHistorico_tr = $('<tr>');
+                let tabelaHistorico_td_texto = $('<td>');
+                let tabelaHistorico_td_data = $('<td>');
+
+                tabelaHistorico_td_texto.html(item.deOcorrenciaHistoricoSituacao);
+                tabelaHistorico_td_data.html(formatarDataFrom(item.dtOcorrenciaSituacao));
+                
+                tabelaHistorico_tr.append(tabelaHistorico_td_texto);
+                tabelaHistorico_tr.append(tabelaHistorico_td_data);
+
+                divOcorrenciaHistorico.append(tabelaHistorico_tr);
+            });
+
+
+        }).catch(error => {
+            console.error('Ocorreu um erro em selectElementCriarOpionDinamicamente :', error);
+            console.log(error);
+        });
+
+    }
+</script>

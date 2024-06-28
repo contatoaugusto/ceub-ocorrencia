@@ -142,3 +142,14 @@ legend {
   .bordaDireitaTableLinha {
     border-left: 4px solid #ffc107;
   }
+
+  .fa-pen-to-square, .fa-trash {
+    color: #000;
+    transition: color 0.3s ease;
+  }
+
+  .fa-pen-to-square:hover, .fa-trash:hover {
+    color: #e008e7; /* Cor do ícone ao passar o mouse */
+    transform: scale(1.5);
+    cursor: pointer;
+  }
