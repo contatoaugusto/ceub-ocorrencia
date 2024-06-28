@@ -143,13 +143,32 @@ legend {
     border-left: 4px solid #ffc107;
   }
 
-  .fa-pen-to-square, .fa-trash {
+  .fa-pen-to-square, .fa-trash, .fa-user-pen {
     color: #000;
     transition: color 0.3s ease;
   }
 
-  .fa-pen-to-square:hover, .fa-trash:hover {
+  .fa-pen-to-square:hover, .fa-trash:hover, .fa-user-pen:hover {
     color: #e008e7; /* Cor do ícone ao passar o mouse */
     transform: scale(1.5);
     cursor: pointer;
   }
+
+
+.nav-tabs .nav-link {
+    color: purple;
+    border: 1px solid transparent;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #e0e0e0;
+}
+.nav-tabs .nav-link.active {
+    color: white; /* Cor do texto quando a aba está ativa */
+    background-color: purple; /* Cor de fundo quando a aba está ativa */
+    border-color: purple purple transparent;
+}
+.nav-tabs .nav-link:hover {
+    color:white;
+    background-color: #0f6fc9; /* Cor de fundo ao passar o mouse */
+    border-color: #ccc; /* Cor da borda ao passar o mouse */
+}

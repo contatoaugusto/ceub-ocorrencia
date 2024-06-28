@@ -1,220 +1,263 @@
-        <div class="mb-4">
-            <h2><%- tituloCabecalho %></h2>
-        </div>
         
-        <!-- Minhas Ocorrências -->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-9 mb-1" id="divCardsOcorrencia">
-                    
-                    <div class="card card-ocorrencia" >
-                        <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
-                            <h5 class="card-title mb-0">Minhas Ocorrências</h5>
-                            <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaMinhas"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
-                        </div>
-                        <div id="divCardOcorrenciaMinhas" class="collapse show" data-parent="#divCardsOcorrencia">
-                            <div class="card-body">
-                                <%
-                                    if (ocorrenciasMinhas.length > 0) {
-                                %>    
-                                    <table class="table table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col" width="5%">ID</th>
-                                            <th scope="col" width="40%">Ocorrência</th>
-                                            <th scope="col" width="30%">Responsável</th>
-                                            <th scope="col">Data</th>
-                                            <th scope="col">Situação</th>
-                                            <th scope="col">Ações</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+        <div class="container mt-5" style="max-width: 100% !important">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="minhas-ocorrencias-tab" data-toggle="tab" href="#minhas-ocorrencias" role="tab" aria-controls="minhas-ocorrencias" aria-selected="true">
+                        <h5>Minhas Ocorrências</h5>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="ocorrencias-responsabilidade-tab" data-toggle="tab" href="#ocorrencias-responsabilidade" role="tab" aria-controls="ocorrencias-responsabilidade" aria-selected="false">
+                        <h5>Ocorrências Minhas Responsabilidade</h5>
+                    </a>
+                </li>
+            </ul>
 
-                                            <% 
-                                                let idOcorrencia;
-                                                ocorrenciasMinhas.forEach(ocorrencia => { 
 
-                                                    if (idOcorrencia != ocorrencia.idOcorrencia) {
-                                                        
-                                                        const ocorrenciasResponsavelList_Filtrado = ocorrenciasMinhas.filter(ocorrenciaFilter => ocorrenciaFilter.idOcorrencia === ocorrencia.idOcorrencia);
-                                                        let blocoHtmlResponsavel = "";
-                                                        
-                                                        ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
-                                                            
-                                                            if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
-                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '<br>';
-                                                            
-                                                            if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
-                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-chalkboard-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador + '<br>';
-                                                            
-                                                                if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
-                                                                blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-md\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '<br>';
-                                                        });
-                                            %>
-                                                        <tr id="trOcorrenciaMinhas<%= ocorrencia.idOcorrencia %>" data-id-ocorrencia="<%= ocorrencia.idOcorrencia %>">
-                                                            <td><%= ocorrencia.idOcorrencia %></td>
-                                                            <td><%= ocorrencia.deOcorrencia %></td>
-                                                            
-                                                            <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
-                                                            <td>
-                                                                <%= formataData(ocorrencia.dtOcorrencia) %>
-                                                            </td>
+            <div class="tab-content">
 
-                                                            <td><%= ocorrencia.deOcorrenciaSituacao %></td>
-                                                            <td>
-                                                                <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/<%= ocorrencia.idOcorrencia %>');">
-                                                                    <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                            <%
-                                                    }
-                                                    
-                                                    idOcorrencia = ocorrencia.idOcorrencia;
-                                                });
+                <!-- Minhas Ocorrências -->
+                <div class="tab-pane fade show active" id="minhas-ocorrencias" role="tabpanel" aria-labelledby="minhas-ocorrencias-tab">
+                    <div>
+                        <div class="row">
 
-                                            %>  
-                                        
-                                        </tbody>
-                                    </table>
-                                <%} else {%>
-                                    <div class="col-md-8">
-                                        <h5>Sem registros</h5>
+                            <div class="col-md-12  p-2 flex" style="padding-left: 480px; padding-right: 80px; ">
+                                <nav class="navbar " >
+                                    <button type="button" id="btnOcorrenciaIncluirInit" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
+                                </nav>
+                            </div>
+    
+                            <div class="col-md-9 mb-1" id="divCardsOcorrencia">
+                                
+                                <div class="card card-ocorrencia" >
+                                    <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
+                                        <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaMinhas"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
                                     </div>
-                                <%}%>
+                                    <div id="divCardOcorrenciaMinhas" class="collapse show" data-parent="#divCardsOcorrencia">
+                                        <div class="card-body">
+                                            <%
+                                                if (ocorrenciasMinhas.length > 0) {
+                                            %>    
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col" width="5%">ID</th>
+                                                        <th scope="col" width="40%">Ocorrência</th>
+                                                        <th scope="col" width="30%">Responsável</th>
+                                                        <th scope="col">Data</th>
+                                                        <th scope="col">Situação</th>
+                                                        <th scope="col">Ações</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+    
+                                                        <% 
+                                                            let idOcorrencia;
+                                                            ocorrenciasMinhas.forEach(ocorrencia => { 
+    
+                                                                if (idOcorrencia != ocorrencia.idOcorrencia) {
+                                                                    
+                                                                    const ocorrenciasResponsavelList_Filtrado = ocorrenciasMinhas.filter(ocorrenciaFilter => ocorrenciaFilter.idOcorrencia === ocorrencia.idOcorrencia);
+                                                                    let blocoHtmlResponsavel = "";
+                                                                    
+                                                                    ocorrenciasResponsavelList_Filtrado.forEach(ocorrenciaResponsavel => { 
+                                                                        
+                                                                        if (ocorrenciaResponsavel.nmPessoaResponsavel != null && ocorrenciaResponsavel.nmPessoaResponsavel  != "")
+                                                                            blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavel + '<br>';
+                                                                        
+                                                                        if (ocorrenciaResponsavel.nmPessoaResponsavelCoordenador != null && ocorrenciaResponsavel.nmPessoaResponsavelCoordenador  != "")
+                                                                            blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-chalkboard-user fa-md\"></i>&nbsp;&nbsp;&nbsp;' + ocorrenciaResponsavel.nmPessoaResponsavelCoordenador + '<br>';
+                                                                        
+                                                                            if (ocorrenciaResponsavel.nmPerfilResponsavel != null && ocorrenciaResponsavel.nmPerfilResponsavel  != "")
+                                                                            blocoHtmlResponsavel += '&nbsp;&nbsp;&nbsp;<i class=\"fa-solid fa-people-group fa-md\"></i>&nbsp;' + ocorrenciaResponsavel.nmPerfilResponsavel + '<br>';
+                                                                    });
+                                                        %>
+                                                                    <tr id="trOcorrenciaMinhas<%= ocorrencia.idOcorrencia %>" data-id-ocorrencia="<%= ocorrencia.idOcorrencia %>">
+                                                                        <td><%= ocorrencia.idOcorrencia %></td>
+                                                                        <td><%= ocorrencia.deOcorrencia %></td>
+                                                                        
+                                                                        <td><div class="bordaDireitaTableLinha"><%- blocoHtmlResponsavel %></div></td>
+                                                                        <td>
+                                                                            <%= formataData(ocorrencia.dtOcorrencia) %>
+                                                                        </td>
+    
+                                                                        <td><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                                                        <td>
+                                                                            <a class="nav-link" href="#" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/<%= ocorrencia.idOcorrencia %>');">
+                                                                                <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                        <%
+                                                                }
+                                                                
+                                                                idOcorrencia = ocorrencia.idOcorrencia;
+                                                            });
+    
+                                                        %>  
+                                                    
+                                                    </tbody>
+                                                </table>
+                                            <%} else {%>
+                                                <div class="col-md-8">
+                                                    <h5>Sem registros</h5>
+                                                </div>
+                                            <%}%>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-3 card ">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    Histórico da Ocorrência <span id="spanHistoricoOcorrenciaMinhas">
+                                </div>
+    
+                                <div class="card-body" id="divOcorrenciaHistorico" style="padding-left: 0px !important;padding-right: 0px !important; ">
+                                    
+                                </div>
                             </div>
                             
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 card ">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        Histórico da Ocorrência <span id="spanHistoricoOcorrenciaMinhas">
-                    </div>
-
-                    <div class="card-body" id="divOcorrenciaHistorico" style="padding-left: 0px !important;padding-right: 0px !important; ">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>            
+                    </div>            
+                </div>   
                 
-        <div class="col-md-12 mb-4 p-2 flex" style="padding-left: 480px; padding-right: 80px; ">
-            <nav class="navbar bg-light" >
-                <button type="button" id="btnOcorrenciaIncluirInit" onclick="carregarConteudoMain('/api/ocorrencia/incluirInit/0');" class="btn card-header-ocorrencia hover:bg-fuchsia-700"><i class="fa-solid fa-plus"></i> incluir</button>
-            </nav>
-        </div>
 
-
-        <!-- Ocorrências Minha Responsabilidade -->
-        <div class="col-md-12 mb-4" id="divCardsOcorrenciaR">
-            
-            <div class="card card-ocorrencia" >
-                <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
-                    <h5 class="card-title mb-0">Ocorrências sob Minha Responsabilidade</h5>
-                    <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaResponsabel"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
-                </div>
-                <div id="divCardOcorrenciaResponsabel" class="collapse show" data-parent="#divCardsOcorrenciaR">
-                    <div class="card-body">
-                        <%
-                            if (ocorrenciasMinhaResponsabilidade.length > 0) {
-                        %>     
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Ocorrência</th>
-                                    <th scope="col">Solicitante</th>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Situação</th>
-                                    <th scope="col">Ações</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                    <% 
-                                    idOcorrencia = 0;
-                                    ocorrenciasMinhaResponsabilidade.forEach(ocorrencia => { 
-
-                                        if (idOcorrencia != ocorrencia.idOcorrencia) {
-                                    %>
-                                            <tr>
-                                                <td><%= ocorrencia.deOcorrencia %></td>
-                                                
-                                                <td>
-                                                    <%= ocorrencia.nmPessoa %>
-                                                </td>
-                                                <td>
-                                                    <%= formataData(ocorrencia.dtOcorrencia) %>
-                                                </td>
-
-                                                <td><%= ocorrencia.deOcorrenciaSituacao %></td>
-                                                <td> <i class="fa-solid fa-pen-to-square fa-lg"></i> &nbsp;&nbsp; <i class="fa-solid fa-trash fa-lg"></i></i></td>
-                                            </tr>
-                                <%
-                                        }
+                <!-- Ocorrências Minha Responsabilidade -->
+                <div class="tab-pane fade p-4" id="ocorrencias-responsabilidade" role="tabpanel" aria-labelledby="ocorrencias-responsabilidade-tab">
+                    <div >
+                        <div class="row">
+                            
+                            <div class="col-md-9 mb-4" id="divCardsOcorrenciaR">
+                            
+                                <div class="card card-ocorrencia" >
+                                    <div class="card-header card-header-ocorrencia d-flex justify-content-between align-items-center" >
                                         
-                                        idOcorrencia = ocorrencia.idOcorrencia;
-                                    });
-
-                                %>  
-                                </tbody>
-                            </table>
-                        <%} else {%>
-                            <div class="col-md-12">
-                                <h5>Sem registros</h5>
+                                        <a class="card-link ml-auto" data-toggle="collapse" href="#divCardOcorrenciaResponsabel"><i class="fa-solid fa-chevron-up fa-lg" style="color:white"></i></a>
+                                    </div>
+                                    <div id="divCardOcorrenciaResponsabel" class="collapse show" data-parent="#divCardsOcorrenciaR">
+                                        <div class="card-body">
+                                            <%
+                                                if (ocorrenciasMinhaResponsabilidade.length > 0) {
+                                            %>     
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col" width="5%">ID</th>
+                                                        <th scope="col">Ocorrência</th>
+                                                        <th scope="col">Solicitante</th>
+                                                        <th scope="col">Data</th>
+                                                        <th scope="col">Situação</th>
+                                                        <th scope="col">Ações</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+    
+                                                        <% 
+                                                        idOcorrencia = 0;
+                                                        ocorrenciasMinhaResponsabilidade.forEach(ocorrencia => { 
+    
+                                                            if (idOcorrencia != ocorrencia.idOcorrencia) {
+                                                        %>
+                                                                <tr id="trOcorrenciaResposabilidade<%= ocorrencia.idOcorrencia %>" data-id-ocorrencia="<%= ocorrencia.idOcorrencia %>">
+                                                                    
+                                                                    <td><%= ocorrencia.idOcorrencia %></td>
+                                                                    <td><%= ocorrencia.deOcorrencia %></td>
+                                                                    
+                                                                    <td>
+                                                                        <%= ocorrencia.nmPessoa %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= formataData(ocorrencia.dtOcorrencia) %>
+                                                                    </td>
+    
+                                                                    <td id="tdOcorrenciaResposabilidade_situacao_<%= ocorrencia.idOcorrencia %>"><%= ocorrencia.deOcorrenciaSituacao %></td>
+                                                                    <td> 
+                                                                        
+                                                                        <a class="nav-link" href="#"  onclick="emitirParecerShowModal(<%= ocorrencia.idOcorrencia %>)">
+                                                                            <i class="fa-solid fa-user-pen fa-lg"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                    <%
+                                                            }
+                                                            
+                                                            idOcorrencia = ocorrencia.idOcorrencia;
+                                                        });
+    
+                                                    %>  
+                                                    </tbody>
+                                                </table>
+                                            <%} else {%>
+                                                <div class="col-md-12">
+                                                    <h5>Sem registros</h5>
+                                                </div>
+                                            <%}%>
+                                        </div>
+                                    </div>    
+                                </div>
                             </div>
-                        <%}%>
-                    </div>
-                </div>    
+    
+                            
+                            <div class="col-md-3 card ">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    Histórico da Ocorrência <span id="spanHistoricoOcorrenciaResponsabilidade">
+                                </div>
+    
+                                <div class="card-body" id="divOcorrenciaHistoricoResponsabilidade" style="padding-left: 0px !important;padding-right: 0px !important; ">
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>  
+                </div>
+
+            </div>       
+
+            
             </div>
+
+        </div> 
+
+
+        <!-- Modal emitir parecer -->
+        <div class="container mt-10">
+            
+            <!-- <div class="modal fade show" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"  style="display: block;"> -->
+            <div class="modal fade show" id="modalEmitirParecer" tabindex="-1" aria-labelledby="modalEmitirParecerLabel">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalEmitirParecerLabel">Parecer  - Ocorrência nº: <span id="spanOcorrenciaModalEmitirParecer"></span> </h5>
+                            <i class="fa-solid fa-xmark fa-md" onclick="emitirParecerCloseModal()"></i>
+                        </div>
+                        <div class="modal-body">
+                            <form id="modalEmitirParecerForm">
+                                <input type="hidden" id="hdnidOcorrencia" name="hdnidOcorrencia">
+                                <input type="hidden" id="hdnidOcorrenciaSituacao" name="hdnidOcorrenciaSituacao">
+                                <input type="hidden" id="hdndeOcorrenciaSituacao" name="hdndeOcorrenciaSituacao">
+
+                                <div class="mb-3">
+                                    <label for="ddlOcorrenciaSituacao" class="form-label">Situação</label>
+                                    <select id="ddlOcorrenciaSituacao" name="ddlOcorrenciaSituacao" class="form-contro form-select form-select-lg" aria-label="Situação" required></select>
+                                    <div id="ddlOcorrenciaSituacao_alert" class="errorMensageAlert text-danger"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="deOcorrenciaHistoricoSituacao" class="form-label">Detalhamento</label>
+                                    <textarea class="form-control" id="deOcorrenciaHistoricoSituacao" name="deOcorrenciaHistoricoSituacao" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="emitirParecerCloseModal()">Fechar</button>
+                            <button type="button" class="btn btn-primary" id="btnModalEmitirParecerSalvar">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-<script>
-
-    let divOcorrenciaHistorico = $('#divOcorrenciaHistorico');
-
-    // Registra o evento de passar ou mouse por cima da linha da listagem de ocorrências e assim deve abrir o histórico de ocorrências
-    $('tr[id^="trOcorrenciaMinhas"]').on('mouseover', function() {
-        montaListagemHistoricoOcorrencia($(this).data('id-ocorrencia'));
-    });
-
-    $('tr[id^="trOcorrenciaMinhas"]').on('mouseleave', function() {
-        divOcorrenciaHistorico.html('');
-    });
-
-    // Conecta no banco de dados e montar o histpiruco de cada ocorrencia ao passa o mouse por cima da linha na listagem de ocorrencias
-    async function montaListagemHistoricoOcorrencia (idOcorrencia){
-        
-        $('#spanHistoricoOcorrenciaMinhas').html('Nº ' + idOcorrencia);
-        
-        conexaoAjaxFetch ('/api/ocorrencia/listarJsonHistoricoOcorrencia/' + idOcorrencia)
-        .then(data => {
-            
-            
-            divOcorrenciaHistorico.html('');
-            
-            let tabelaHistorico = $('<table>');
-
-            data.forEach(item => {
-                let tabelaHistorico_tr = $('<tr>');
-                let tabelaHistorico_td_texto = $('<td>');
-                let tabelaHistorico_td_data = $('<td>');
-
-                tabelaHistorico_td_texto.html(item.deOcorrenciaHistoricoSituacao);
-                tabelaHistorico_td_data.html(formatarDataFrom(item.dtOcorrenciaSituacao));
-                
-                tabelaHistorico_tr.append(tabelaHistorico_td_texto);
-                tabelaHistorico_tr.append(tabelaHistorico_td_data);
-
-                divOcorrenciaHistorico.append(tabelaHistorico_tr);
-            });
-
-
-        }).catch(error => {
-            console.error('Ocorreu um erro em selectElementCriarOpionDinamicamente :', error);
-            console.log(error);
-        });
-
-    }
-</script>
+<script src="/javascript/ocorrencia_listar_javascript.js"></script>

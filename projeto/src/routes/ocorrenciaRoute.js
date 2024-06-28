@@ -170,6 +170,49 @@ router.get('/listarJsonHistoricoOcorrencia/:id', autenticacaoMiddleware, async (
 });
 
 
+/**
+ * Para salvar uma deteminada ocorrência
+ */
+router.post('/salvarhistoricoocorrencia', autenticacaoMiddleware, async (req, res) => {
+    
+    const { hdnidOcorrencia, hdnidOcorrenciaSituacao, deOcorrenciaHistoricoSituacao } = req.body;
+
+    let usuarioLogado = req.session.usuario;
+
+    try {
+        
+       let retornoBancoDados = await querySoredProcedure("OCOTB.SP_setOcorrenciaHistoricoSituacao", 
+            {
+                idOcorrencia: hdnidOcorrencia,
+                idOcorrenciaSituacao: hdnidOcorrenciaSituacao, 
+                deOcorrenciaHistoricoSituacao: deOcorrenciaHistoricoSituacao,
+                icAtivo: 1
+            });
+        
+       
+        console.log('Resultado da consulta:', retornoBancoDados);
+
+        res.json( 
+            {
+                status: 'Salvo com sucesso!'
+            }
+        );
+
+    } catch (error) {
+        console.log(error);
+        console.error('Erro ao salva ocorrência:', error);
+        //res.status(500).json({ message: 'Erro interno do servidor (ocorrenciaRoute)' });
+        req.session.mensagemErro = {
+            id: 0,
+            cssClass: [' alert-danger '],
+            mensagem: error
+       };
+
+        return res.redirect('/api/ocorrencia/init');
+    } 
+});
+
+
 function ValidaCampoObrigatorio(req, ddlOcorrenciaTipo, ddlOcorrenciaSubTipo, deOcorrencia, hdnResponsavelFinanceiroList){
     
     let mensagemValidacao = '';

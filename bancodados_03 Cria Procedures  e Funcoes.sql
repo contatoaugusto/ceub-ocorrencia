@@ -1387,6 +1387,7 @@ GO
 		 @idOcorrencia			INT
       	,@idOcorrenciaSituacao	INT
       	,@icAtivo				BIT
+		,@deOcorrenciaHistoricoSituacao VARCHAR(200)
 	)
 	AS
 	BEGIN
@@ -1395,13 +1396,15 @@ GO
 			idOcorrencia,
 			idOcorrenciaSituacao,
 			icAtivo,
-			dtOcorrenciaSituacao
+			dtOcorrenciaSituacao,
+			deOcorrenciaHistoricoSituacao
 		)
 		SELECT 
 			@idOcorrencia,
 			@idOcorrenciaSituacao,
-			@icAtivo,
-			GETDATE()
+			1,
+			GETDATE(),
+			@deOcorrenciaHistoricoSituacao
 END
 GO
 
